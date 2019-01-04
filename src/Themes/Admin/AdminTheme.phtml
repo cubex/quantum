@@ -1,0 +1,53 @@
+<?php
+/**
+ * @var $this \Cubex\Quantum\Themes\Admin\AdminTheme
+ */
+
+use Packaged\Dispatch\Dispatch as Dispatch;
+use Packaged\Dispatch\ResourceStore as ResourceStore;
+
+?>
+<!DOCTYPE html>
+<html>
+<head>
+  <meta name="viewport" content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0">
+  <meta name="robots" content="noindex"/>
+  <?= Dispatch::instance()->store()->generateHtmlIncludes(ResourceStore::TYPE_CSS); ?>
+  <title><?= $this->getPageTitle() ?></title>
+</head>
+<body class="u-admin">
+
+<header><?php
+  $user = '';
+  if($user)
+  {
+    echo '<span id="user_welcome"><i class="icon-user"></i> Hi, Name | </span>';
+  }
+  echo '<a href="/">Website</a>';
+  if($user)
+  {
+    echo ' | ' . $this->data()->getAlnum('logout_url');
+  }
+  ?></header>
+<div id="contentWrap">
+  <nav>
+    <span class="icon-menu mobile"></span>
+    <?= $this->getMenu($this::MENU_LEFT); ?>
+  </nav>
+  <div id="content">
+    <?= $this->getContent() ?>
+    <div class="footer">
+      <div>
+        Powered by <a href="http://quantum.io" target="_blank">Quantum</a>.
+      </div>
+      <div>
+        <a href="https://github.com/cubex/quantum" target="_blank">GitHub</a> |
+        <a href="https://www.facebook.com/Quantum" target="_blank">Facebook</a>
+      </div>
+    </div>
+  </div>
+</div>
+
+<?= Dispatch::instance()->store()->generateHtmlIncludes(ResourceStore::TYPE_JS); ?>
+</body>
+</html>

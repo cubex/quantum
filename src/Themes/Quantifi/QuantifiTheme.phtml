@@ -1,0 +1,24 @@
+<?php
+/**
+ * @var $this \Cubex\Quantum\Themes\Quantifi\QuantifiTheme
+ */
+
+use Packaged\Dispatch\Dispatch;
+use Packaged\Dispatch\ResourceStore;
+
+?>
+<!DOCTYPE html>
+<html>
+<head lang="en">
+  <meta charset="UTF-8">
+  <?= Dispatch::instance()->store()->generateHtmlIncludes(ResourceStore::TYPE_CSS); ?>
+  <title><?= $this->getPageTitle() ?></title>
+</head>
+<body>
+<div class="content">
+  <h1><?= $this->getPageTitle() ?></h1>
+  <?= $this->getContent() ?>
+</div>
+<?= Dispatch::instance()->store()->generateHtmlIncludes(ResourceStore::TYPE_JS); ?>
+</body>
+</html>

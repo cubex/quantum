@@ -1,0 +1,39 @@
+{
+  "name": "cubex/quantum",
+  "description": "Cubex CMS Project",
+  "homepage": "http://cubex.io",
+  "license": "BSD-3-Clause",
+  "authors": [
+    {
+      "name": "Tom Kay",
+      "email": "info@tomkay.me",
+      "homepage": "http://tomkay.me"
+    }
+  ],
+  "require": {
+    "cubex/framework": "dev-master",
+    "packaged/dispatch": "dev-master",
+    "packaged/glimpse": "^0.8",
+    "packaged/dal": "^1.7"
+  },
+  "require-dev": {
+    "satooshi/php-coveralls": "2.0.0",
+    "phpunit/phpunit": "6.5.5",
+    "filp/whoops": "^2.3"
+  },
+  "autoload": {
+    "psr-4": {
+      "Cubex\\Quantum\\": "src/"
+    }
+  },
+  "repositories": [
+    {
+      "type": "vcs",
+      "url": "git@github.com:cubex/framework.git"
+    },
+    {
+      "type": "vcs",
+      "url": "git@github.com:packaged/dispatch.git"
+    }
+  ]
+}
