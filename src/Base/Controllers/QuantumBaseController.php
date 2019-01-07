@@ -7,6 +7,7 @@ use Cubex\Quantum\Base\Interfaces\QuantumAware;
 use Cubex\Quantum\Base\QuantumProject;
 use Cubex\Quantum\Themes\BaseTheme;
 use Cubex\Quantum\Themes\Quantifi\QuantifiTheme;
+use Packaged\SafeHtml\ISafeHtmlProducer;
 use Packaged\Ui\Renderable;
 use Symfony\Component\HttpFoundation\Response;
 use Throwable;
@@ -86,10 +87,18 @@ abstract class QuantumBaseController extends Controller implements QuantumAware
     {
       $obj->setQuantum($this->getQuantum());
     }
-    if($obj instanceof Renderable || is_string($obj))
+    if($obj instanceof ISafeHtmlProducer)
+    {
+      $obj = $obj->produceSafeHTML()->getContent();
+    }
+    if($obj instanceof Renderable)
+    {
+      $obj = $obj->render();
+    }
+    if(is_string($obj))
     {
       $theme = $this->getTheme();
-      $obj = $theme->setContent(is_string($obj) ? $obj : $obj->render());
+      $obj = $theme->setContent($obj);
     }
     return parent::_prepareResponse($c, $obj);
   }
