@@ -36,4 +36,11 @@ abstract class QuantumAdminController extends QuantumBaseController
       );
     }
   }
+
+  protected function _buildModuleUrl(...$parts)
+  {
+    $vendor = $this->getContext()->routeData()->get('vendor');
+    $package = $this->getContext()->routeData()->get('package');
+    return Path::url($this->getQuantum()->getAdminPath(), $vendor, $package, ...$parts);
+  }
 }
