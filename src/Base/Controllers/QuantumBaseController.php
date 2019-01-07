@@ -41,6 +41,12 @@ abstract class QuantumBaseController extends Controller implements QuantumAware
     return $this->_theme;
   }
 
+  public function setTheme(BaseTheme $theme)
+  {
+    $this->_theme = $theme;
+    return $this;
+  }
+
   protected function _createTheme(): BaseTheme
   {
     return new QuantifiTheme();
