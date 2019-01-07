@@ -27,23 +27,6 @@ abstract class QuantumBaseController extends Controller implements QuantumAware
     return $this->_quantum;
   }
 
-  protected $_title;
-
-  public function getTitle()
-  {
-    return $this->_title;
-  }
-
-  public function setTitle($title)
-  {
-    $this->_title = $title;
-  }
-
-  public function getMenuItems()
-  {
-    return [];
-  }
-
   private $_theme;
 
   /**
