@@ -71,7 +71,7 @@ abstract class QuantumProject
     );
 
     Dispatch::bind(new Dispatch($launcher->getContext()->getProjectRoot(), $this->_resourcePath));
-    Dispatch::instance()->setComponentsNamespace('\Cubex\Quantum');
+    Dispatch::instance()->addComponentAlias('\Cubex\Quantum', 'quantum');
 
     // configure dal
     $cnf = new IniConfigProvider(
