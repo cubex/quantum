@@ -10,6 +10,9 @@ use Cubex\Quantum\Base\Interfaces\QuantumModule;
 use Cubex\Quantum\Modules\Pages\Controllers\ContentController;
 use Cubex\Quantum\Modules\Pages\PagesModule;
 use Cubex\Quantum\Modules\Paths\PathsModule;
+use Cubex\Quantum\Themes\Admin\AdminTheme;
+use Cubex\Quantum\Themes\BaseTheme;
+use Cubex\Quantum\Themes\Quantifi\QuantifiTheme;
 use Cubex\Routing\Router;
 use Packaged\Config\Provider\Ini\IniConfigProvider;
 use Packaged\Dal\DalResolver;
@@ -39,6 +42,16 @@ abstract class QuantumProject
   public function contentHandler()
   {
     return ContentController::class;
+  }
+
+  public function getAdminTheme(): BaseTheme
+  {
+    return new AdminTheme();
+  }
+
+  public function getFrontendTheme(): BaseTheme
+  {
+    return new QuantifiTheme();
   }
 
   protected $_resourcePath = '/_r';

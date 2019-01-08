@@ -10,7 +10,7 @@ abstract class QuantumAdminController extends QuantumBaseController
 {
   protected function _createTheme(): BaseTheme
   {
-    $theme = new AdminTheme();
+    $theme = $this->getQuantum()->getAdminTheme();
     $theme->getMenu(AdminTheme::MENU_LEFT)->addItem(
       QuantumMenuItem::create('Dashboard', Path::url($this->getQuantum()->getAdminPath()))
     );

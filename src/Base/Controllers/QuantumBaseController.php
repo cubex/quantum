@@ -6,7 +6,6 @@ use Cubex\Controller\Controller;
 use Cubex\Quantum\Base\Interfaces\QuantumAware;
 use Cubex\Quantum\Base\QuantumProject;
 use Cubex\Quantum\Themes\BaseTheme;
-use Cubex\Quantum\Themes\Quantifi\QuantifiTheme;
 use Packaged\SafeHtml\ISafeHtmlProducer;
 use Packaged\Ui\Renderable;
 use Symfony\Component\HttpFoundation\Response;
@@ -49,7 +48,7 @@ abstract class QuantumBaseController extends Controller implements QuantumAware
 
   protected function _createTheme(): BaseTheme
   {
-    return new QuantifiTheme();
+    return $this->getQuantum()->getFrontendTheme();
   }
 
   protected function _init()
