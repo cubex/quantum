@@ -1,0 +1,36 @@
+html, body {
+  display: flex;
+  flex-grow: 1;
+  flex-direction: column;
+  height: 100%;
+  margin: 0;
+}
+
+body.loading::before {
+  content: '';
+  box-sizing: border-box;
+  top: 0;
+  left: 0;
+  width: 20px;
+  height: 20px;
+  margin-top: 4px;
+  margin-left: 4px;
+  border-radius: 50%;
+  border-top: 2px solid #07d;
+  border-right: 2px solid transparent;
+  animation: spinner .6s linear infinite;
+}
+
+@keyframes spinner {
+  to {transform: rotate(360deg);}
+}
+
+
+#content-editor {
+  overflow: visible;
+  border: 1px solid #444;
+}
+
+body.loading #content-editor {
+  display: none;
+}

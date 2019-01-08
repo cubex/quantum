@@ -7,8 +7,9 @@ use Cubex\Quantum\Base\Controllers\AdminController;
 use Cubex\Quantum\Base\Controllers\FrontendController;
 use Cubex\Quantum\Base\Interfaces\QuantumAware;
 use Cubex\Quantum\Base\Interfaces\QuantumModule;
-use Cubex\Quantum\Services\Pages\Controllers\ContentController;
-use Cubex\Quantum\Services\Pages\PagesModule;
+use Cubex\Quantum\Modules\Pages\Controllers\ContentController;
+use Cubex\Quantum\Modules\Pages\PagesModule;
+use Cubex\Quantum\Modules\Paths\PathsModule;
 use Cubex\Routing\Router;
 use Packaged\Config\Provider\Ini\IniConfigProvider;
 use Packaged\Dal\DalResolver;
@@ -74,6 +75,7 @@ abstract class QuantumProject
     $this->_init();
 
     //add built in modules
+    $this->addModule(new PathsModule());
     $this->addModule(new PagesModule());
   }
 

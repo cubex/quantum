@@ -1,0 +1,10 @@
+{
+  "name": "ckeditor-component",
+  "version": "1.0.0",
+  "files": [
+    "package.json"
+  ],
+  "dependencies": {
+    "@ckeditor/ckeditor5-build-balloon": "^11.2.0"
+  }
+}

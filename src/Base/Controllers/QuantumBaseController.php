@@ -66,7 +66,7 @@ abstract class QuantumBaseController extends Controller implements QuantumAware
     {
       $theme = $this->getTheme();
       $theme->setPageTitle($e->getMessage())->setContent($e->getMessage());
-      return Response::create($theme, $e->getCode());
+      return Response::create($theme, $e->getCode() ?: 500);
     }
   }
 
@@ -91,5 +91,4 @@ abstract class QuantumBaseController extends Controller implements QuantumAware
     }
     return parent::_prepareResponse($c, $obj);
   }
-
 }
