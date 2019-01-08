@@ -11,7 +11,7 @@
     }
   ],
   "require": {
-    "cubex/framework": "^3.0.0-alpha.6",
+    "cubex/framework": "^3.0.0-alpha.7",
     "packaged/dispatch": "^2.0.0-alpha.9",
     "packaged/glimpse": "^0.9",
     "packaged/dal": "^1.7"
