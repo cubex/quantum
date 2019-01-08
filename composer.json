@@ -11,8 +11,8 @@
     }
   ],
   "require": {
-    "cubex/framework": "dev-master",
-    "packaged/dispatch": "dev-master",
+    "cubex/framework": "^3.0.0-alpha.6",
+    "packaged/dispatch": "^2.0.0-alpha.9",
     "packaged/glimpse": "^0.9",
     "packaged/dal": "^1.7"
   },
