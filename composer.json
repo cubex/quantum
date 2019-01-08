@@ -13,7 +13,7 @@
   "require": {
     "cubex/framework": "dev-master",
     "packaged/dispatch": "dev-master",
-    "packaged/glimpse": "^0.8",
+    "packaged/glimpse": "^0.9",
     "packaged/dal": "^1.7"
   },
   "require-dev": {
@@ -34,6 +34,10 @@
     {
       "type": "vcs",
       "url": "git@github.com:packaged/dispatch.git"
+    },
+    {
+      "type": "vcs",
+      "url": "git@github.com:packaged/glimpse.git"
     }
   ]
 }
