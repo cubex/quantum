@@ -7,7 +7,6 @@ use Cubex\Quantum\Base\Controllers\AdminController;
 use Cubex\Quantum\Base\Controllers\FrontendController;
 use Cubex\Quantum\Base\Interfaces\QuantumAware;
 use Cubex\Quantum\Base\Interfaces\QuantumModule;
-use Cubex\Quantum\Modules\Pages\Controllers\ContentController;
 use Cubex\Quantum\Modules\Pages\PagesModule;
 use Cubex\Quantum\Modules\Paths\PathsModule;
 use Cubex\Quantum\Themes\Admin\AdminTheme;
@@ -26,7 +25,7 @@ abstract class QuantumProject
   /**
    * @var Cubex
    */
-  private $_launcher;
+  private $_cubex;
   private $_frontendModules = [];
   private $_adminModules = [];
   /**
@@ -56,11 +55,12 @@ abstract class QuantumProject
 
   protected $_resourcePath = '/_r';
 
-  public function __construct(Cubex $launcher)
+  public function __construct(Cubex $cubex)
   {
-    $this->_launcher = $launcher;
+    $this->_cubex = $cubex;
+    $context = $cubex->getContext();
 
-    $launcher->listen(
+    $cubex->listen(
       Cubex::EVENT_HANDLE_PRE_EXECUTE,
       function ($context, $handler) {
         if($handler instanceof QuantumAware)
@@ -70,13 +70,13 @@ abstract class QuantumProject
       }
     );
 
-    Dispatch::bind(new Dispatch($launcher->getContext()->getProjectRoot(), $this->_resourcePath));
+    Dispatch::bind(new Dispatch($context->getProjectRoot(), $this->_resourcePath));
     Dispatch::instance()->addComponentAlias('\Cubex\Quantum', 'quantum');
 
     // configure dal
     $cnf = new IniConfigProvider(
       Path::system(
-        $launcher->getContext()->getProjectRoot(),
+        $context->getProjectRoot(),
         'conf',
         'defaults',
         'connections.ini'
@@ -90,6 +90,16 @@ abstract class QuantumProject
     //add built in modules
     $this->addModule(new PathsModule());
     $this->addModule(new PagesModule());
+  }
+
+  public function getCubex()
+  {
+    return $this->_cubex;
+  }
+
+  public function getContext()
+  {
+    return $this->getCubex()->getContext();
   }
 
   public function addModule(QuantumModule $class)
@@ -154,7 +164,7 @@ abstract class QuantumProject
       $router->handle($this->getAdminPath(), new AdminController());
     }
     $router->handle('/', new FrontendController());
-    return $this->_launcher->handle($router, $send, $catch);
+    return $this->_cubex->handle($router, $send, $catch);
   }
 }
 
