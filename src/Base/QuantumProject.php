@@ -148,7 +148,11 @@ abstract class QuantumProject
         return Dispatch::instance()->handle($c->getRequest());
       }
     );
-    $router->handle($this->getAdminPath(), new AdminController());
+    $adminPath = $this->getAdminPath();
+    if($adminPath)
+    {
+      $router->handle($this->getAdminPath(), new AdminController());
+    }
     $router->handle('/', new FrontendController());
     return $this->_launcher->handle($router, $send, $catch);
   }
