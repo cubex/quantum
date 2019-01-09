@@ -60,14 +60,19 @@ class PagesController extends QuantumAdminController
     $table->appendContent(TableRow::create()->appendContent(TableCell::collection(['ID', $page->id])));
     $table->appendContent(
       TableRow::create()->appendContent(
-        TableCell::collection(['Title', TextInput::create($this->_getVendor(), $this->_getPackage(), $page->title)])
+        TableCell::collection(['Title', TextInput::create('title', $page->title)])
       )
     );
 
     return Div::create(
       [
         $table,
-        EditorComponent::create($this->_buildModuleUrl('editor', $pageId)),
+        EditorIframeComponent::create(
+          $this->_buildModuleUrl('editor', $pageId),
+          HtmlTag::createTag('textarea')->setContent($page->content)
+            ->setAttributes(['name' => 'content', 'style' => 'display:none'])
+        ),
+        HtmlTag::createTag('button', [], 'Submit'),
       ]
     );
   }
@@ -75,9 +80,7 @@ class PagesController extends QuantumAdminController
   public function getEditor()
   {
     $this->setTheme(new NoTheme());
-    return CkEditorComponent::create(
-      Page::loadById($this->getContext()->routeData()->get('pageId'))
-    );
+    return CkEditorComponent::create();
   }
 
   public function postSave()

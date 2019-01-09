@@ -9,16 +9,14 @@ use Packaged\Glimpse\Tags\Form\Input;
 
 class TextInput extends UiElement implements DispatchableComponent
 {
-  protected $_vendor;
-  protected $_package;
-  protected $_content;
+  protected $_name;
+  protected $_value;
 
-  public static function create($vendor, $package, $content)
+  public static function create($name, $value)
   {
     $o = new static();
-    $o->_vendor = $vendor;
-    $o->_package = $package;
-    $o->_content = $content;
+    $o->_name = $name;
+    $o->_value = $value;
     return $o;
   }
 
@@ -32,7 +30,9 @@ class TextInput extends UiElement implements DispatchableComponent
     ResourceManager::component($this)->requireJs('input.js');
 
     return Div::create(
-      Input::create()->setAttribute('value', $this->_content)
+      Input::create()
+        ->setAttribute('name', $this->_name)
+        ->setAttribute('value', $this->_value)
     )->addClass('q-input');
   }
 }

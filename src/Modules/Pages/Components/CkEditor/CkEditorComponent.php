@@ -1,26 +1,17 @@
 <?php
 namespace Cubex\Quantum\Modules\Pages\Components\CkEditor;
 
-use Cubex\Quantum\Modules\Pages\Daos\Page;
 use Cubex\Ui\UiElement;
 use Packaged\Dispatch\Component\DispatchableComponent;
 use Packaged\Dispatch\ResourceManager;
 use Packaged\Glimpse\Core\HtmlTag;
 use Packaged\Glimpse\Tags\Div;
-use Packaged\SafeHtml\SafeHtml;
 
 class CkEditorComponent extends UiElement implements DispatchableComponent
 {
-  /**
-   * @var Page
-   */
-  protected $_page;
-
-  public static function create(Page $page)
+  public static function create()
   {
-    $o = new static;
-    $o->_page = $page;
-    return $o;
+    return new static();
   }
 
   public function getResourceDirectory()
@@ -42,10 +33,10 @@ class CkEditorComponent extends UiElement implements DispatchableComponent
         ['class' => 'loading'],
         Div::create(
           [
-            Div::create(new SafeHtml($this->_page->content))->setId('content-editor'),
-            Div::create('WIDGETS')->setId('widgets'),
+            Div::create()->setId('content-editor'),
+            Div::create('WIDGETS')->setId('content-widgets'),
           ]
-        )->setId('wrapper')
+        )->setId('content-editor-wrapper')
       )
     );
   }

@@ -25,12 +25,23 @@ body.loading::before {
   to {transform: rotate(360deg);}
 }
 
+#content-editor-wrapper {
+  display: flex;
+  flex-direction: row;
+}
+
+body.loading #content-editor-wrapper {
+  display: none;
+}
 
 #content-editor {
   overflow: visible;
   border: 1px solid #444;
+  flex-grow: 1;
 }
 
-body.loading #content-editor {
-  display: none;
+#content-widgets {
+  background: #444;
+  color: #efefef;
+  padding: 2px;
 }
