@@ -4,7 +4,7 @@ namespace Cubex\Quantum\Base\Controllers;
 use Cubex\Context\Context;
 use Cubex\Controller\Controller;
 use Cubex\Quantum\Base\Interfaces\QuantumAware;
-use Cubex\Quantum\Base\QuantumProject;
+use Cubex\Quantum\Base\Traits\QuantumAwareTrait;
 use Cubex\Quantum\Themes\BaseTheme;
 use Packaged\SafeHtml\ISafeHtmlProducer;
 use Packaged\Ui\Renderable;
@@ -13,18 +13,7 @@ use Throwable;
 
 abstract class QuantumBaseController extends Controller implements QuantumAware
 {
-  protected $_quantum;
-
-  public function setQuantum(QuantumProject $project)
-  {
-    $this->_quantum = $project;
-    return $this;
-  }
-
-  public function getQuantum(): QuantumProject
-  {
-    return $this->_quantum;
-  }
+  use QuantumAwareTrait;
 
   private $_theme;
 
