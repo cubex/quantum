@@ -3,14 +3,23 @@ BalloonEditor
   .then(editor => {
     document.body.classList.remove('loading');
 
-    /*
-        const toolbarContainer = document.querySelector('#toolbar-container');
-        toolbarContainer.appendChild(editor.ui.view.toolbar.element);
-    */
-    resizeIframe();
-    editor.model.document.on('change:data', () => {
-      setTimeout(resizeIframe, 0);
+    let popupElement = document.querySelector('.ck-body');
+
+    // copy styles
+    window.top.document.head.appendChild(window.document.querySelector('style').cloneNode(true));
+    // move popup container to parent
+    window.frameElement.parentNode.appendChild(popupElement);
+
+    // when popup is shown, reposition it based on frameElement
+    editor.plugins.get('BalloonToolbar').on('show', () => {
+      let panel = popupElement.querySelector('.ck-balloon-panel');
+      panel.style.marginTop = window.frameElement.getBoundingClientRect().top + 'px';
+      panel.style.marginLeft = window.frameElement.getBoundingClientRect().left + 'px';
     });
+
+    // resize Iframe when content changes
+    resizeIframe();
+    editor.model.document.on('change:data', () => setTimeout(resizeIframe, 0));
 
   })
   .catch(error => {console.error(error);});
