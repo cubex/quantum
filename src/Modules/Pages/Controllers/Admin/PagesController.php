@@ -181,15 +181,21 @@ class PagesController extends QuantumAdminController
     $versions = PageContent::each(EqualPredicate::create('pageId', $page->id));
     foreach($versions as $version)
     {
-      $publishButton = Link::create($this->_buildModuleUrl('publish', $page->id, $version->id), 'PUBLISH');
+      $publishButton = HtmlTag::createTag('button', [], 'PUBLISH');
+      $publishLink = Link::create(
+        $this->_buildModuleUrl('publish', $page->id, $version->id),
+        $publishButton
+      );
       if($page->publishedVersion === $version->id)
       {
+        $publishLink->removeAttribute('href');
         $publishButton->setAttribute('disabled', true);
       }
       $versionList->addItem(
         ListItem::create(
           [
-            $publishButton,
+            $publishLink,
+            ' ',
             Link::create(
               $this->_buildModuleUrl($page->id, $version->id),
               '[' . date('Y-m-d H:i:s', $version->createdTime) . '] ' . $version->title
@@ -215,6 +221,6 @@ class PagesController extends QuantumAdminController
     }
     PathHelper::setPath($page->publishedPath, ContentController::class, new ParameterBag(['pageId' => $page->id]));
 
-    return $this->getEdit();
+    return RedirectResponse::create($this->_buildModuleUrl($page->id));
   }
 }
