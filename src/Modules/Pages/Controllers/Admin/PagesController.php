@@ -5,8 +5,10 @@ use Cubex\Quantum\Base\Components\Input\TextInput;
 use Cubex\Quantum\Base\Controllers\QuantumAdminController;
 use Cubex\Quantum\Modules\Pages\Components\CkEditor\CkEditorComponent;
 use Cubex\Quantum\Modules\Pages\Components\EditorIframe\EditorIframeComponent;
+use Cubex\Quantum\Modules\Pages\Controllers\ContentController;
 use Cubex\Quantum\Modules\Pages\Daos\Page;
 use Cubex\Quantum\Modules\Pages\Daos\PageContent;
+use Cubex\Quantum\Modules\Paths\PathHelper;
 use Cubex\Quantum\Themes\NoTheme\NoTheme;
 use Packaged\Glimpse\Core\HtmlTag;
 use Packaged\Glimpse\Tags\Div;
@@ -20,6 +22,7 @@ use Packaged\Glimpse\Tags\Table\TableRow;
 use Packaged\Glimpse\Tags\Text\StrongText;
 use Packaged\QueryBuilder\Predicate\EqualPredicate;
 use Packaged\SafeHtml\ISafeHtmlProducer;
+use Symfony\Component\HttpFoundation\ParameterBag;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 
 class PagesController extends QuantumAdminController
@@ -27,6 +30,7 @@ class PagesController extends QuantumAdminController
   public function getRoutes()
   {
     return [
+      self::route('publish/{pageId@num}/{version@num}', 'publish'),
       self::route('editor/{pageId@num}', 'contentEditor'),
       self::route('{pageId@num}/{version@num}', 'edit'),
       self::route('{pageId@num}', 'edit'),
@@ -177,16 +181,40 @@ class PagesController extends QuantumAdminController
     $versions = PageContent::each(EqualPredicate::create('pageId', $page->id));
     foreach($versions as $version)
     {
+      $publishButton = Link::create($this->_buildModuleUrl('publish', $page->id, $version->id), 'PUBLISH');
+      if($page->publishedVersion === $version->id)
+      {
+        $publishButton->setAttribute('disabled', true);
+      }
       $versionList->addItem(
         ListItem::create(
-          Link::create(
-            $this->_buildModuleUrl($page->id, $version->id),
-            '[' . date('Y-m-d H:i:s', $version->createdTime) . '] ' . $version->title
-            . ' (' . strlen($version->content) . ' bytes)'
-          )
+          [
+            $publishButton,
+            Link::create(
+              $this->_buildModuleUrl($page->id, $version->id),
+              '[' . date('Y-m-d H:i:s', $version->createdTime) . '] ' . $version->title
+              . ' (' . strlen($version->content) . ' bytes)'
+            ),
+          ]
         )
       );
     }
     return $versionList;
+  }
+
+  public function getPublish()
+  {
+    $page = Page::loadById($this->getContext()->routeData()->get('pageId'));
+    $page->publishedVersion = $this->getContext()->routeData()->get('version');
+    $page->publishedPath = $page->path;
+    $changes = $page->save();
+
+    if(!empty($changes['publishedPath']['from']))
+    {
+      PathHelper::removePath($changes['publishedPath']['from'], ContentController::class);
+    }
+    PathHelper::setPath($page->publishedPath, ContentController::class, new ParameterBag(['pageId' => $page->id]));
+
+    return $this->getEdit();
   }
 }

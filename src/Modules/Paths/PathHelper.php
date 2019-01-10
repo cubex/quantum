@@ -20,8 +20,7 @@ class PathHelper
 
   public static function setPath($path, $handlerModule, ParameterBag $handlerOptions)
   {
-    $pathObj = new Path();
-    $pathObj->path = $path;
+    $pathObj = Path::loadOrNew($path);
     $pathObj->handlerModule = $handlerModule;
     $pathObj->handlerOptions = $handlerOptions;
     $pathObj->save();
@@ -30,5 +29,13 @@ class PathHelper
   public static function getPath($path)
   {
     return Path::loadOneWhere(EqualPredicate::create('path', $path));
+  }
+
+  public static function removePath($path, $handlerModule)
+  {
+    Path::collection(
+      EqualPredicate::create('path', $path),
+      EqualPredicate::create('handlerModule', $handlerModule)
+    )->delete();
   }
 }

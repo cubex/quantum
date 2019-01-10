@@ -27,7 +27,7 @@ class ContentController extends QuantumBaseController implements QuantumFrontend
   public function processDefault()
   {
     $page = Page::loadById($this->_options->get('pageId'));
-    $content = PageContent::loadById([$page->id, $page->publishedVersion]);
+    $content = PageContent::loadById($page->id, $page->publishedVersion);
 
     if($content->theme)
     {

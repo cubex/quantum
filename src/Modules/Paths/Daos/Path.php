@@ -1,15 +1,22 @@
 <?php
 namespace Cubex\Quantum\Modules\Paths\Daos;
 
-use Cubex\Quantum\Base\Daos\QuantumQlDao;
+use Packaged\Dal\Ql\QlDao;
 use Symfony\Component\HttpFoundation\ParameterBag;
 
-class Path extends QuantumQlDao
+class Path extends QlDao
 {
+  protected $_dataStoreName = 'quantum_sql';
+
   public $path;
 
   public $handlerModule;
   public $handlerOptions;
+
+  public function getDaoIDProperties()
+  {
+    return ['path'];
+  }
 
   protected function _configure()
   {
