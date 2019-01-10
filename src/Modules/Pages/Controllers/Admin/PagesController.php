@@ -19,6 +19,7 @@ use Packaged\Glimpse\Tags\Table\TableHead;
 use Packaged\Glimpse\Tags\Table\TableRow;
 use Packaged\Glimpse\Tags\Text\StrongText;
 use Packaged\QueryBuilder\Predicate\EqualPredicate;
+use Packaged\SafeHtml\ISafeHtmlProducer;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 
 class PagesController extends QuantumAdminController
@@ -98,23 +99,13 @@ class PagesController extends QuantumAdminController
       ]
     );
 
-    // version history
-    $versionList = OrderedList::create();
-    $versions = PageContent::each(EqualPredicate::create('pageId', $page->id));
-    foreach($versions as $version)
-    {
-      $versionList->addItem(
-        ListItem::create(
-          Link::create(
-            $this->_buildModuleUrl($page->id, $version->id),
-            '[' . date('Y-m-d H:i:s', $version->createdTime) . '] ' . $version->title
-            . ' (' . strlen($version->content) . ' bytes)'
-          )
-        )
-      );
-    }
-
-    return Div::create([$form, StrongText::create('Versions'), $versionList]);
+    return Div::create(
+      [
+        $form,
+        StrongText::create('Versions'),
+        $this->_getVersionList($page),
+      ]
+    );
   }
 
   public function postEdit()
@@ -172,5 +163,30 @@ class PagesController extends QuantumAdminController
       $content->pageId = $page->id;
     }
     return $content;
+  }
+
+  /**
+   * @param Page $page
+   *
+   * @return OrderedList
+   */
+  protected function _getVersionList(Page $page): ISafeHtmlProducer
+  {
+    // version history
+    $versionList = OrderedList::create();
+    $versions = PageContent::each(EqualPredicate::create('pageId', $page->id));
+    foreach($versions as $version)
+    {
+      $versionList->addItem(
+        ListItem::create(
+          Link::create(
+            $this->_buildModuleUrl($page->id, $version->id),
+            '[' . date('Y-m-d H:i:s', $version->createdTime) . '] ' . $version->title
+            . ' (' . strlen($version->content) . ' bytes)'
+          )
+        )
+      );
+    }
+    return $versionList;
   }
 }
