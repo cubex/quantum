@@ -4,25 +4,22 @@ namespace Cubex\Quantum\Modules\Pages\Controllers\Admin;
 use Cubex\Quantum\Base\Components\Input\TextInput;
 use Cubex\Quantum\Base\Controllers\QuantumAdminController;
 use Cubex\Quantum\Modules\Pages\Components\CkEditor\CkEditorComponent;
-use Cubex\Quantum\Modules\Pages\Components\Editor\EditorComponent;
+use Cubex\Quantum\Modules\Pages\Components\EditorIframe\EditorIframeComponent;
 use Cubex\Quantum\Modules\Pages\Daos\Page;
 use Cubex\Quantum\Themes\NoTheme\NoTheme;
-use Packaged\Glimpse\Tags\Div;
+use Packaged\Glimpse\Core\HtmlTag;
 use Packaged\Glimpse\Tags\Link;
 use Packaged\Glimpse\Tags\Table\Table;
 use Packaged\Glimpse\Tags\Table\TableCell;
 use Packaged\Glimpse\Tags\Table\TableHead;
 use Packaged\Glimpse\Tags\Table\TableRow;
-use Packaged\Http\Response;
 
 class PagesController extends QuantumAdminController
 {
   public function getRoutes()
   {
     return [
-      self::route('editor/{pageId@num}/save', 'save'),
-      self::route('editor/{pageId@num}/load', 'load'),
-      self::route('editor/{pageId@num}', 'editor'),
+      self::route('editor/{pageId@num}', 'contentEditor'),
       self::route('{pageId@num}', 'edit'),
       self::route('', 'list'),
     ];
@@ -60,11 +57,18 @@ class PagesController extends QuantumAdminController
     $table->appendContent(TableRow::create()->appendContent(TableCell::collection(['ID', $page->id])));
     $table->appendContent(
       TableRow::create()->appendContent(
+        TableCell::collection(['Path', TextInput::create('path', '')])
+      )
+    );
+    $table->appendContent(
+      TableRow::create()->appendContent(
         TableCell::collection(['Title', TextInput::create('title', $page->title)])
       )
     );
 
-    return Div::create(
+    return HtmlTag::createTag(
+      'form',
+      ['action' => $this->_buildModuleUrl($pageId), 'method' => 'post'],
       [
         $table,
         EditorIframeComponent::create(
@@ -77,24 +81,22 @@ class PagesController extends QuantumAdminController
     );
   }
 
-  public function getEditor()
+  public function postEdit()
+  {
+    // todo: CSRF
+    $pageId = $this->getContext()->routeData()->get('pageId');
+
+    $page = Page::loadById($pageId);
+    $page->path = $this->getRequest()->get('path');
+    $page->title = $this->getRequest()->get('title');
+    $page->content = $this->getRequest()->get('content');
+    $page->save();
+    return $this->getEdit();
+  }
+
+  public function getContentEditor()
   {
     $this->setTheme(new NoTheme());
     return CkEditorComponent::create();
-  }
-
-  public function postSave()
-  {
-    $pageId = $this->getContext()->routeData()->get('pageId');
-    $page = Page::loadById($pageId);
-    $page->content = $this->getRequest()->get('data');
-    $page->save();
-  }
-
-  public function getLoad()
-  {
-    $pageId = $this->getContext()->routeData()->get('pageId');
-    $page = Page::loadById($pageId);
-    return Response::create($page->content);
   }
 }
