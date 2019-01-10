@@ -57,7 +57,7 @@ class PagesController extends QuantumAdminController
     $table->appendContent(TableRow::create()->appendContent(TableCell::collection(['ID', $page->id])));
     $table->appendContent(
       TableRow::create()->appendContent(
-        TableCell::collection(['Path', TextInput::create('path', '')])
+        TableCell::collection(['Path', TextInput::create('path', $page->path)])
       )
     );
     $table->appendContent(
