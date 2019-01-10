@@ -26,7 +26,7 @@ abstract class QuantumQlDao extends QlDao
   {
     if($this->hasChanges())
     {
-      $this->updatedTime = time();
+      $this->createdTime = $this->updatedTime = time();
     }
     return parent::save();
   }

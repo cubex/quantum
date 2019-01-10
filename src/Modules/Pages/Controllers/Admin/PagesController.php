@@ -9,11 +9,15 @@ use Cubex\Quantum\Modules\Pages\Daos\Page;
 use Cubex\Quantum\Modules\Pages\Daos\PageContent;
 use Cubex\Quantum\Themes\NoTheme\NoTheme;
 use Packaged\Glimpse\Core\HtmlTag;
+use Packaged\Glimpse\Tags\Div;
 use Packaged\Glimpse\Tags\Link;
+use Packaged\Glimpse\Tags\Lists\ListItem;
+use Packaged\Glimpse\Tags\Lists\OrderedList;
 use Packaged\Glimpse\Tags\Table\Table;
 use Packaged\Glimpse\Tags\Table\TableCell;
 use Packaged\Glimpse\Tags\Table\TableHead;
 use Packaged\Glimpse\Tags\Table\TableRow;
+use Packaged\Glimpse\Tags\Text\StrongText;
 use Packaged\QueryBuilder\Predicate\EqualPredicate;
 
 class PagesController extends QuantumAdminController
@@ -22,6 +26,7 @@ class PagesController extends QuantumAdminController
   {
     return [
       self::route('editor/{pageId@num}', 'contentEditor'),
+      self::route('{pageId@num}/{version@num}', 'edit'),
       self::route('{pageId@num}', 'edit'),
       self::route('', 'list'),
     ];
@@ -40,7 +45,7 @@ class PagesController extends QuantumAdminController
     /** @var Page $page */
     foreach($pages as $page)
     {
-      $content = $this->_getCurrentContent($page);
+      $content = $this->_getPageContent($page);
 
       $table->appendContent($row = TableRow::create());
       $row->appendContent(
@@ -57,7 +62,7 @@ class PagesController extends QuantumAdminController
     $this->_applyDefaultMenu();
 
     $page = Page::loadById($this->getContext()->routeData()->get('pageId'));
-    $content = $this->_getCurrentContent($page);
+    $content = $this->_getPageContent($page, $this->getContext()->routeData()->get('version'));
 
     $table = Table::create();
     $table->appendContent(TableRow::create()->appendContent(TableCell::collection(['ID', $page->id])));
@@ -68,11 +73,16 @@ class PagesController extends QuantumAdminController
     );
     $table->appendContent(
       TableRow::create()->appendContent(
+        TableCell::collection(['Version', $content->id])
+      )
+    );
+    $table->appendContent(
+      TableRow::create()->appendContent(
         TableCell::collection(['Title', TextInput::create('title', $content->title)])
       )
     );
 
-    return HtmlTag::createTag(
+    $form = HtmlTag::createTag(
       'form',
       ['action' => $this->_buildModuleUrl($page->id), 'method' => 'post'],
       [
@@ -85,6 +95,24 @@ class PagesController extends QuantumAdminController
         HtmlTag::createTag('button', [], 'Submit'),
       ]
     );
+
+    // version history
+    $versionList = OrderedList::create();
+    $versions = PageContent::each(EqualPredicate::create('pageId', $page->id));
+    foreach($versions as $version)
+    {
+      $versionList->addItem(
+        ListItem::create(
+          Link::create(
+            $this->_buildModuleUrl($page->id, $version->id),
+            '[' . date('Y-m-d H:i:s', $version->createdTime) . '] ' . $version->title
+            . ' (' . strlen($version->content) . ' bytes)'
+          )
+        )
+      );
+    }
+
+    return Div::create([$form, StrongText::create('Versions'), $versionList]);
   }
 
   public function postEdit()
@@ -96,7 +124,7 @@ class PagesController extends QuantumAdminController
     $page->path = $this->getRequest()->get('path');
     $page->save();
 
-    $content = $this->_getCurrentContent($page);
+    $content = $this->_getPageContent($page);
     $content->title = $this->getRequest()->get('title');
     $content->content = $this->getRequest()->get('content');
     $content->save();
@@ -110,17 +138,19 @@ class PagesController extends QuantumAdminController
   }
 
   /**
-   * @param Page $page
+   * @param Page   $page
+   * @param string $version Leave empty for current published version, or latest version if not yet published
    *
    * @return PageContent
    */
-  private function _getCurrentContent(Page $page)
+  private function _getPageContent(Page $page, $version = '')
   {
-    if($page->publishedVersion)
+    $version = $version ?: $page->publishedVersion;
+    if($version)
     {
       $content = PageContent::collection(
         EqualPredicate::create('pageId', $page->id),
-        EqualPredicate::create('id', $page->publishedVersion)
+        EqualPredicate::create('id', $version)
       )->first();
     }
     else
