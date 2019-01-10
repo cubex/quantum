@@ -5,6 +5,8 @@ use Cubex\Quantum\Base\Daos\QuantumQlDao;
 
 class Page extends QuantumQlDao
 {
+  public $path;
+
   public $title;
   public $content;
 

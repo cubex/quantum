@@ -2,6 +2,7 @@
 namespace Cubex\Quantum\Modules\Paths\Controllers;
 
 use Cubex\Quantum\Base\Controllers\QuantumBaseController;
+use Cubex\Quantum\Base\Interfaces\QuantumFrontendHandler;
 use Cubex\Quantum\Modules\Paths\Daos\Path;
 
 class PathRouteController extends QuantumBaseController
@@ -13,17 +14,22 @@ class PathRouteController extends QuantumBaseController
 
   public function processDefault()
   {
-    $page = Path::loadOneWhere(
+    $path = Path::loadOneWhere(
       [
-        'path'      => $this->getRequest()->path(),
-        'published' => true,
+        'path' => $this->getRequest()->path(),
       ]
     );
-    if(!$page)
+    if(!$path)
     {
       throw new \Exception('Page Not Found', 404);
     }
 
-    return $page->handler;
+    // defer to specified page handler
+    $module = new $path->handlerModule();
+    if($module instanceof QuantumFrontendHandler)
+    {
+      $module->setOptions($path->handlerOptions);
+    }
+    return $module;
   }
 }

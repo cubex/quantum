@@ -8,6 +8,7 @@ use Cubex\Quantum\Base\Controllers\FrontendController;
 use Cubex\Quantum\Base\Interfaces\QuantumAware;
 use Cubex\Quantum\Base\Interfaces\QuantumModule;
 use Cubex\Quantum\Modules\Pages\PagesModule;
+use Cubex\Quantum\Modules\Paths\Controllers\PathRouteController;
 use Cubex\Quantum\Modules\Paths\PathsModule;
 use Cubex\Quantum\Themes\Admin\AdminTheme;
 use Cubex\Quantum\Themes\BaseTheme;
@@ -40,7 +41,7 @@ abstract class QuantumProject
 
   public function contentHandler()
   {
-    return ContentController::class;
+    return PathRouteController::class;
   }
 
   public function getAdminTheme(): BaseTheme
