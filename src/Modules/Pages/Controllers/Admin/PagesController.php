@@ -19,6 +19,7 @@ use Packaged\Glimpse\Tags\Table\TableHead;
 use Packaged\Glimpse\Tags\Table\TableRow;
 use Packaged\Glimpse\Tags\Text\StrongText;
 use Packaged\QueryBuilder\Predicate\EqualPredicate;
+use Symfony\Component\HttpFoundation\RedirectResponse;
 
 class PagesController extends QuantumAdminController
 {
@@ -62,7 +63,8 @@ class PagesController extends QuantumAdminController
     $this->_applyDefaultMenu();
 
     $page = Page::loadById($this->getContext()->routeData()->get('pageId'));
-    $content = $this->_getPageContent($page, $this->getContext()->routeData()->get('version'));
+    $version = $this->getContext()->routeData()->get('version');
+    $content = $this->_getPageContent($page, $version);
 
     $table = Table::create();
     $table->appendContent(TableRow::create()->appendContent(TableCell::collection(['ID', $page->id])));
@@ -84,7 +86,7 @@ class PagesController extends QuantumAdminController
 
     $form = HtmlTag::createTag(
       'form',
-      ['action' => $this->_buildModuleUrl($page->id), 'method' => 'post'],
+      ['action' => $this->_buildModuleUrl($page->id, $version), 'method' => 'post'],
       [
         $table,
         EditorIframeComponent::create(
@@ -124,10 +126,15 @@ class PagesController extends QuantumAdminController
     $page->path = $this->getRequest()->get('path');
     $page->save();
 
-    $content = $this->_getPageContent($page);
+    $content = $this->_getPageContent($page, $this->getContext()->routeData()->get('version'));
     $content->title = $this->getRequest()->get('title');
     $content->content = $this->getRequest()->get('content');
-    $content->save();
+    if($content->save())
+    {
+      // contents changed, redirect to new edit url
+      return RedirectResponse::create($this->_buildModuleUrl($page->id));
+    }
+    // no changes, just show same page
     return $this->getEdit();
   }
 
