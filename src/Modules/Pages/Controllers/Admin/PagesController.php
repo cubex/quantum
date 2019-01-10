@@ -6,6 +6,7 @@ use Cubex\Quantum\Base\Controllers\QuantumAdminController;
 use Cubex\Quantum\Modules\Pages\Components\CkEditor\CkEditorComponent;
 use Cubex\Quantum\Modules\Pages\Components\EditorIframe\EditorIframeComponent;
 use Cubex\Quantum\Modules\Pages\Daos\Page;
+use Cubex\Quantum\Modules\Pages\Daos\PageContent;
 use Cubex\Quantum\Themes\NoTheme\NoTheme;
 use Packaged\Glimpse\Core\HtmlTag;
 use Packaged\Glimpse\Tags\Link;
@@ -13,6 +14,7 @@ use Packaged\Glimpse\Tags\Table\Table;
 use Packaged\Glimpse\Tags\Table\TableCell;
 use Packaged\Glimpse\Tags\Table\TableHead;
 use Packaged\Glimpse\Tags\Table\TableRow;
+use Packaged\QueryBuilder\Predicate\EqualPredicate;
 
 class PagesController extends QuantumAdminController
 {
@@ -38,9 +40,13 @@ class PagesController extends QuantumAdminController
     /** @var Page $page */
     foreach($pages as $page)
     {
+      $content = $this->_getCurrentContent($page);
+
       $table->appendContent($row = TableRow::create());
       $row->appendContent(
-        TableCell::collection([$page->id, Link::create($this->_buildModuleUrl($page->id), $page->title)])
+        TableCell::collection(
+          [$page->id, Link::create($this->_buildModuleUrl($page->id), $content->title ?: '- No Title -')]
+        )
       );
     }
     return $table;
@@ -50,8 +56,8 @@ class PagesController extends QuantumAdminController
   {
     $this->_applyDefaultMenu();
 
-    $pageId = $this->getContext()->routeData()->get('pageId');
-    $page = Page::loadById($pageId);
+    $page = Page::loadById($this->getContext()->routeData()->get('pageId'));
+    $content = $this->_getCurrentContent($page);
 
     $table = Table::create();
     $table->appendContent(TableRow::create()->appendContent(TableCell::collection(['ID', $page->id])));
@@ -62,18 +68,18 @@ class PagesController extends QuantumAdminController
     );
     $table->appendContent(
       TableRow::create()->appendContent(
-        TableCell::collection(['Title', TextInput::create('title', $page->title)])
+        TableCell::collection(['Title', TextInput::create('title', $content->title)])
       )
     );
 
     return HtmlTag::createTag(
       'form',
-      ['action' => $this->_buildModuleUrl($pageId), 'method' => 'post'],
+      ['action' => $this->_buildModuleUrl($page->id), 'method' => 'post'],
       [
         $table,
         EditorIframeComponent::create(
-          $this->_buildModuleUrl('editor', $pageId),
-          HtmlTag::createTag('textarea')->setContent($page->content)
+          $this->_buildModuleUrl('editor', $page->id),
+          HtmlTag::createTag('textarea')->setContent($content->content)
             ->setAttributes(['name' => 'content', 'style' => 'display:none'])
         ),
         HtmlTag::createTag('button', [], 'Submit'),
@@ -88,9 +94,12 @@ class PagesController extends QuantumAdminController
 
     $page = Page::loadById($pageId);
     $page->path = $this->getRequest()->get('path');
-    $page->title = $this->getRequest()->get('title');
-    $page->content = $this->getRequest()->get('content');
     $page->save();
+
+    $content = $this->_getCurrentContent($page);
+    $content->title = $this->getRequest()->get('title');
+    $content->content = $this->getRequest()->get('content');
+    $content->save();
     return $this->getEdit();
   }
 
@@ -98,5 +107,33 @@ class PagesController extends QuantumAdminController
   {
     $this->setTheme(new NoTheme());
     return CkEditorComponent::create();
+  }
+
+  /**
+   * @param Page $page
+   *
+   * @return PageContent
+   */
+  private function _getCurrentContent(Page $page)
+  {
+    if($page->publishedVersion)
+    {
+      $content = PageContent::collection(
+        EqualPredicate::create('pageId', $page->id),
+        EqualPredicate::create('id', $page->publishedVersion)
+      )->first();
+    }
+    else
+    {
+      $content = PageContent::collection(EqualPredicate::create('pageId', $page->id))
+        ->orderBy(['id' => 'DESC'])
+        ->first();
+    }
+    if(!$content)
+    {
+      $content = new PageContent();
+      $content->pageId = $page->id;
+    }
+    return $content;
   }
 }

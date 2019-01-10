@@ -28,6 +28,6 @@ abstract class QuantumQlDao extends QlDao
     {
       $this->updatedTime = time();
     }
-    parent::save();
+    return parent::save();
   }
 }
