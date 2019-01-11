@@ -1,12 +1,19 @@
+
+:root {
+  --dark-blue-color: #323a45;
+  --green-accent-color: #8cc63f;
+}
+
 body {
   font-family: Lato, Roboto, Helvetica, sans-serif;
+  color: var(--dark-blue-color);
 }
 
 .panel {
   background: #f9f9f9;
 }
 
-.panel-header { line-height: 52px; background: #323a45; border-top-left-radius: 5px; border-top-right-radius: 5px; padding: 0 3%; font-size: 16px; color: white; margin: 0; }
+.panel-header { line-height: 52px; background: var(--dark-blue-color); border-top-left-radius: 5px; border-top-right-radius: 5px; padding: 0 3%; font-size: 16px; color: white; margin: 0; }
 
 .panel-header h1 {
   margin: 0;
@@ -27,10 +34,24 @@ table.datalist td {
   padding: 14px 10px;
 }
 
+a:hover {
+  color: var(--green-accent-color);
+}
+
+button[disabled] {
+  cursor: default;
+}
+
+button {
+  cursor: pointer;
+}
+
 
 /*
- green: #8CC63F
-*/
+---- old --------------------------------------------------
+ */
+
+
 html { height: 100%; }
 
 body { text-align: left !important; text-align: center; margin: 0; font-size: 16px; background: #eaedf1; min-width: 100%; min-height: 100%; max-width: 100%; display: inline-block; }
@@ -45,9 +66,9 @@ body > header { height: 52px; background: #323a45 url(images/ucore-emboss.png) 1
 
 header a { color: #ff5900; }
 
-header .icon-user { color: #8cc63f; }
+header .icon-user { color: var(--green-accent-color); }
 
-h2 { background: white; color: #8cc63f; font-size: 16px; margin: 0; padding: 0 40px; line-height: 52px; }
+h2 { background: white; color: var(--green-accent-color); font-size: 16px; margin: 0; padding: 0 40px; line-height: 52px; }
 
 #contentWrap { position: relative; margin-top: 26px; }
 
@@ -55,7 +76,6 @@ h2 { background: white; color: #8cc63f; font-size: 16px; margin: 0; padding: 0 4
 
 a { color: #5e6d81; text-decoration: none }
 
-a:hover { color: #8CC63F }
 
 a.ui-state-hover:hover { color: #333; }
 
@@ -67,11 +87,11 @@ nav ul ul { display: none; }
 
 nav a { line-height: 18px; color: #9ea7b3; display: block; padding: 17px 5px 17px 44px; margin-bottom: 1px; background: white; }
 
-nav a:hover { background-color: #8cc63f; color: white; }
+nav a:hover { background-color: var(--green-accent-color); color: white; }
 
 nav li li a { background-color: #efefef; }
 
-nav li.active-link > a, nav li.active-link-parent > a { background-color: #8cc63f; color: white }
+nav li.active-link > a, nav li.active-link-parent > a { background-color: var(--green-accent-color); color: white }
 
 nav li.active-link ul { display: block; }
 
@@ -109,7 +129,7 @@ nav li._modlinks_uemailtemplatelist a:before { content: "\e81b"; }
 
 .module-container h2 { position: relative; white-space: nowrap; padding: 0 20px; }
 
-.module-container h1:before { speak: none; font-size: 18px; font-family: ucore-symbols; font-weight: normal; position: relative; color: #8cc63f; text-align: center; line-height: 52px; padding-right: 10px; }
+.module-container h1:before { speak: none; font-size: 18px; font-family: ucore-symbols; font-weight: normal; position: relative; color: var(--green-accent-color); text-align: center; line-height: 52px; padding-right: 10px; }
 
 .module-container.modOpts h1:before { content: "\e806"; }
 
@@ -147,15 +167,15 @@ ul.pagination li.next a:after { content: "\e827"; speak: none; font-family: ucor
 
 .footer { text-align: right; font-size: 12px; margin: 20px 10px; }
 
-.footer a { color: #8cc63f }
+.footer a { color: var(--green-accent-color) }
 
-th.sortable.sort-down:before { content: "\e824"; speak: none; font-size: 18px; font-family: ucore-symbols; font-weight: normal; color: #8cc63f; padding-right: 7px; }
+th.sortable.sort-down:before { content: "\e824"; speak: none; font-size: 18px; font-family: ucore-symbols; font-weight: normal; color: var(--green-accent-color); padding-right: 7px; }
 
-th.sortable.sort-up:before { content: "\e825"; speak: none; font-size: 18px; font-family: ucore-symbols; font-weight: normal; color: #8cc63f; padding-right: 7px; }
+th.sortable.sort-up:before { content: "\e825"; speak: none; font-size: 18px; font-family: ucore-symbols; font-weight: normal; color: var(--green-accent-color); padding-right: 7px; }
 
 .ui-combobox .ui-combobox-toggle { border-left: 1px solid #aaa; }
 
-.ui-combobox .ui-combobox-toggle:before { content: "\e824"; font-size: 1.1em; color: #8cc63f; font-family: "ucore-symbols"; }
+.ui-combobox .ui-combobox-toggle:before { content: "\e824"; font-size: 1.1em; color: var(--green-accent-color); font-family: "ucore-symbols"; }
 
 input, select, textarea, .inputtype,
 input.inputtype, select.inputtype, textarea.inputtype, div.inputtype { margin: 0; padding: 6px; border: 1px solid #5e6d81; background: white; color: #362B36; width: 300px; height: 35px; line-height: 21px; font-size: 1em; font-family: Lato; box-sizing: border-box; }
@@ -222,11 +242,11 @@ td.uFilters .inputtype.select2-container a.select2-choice .select2-arrow { displ
 
 .new-item { visibility: hidden; display: inline-block; width: 1em; white-space: nowrap; }
 
-.new-item:before { content: "\e816"; speak: none; font-size: inherit; font-family: ucore-symbols; font-weight: normal; color: #8cc63f; visibility: visible; }
+.new-item:before { content: "\e816"; speak: none; font-size: inherit; font-family: ucore-symbols; font-weight: normal; color: var(--green-accent-color); visibility: visible; }
 
 .export { visibility: hidden; display: inline-block; width: 1em; white-space: nowrap; }
 
-.export:before { content: "\e817"; speak: none; font-size: inherit; font-family: ucore-symbols; font-weight: normal; color: #8cc63f; visibility: visible; }
+.export:before { content: "\e817"; speak: none; font-size: inherit; font-family: ucore-symbols; font-weight: normal; color: var(--green-accent-color); visibility: visible; }
 
 nav li {
   transition: 0.15s;
@@ -316,7 +336,7 @@ nav li {
 
   .mobile { display: initial; }
 
-  nav .icon-menu { position: absolute; font-size: 14px; top: 0; right: -42px; width: 42px; height: 52px; line-height: 52px; background: #323a45; color: #8cc63f; text-align: center; border-right: 1px solid #8cc63f; }
+  nav .icon-menu { position: absolute; font-size: 14px; top: 0; right: -42px; width: 42px; height: 52px; line-height: 52px; background: #323a45; color: var(--green-accent-color); text-align: center; border-right: 1px solid var(--green-accent-color); }
 
   .layoutListSection td, .layoutListSection th, .layoutDetailSection td { padding: 5px; }
 
