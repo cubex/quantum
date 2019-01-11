@@ -17,7 +17,7 @@
     "packaged/dal": "^1.7"
   },
   "require-dev": {
-    "satooshi/php-coveralls": "2.0.0",
+    "php-coveralls/php-coveralls": "2.1.0",
     "phpunit/phpunit": "6.5.5",
     "filp/whoops": "^2.3"
   },

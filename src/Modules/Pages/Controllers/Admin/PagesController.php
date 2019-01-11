@@ -1,7 +1,12 @@
 <?php
 namespace Cubex\Quantum\Modules\Pages\Controllers\Admin;
 
+use Cubex\Quantum\Base\Components\DataList\DataFieldSchema;
+use Cubex\Quantum\Base\Components\DataList\DataList;
+use Cubex\Quantum\Base\Components\DataList\DataSchema;
 use Cubex\Quantum\Base\Components\Input\TextInput;
+use Cubex\Quantum\Base\Components\Panel\Panel;
+use Cubex\Quantum\Base\Components\Panel\PanelHeader;
 use Cubex\Quantum\Base\Controllers\QuantumAdminController;
 use Cubex\Quantum\Modules\Pages\Components\CkEditor\CkEditorComponent;
 use Cubex\Quantum\Modules\Pages\Components\EditorIframe\EditorIframeComponent;
@@ -17,7 +22,6 @@ use Packaged\Glimpse\Tags\Lists\ListItem;
 use Packaged\Glimpse\Tags\Lists\OrderedList;
 use Packaged\Glimpse\Tags\Table\Table;
 use Packaged\Glimpse\Tags\Table\TableCell;
-use Packaged\Glimpse\Tags\Table\TableHead;
 use Packaged\Glimpse\Tags\Table\TableRow;
 use Packaged\Glimpse\Tags\Text\StrongText;
 use Packaged\QueryBuilder\Predicate\EqualPredicate;
@@ -31,9 +35,10 @@ class PagesController extends QuantumAdminController
   {
     return [
       self::route('publish/{pageId@num}/{version@num}', 'publish'),
-      self::route('editor/{pageId@num}', 'contentEditor'),
       self::route('{pageId@num}/{version@num}', 'edit'),
       self::route('{pageId@num}', 'edit'),
+      self::route('editor', 'contentEditor'),
+      self::route('new', 'edit'),
       self::route('', 'list'),
     ];
   }
@@ -45,31 +50,48 @@ class PagesController extends QuantumAdminController
     /** @var  $pages */
     $pages = Page::collection()->limitWithOffset(0, 10);
 
-    $table = Table::create();
-    $table->appendContent($row = TableRow::create());
-    $row->appendContent(TableHead::create()->appendContent(TableCell::collection(['ID', 'Title'])));
+    $data = [];
     /** @var Page $page */
     foreach($pages as $page)
     {
-      $content = $this->_getPageContent($page);
-
-      $table->appendContent($row = TableRow::create());
-      $row->appendContent(
-        TableCell::collection(
-          [$page->id, Link::create($this->_buildModuleUrl($page->id), $content->title ?: '- No Title -')]
-        )
-      );
+      $data[] = [
+        'page'    => $page->getDaoPropertyData(),
+        'content' => $this->_getPageContent($page)->getDaoPropertyData(),
+        'actions' => [Link::create($this->_buildModuleUrl($page->id), 'Edit')],
+      ];
     }
-    return $table;
+
+    $schema = DataSchema::create($data)
+      ->addField(DataFieldSchema::create('actions', '')->addClass('shrink'))
+      //->addField(DataFieldSchema::create('page.id', 'ID')->addClass('shrink'))
+      ->addField(DataFieldSchema::create('page.path', 'Path'))
+      //->addField(DataFieldSchema::create('page.publishedPath', 'Published'))
+      ->addField(DataFieldSchema::create('content.title', 'Title'));
+
+    $header = PanelHeader::create('Pages')
+      ->addAction(Link::create($this->_buildModuleUrl('new'), 'New'));
+    return Panel::create(DataList::create($schema))->setHeader($header);
   }
 
   public function getEdit()
   {
     $this->_applyDefaultMenu();
 
-    $page = Page::loadById($this->getContext()->routeData()->get('pageId'));
+    $pageId = $this->getContext()->routeData()->get('pageId');
     $version = $this->getContext()->routeData()->get('version');
-    $content = $this->_getPageContent($page, $version);
+
+    if($pageId)
+    {
+      $page = Page::loadById($pageId);
+      $content = $this->_getPageContent($page, $version);
+      $postUrl = $this->_buildModuleUrl($page->id, $content->id);
+    }
+    else
+    {
+      $page = new Page();
+      $content = new PageContent();
+      $postUrl = $this->_buildModuleUrl('new');
+    }
 
     $table = Table::create();
     $table->appendContent(TableRow::create()->appendContent(TableCell::collection(['ID', $page->id])));
@@ -91,11 +113,11 @@ class PagesController extends QuantumAdminController
 
     $form = HtmlTag::createTag(
       'form',
-      ['action' => $this->_buildModuleUrl($page->id, $version), 'method' => 'post'],
+      ['action' => $postUrl, 'method' => 'post'],
       [
         $table,
         EditorIframeComponent::create(
-          $this->_buildModuleUrl('editor', $page->id),
+          $this->_buildModuleUrl('editor'),
           HtmlTag::createTag('textarea')->setContent($content->content)
             ->setAttributes(['name' => 'content', 'style' => 'display:none'])
         ),
@@ -117,11 +139,20 @@ class PagesController extends QuantumAdminController
     // todo: CSRF
     $pageId = $this->getContext()->routeData()->get('pageId');
 
-    $page = Page::loadById($pageId);
+    if($pageId)
+    {
+      $page = Page::loadById($pageId);
+      $content = $this->_getPageContent($page, $this->getContext()->routeData()->get('version'));
+    }
+    else
+    {
+      $page = new Page();
+      $content = new PageContent();
+    }
     $page->path = $this->getRequest()->get('path');
     $page->save();
 
-    $content = $this->_getPageContent($page, $this->getContext()->routeData()->get('version'));
+    $content->pageId = $page->id;
     $content->title = $this->getRequest()->get('title');
     $content->content = $this->getRequest()->get('content');
     if($content->save())
@@ -131,12 +162,6 @@ class PagesController extends QuantumAdminController
     }
     // no changes, just show same page
     return $this->getEdit();
-  }
-
-  public function getContentEditor()
-  {
-    $this->setTheme(new NoTheme());
-    return CkEditorComponent::create();
   }
 
   /**
@@ -222,5 +247,11 @@ class PagesController extends QuantumAdminController
     PathHelper::setPath($page->publishedPath, ContentController::class, new ParameterBag(['pageId' => $page->id]));
 
     return RedirectResponse::create($this->_buildModuleUrl($page->id));
+  }
+
+  public function getContentEditor()
+  {
+    $this->setTheme(new NoTheme());
+    return CkEditorComponent::create();
   }
 }

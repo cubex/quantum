@@ -1,23 +1,51 @@
+body {
+  font-family: Lato, Roboto, Helvetica, sans-serif;
+}
+
+.panel {
+  background: #f9f9f9;
+}
+
+.panel-header { line-height: 52px; background: #323a45; border-top-left-radius: 5px; border-top-right-radius: 5px; padding: 0 3%; font-size: 16px; color: white; margin: 0; }
+
+.panel-header h1 {
+  margin: 0;
+  font-size: 16px;
+}
+
+table.datalist {
+  border-spacing: 0;
+}
+
+table.datalist thead,
+table.datalist tbody tr:nth-child(2) {
+  background: #f0f0f0;
+}
+
+table.datalist th,
+table.datalist td {
+  padding: 5px 10px;
+}
+
+
 /*
  green: #8CC63F
 */
 html { height: 100%; }
 
-body { text-align: left !important; text-align: center; margin: 0; font-family: Lato; font-size: 16px; background: #eaedf1; min-width: 100%; min-height: 100%; max-width: 100%; display: inline-block; }
+body { text-align: left !important; text-align: center; margin: 0; font-size: 16px; background: #eaedf1; min-width: 100%; min-height: 100%; max-width: 100%; display: inline-block; }
 
 #wrap { width: 100%; margin: 0 auto; text-align: left; background: white; }
 
 header, nav, .module-container .linklist, h1, h2, h3 { font-weight: 700; }
 
-header { height: 52px; background: #323a45 url(images/ucore-emboss.png) 15px center no-repeat; color: white; text-align: right; line-height: 52px; font-size: 14px;
-  min-width:     100%; box-sizing: border-box; display: inline-block; padding-right: 20px;
+body > header { height: 52px; background: #323a45 url(images/ucore-emboss.png) 15px center no-repeat; color: white; text-align: right; line-height: 52px; font-size: 14px;
+  min-width: 100%; box-sizing: border-box; display: inline-block; padding-right: 20px;
 }
 
 header a { color: #ff5900; }
 
 header .icon-user { color: #8cc63f; }
-
-h1 { line-height: 52px; background: #323a45; border-top-left-radius: 5px; border-top-right-radius: 5px; padding: 0 40px; font-size: 16px; color: white; margin: 0; }
 
 h2 { background: white; color: #8cc63f; font-size: 16px; margin: 0; padding: 0 40px; line-height: 52px; }
 
@@ -201,17 +229,17 @@ td.uFilters .inputtype.select2-container a.select2-choice .select2-arrow { displ
 .export:before { content: "\e817"; speak: none; font-size: inherit; font-family: ucore-symbols; font-weight: normal; color: #8cc63f; visibility: visible; }
 
 nav li {
-  transition:         0.15s;
-  -moz-transition:    0.15s; /* Firefox 4 */
+  transition: 0.15s;
+  -moz-transition: 0.15s; /* Firefox 4 */
   -webkit-transition: 0.15s; /* Safari and Chrome */
-  -o-transition:      0.15s; /* Opera */
+  -o-transition: 0.15s; /* Opera */
 }
 
 .uWidgetPlaceholder {
   background-color: #ccc;
-  border:           1px solid #999;
-  border-radius:    10px;
-  padding:          5px;
+  border: 1px solid #999;
+  border-radius: 10px;
+  padding: 5px;
 }
 
 .uWidgetPlaceholder div.uWidgetHeader {

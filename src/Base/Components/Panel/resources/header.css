@@ -1,0 +1,12 @@
+header.panel-header {
+  display: flex;
+}
+
+header.panel-header h1 {
+  flex-grow: 1;
+}
+
+header.panel-header .panel-header--actions {
+  list-style: none;
+  margin: 0;
+}
