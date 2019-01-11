@@ -197,7 +197,7 @@ class PagesController extends QuantumAdminController
   /**
    * @param Page $page
    *
-   * @return OrderedList
+   * @return ISafeHtmlProducer
    */
   protected function _getVersionList(Page $page): ISafeHtmlProducer
   {
