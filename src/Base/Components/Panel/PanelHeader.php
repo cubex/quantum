@@ -4,7 +4,7 @@ namespace Cubex\Quantum\Base\Components\Panel;
 use Cubex\Ui\UiElement;
 use Packaged\Dispatch\Component\DispatchableComponent;
 use Packaged\Dispatch\ResourceManager;
-use Packaged\Glimpse\Core\HtmlTag;
+use Packaged\Glimpse\Core\CustomHtmlTag;
 use Packaged\Glimpse\Tags\Lists\UnorderedList;
 use Packaged\Glimpse\Tags\Text\HeadingOne;
 use Packaged\SafeHtml\ISafeHtmlProducer;
@@ -40,7 +40,7 @@ class PanelHeader extends UiElement implements DispatchableComponent
   {
     ResourceManager::component($this)->requireCss('header.css');
 
-    return HtmlTag::createTag(
+    return CustomHtmlTag::build(
       'header',
       [],
       [

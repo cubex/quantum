@@ -5,13 +5,19 @@ use Cubex\Ui\UiElement;
 use Packaged\Dispatch\Component\DispatchableComponent;
 use Packaged\Dispatch\ResourceManager;
 use Packaged\Glimpse\Core\HtmlTag;
-use Packaged\Glimpse\Tags\Div;
 
 class CkEditorComponent extends UiElement implements DispatchableComponent
 {
-  public static function create()
+  /**
+   * @var HtmlTag
+   */
+  protected $_input;
+
+  public static function create(HtmlTag $input)
   {
-    return new static();
+    $o = new static;
+    $o->_input = $input;
+    return $o;
   }
 
   public function getResourceDirectory()
@@ -22,22 +28,10 @@ class CkEditorComponent extends UiElement implements DispatchableComponent
   public function render(): string
   {
     $rm = ResourceManager::component($this);
-    $rm->requireJs('balloon/ckeditor.min.js');
-    $rm->requireCss('editor.css');
+    $rm->requireJs('widget/ckeditor.min.js');
     $rm->requireJs('ckeditor.js');
-    return HtmlTag::createTag(
-      'html',
-      [],
-      HtmlTag::createTag(
-        'body',
-        ['class' => 'loading'],
-        Div::create(
-          [
-            Div::create()->setId('content-editor'),
-            Div::create('WIDGETS')->setId('content-widgets'),
-          ]
-        )->setId('content-editor-wrapper')
-      )
-    );
+    $rm->requireCss('ckeditor.css');
+
+    return $this->_input->addClass('content-editor');
   }
 }

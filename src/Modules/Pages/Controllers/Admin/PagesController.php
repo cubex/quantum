@@ -8,14 +8,13 @@ use Cubex\Quantum\Base\Components\Input\TextInput;
 use Cubex\Quantum\Base\Components\Panel\Panel;
 use Cubex\Quantum\Base\Components\Panel\PanelHeader;
 use Cubex\Quantum\Base\Controllers\QuantumAdminController;
+use Cubex\Quantum\Modules\FileStore\FileStorageInterface;
 use Cubex\Quantum\Modules\Pages\Components\CkEditor\CkEditorComponent;
-use Cubex\Quantum\Modules\Pages\Components\EditorIframe\EditorIframeComponent;
 use Cubex\Quantum\Modules\Pages\Controllers\ContentController;
 use Cubex\Quantum\Modules\Pages\Daos\Page;
 use Cubex\Quantum\Modules\Pages\Daos\PageContent;
 use Cubex\Quantum\Modules\Paths\PathHelper;
-use Cubex\Quantum\Themes\NoTheme\NoTheme;
-use Packaged\Glimpse\Core\HtmlTag;
+use Packaged\Glimpse\Core\CustomHtmlTag;
 use Packaged\Glimpse\Tags\Div;
 use Packaged\Glimpse\Tags\Link;
 use Packaged\Glimpse\Tags\Lists\ListItem;
@@ -37,7 +36,6 @@ class PagesController extends QuantumAdminController
       self::route('publish/{pageId@num}/{version@num}', 'publish'),
       self::route('{pageId@num}/{version@num}', 'edit'),
       self::route('{pageId@num}', 'edit'),
-      self::route('editor', 'contentEditor'),
       self::route('new', 'edit'),
       self::route('', 'list'),
     ];
@@ -111,17 +109,16 @@ class PagesController extends QuantumAdminController
       )
     );
 
-    $form = HtmlTag::createTag(
+    $form = CustomHtmlTag::build(
       'form',
       ['action' => $postUrl, 'method' => 'post'],
       [
         $table,
-        EditorIframeComponent::create(
-          $this->_buildModuleUrl('editor'),
-          HtmlTag::createTag('textarea')->setContent($content->content)
-            ->setAttributes(['name' => 'content', 'style' => 'display:none'])
+        CkEditorComponent::create(
+          CustomHtmlTag::build('textarea')->setContent($content->content)
+            ->setAttributes(['name' => 'content'])
         ),
-        HtmlTag::createTag('button', [], 'Submit'),
+        CustomHtmlTag::build('button', [], 'Submit'),
       ]
     );
 
@@ -206,7 +203,7 @@ class PagesController extends QuantumAdminController
     $versions = PageContent::each(EqualPredicate::create('pageId', $page->id));
     foreach($versions as $version)
     {
-      $publishButton = HtmlTag::createTag('button', [], 'PUBLISH');
+      $publishButton = CustomHtmlTag::build('button', [], 'PUBLISH');
       $publishLink = Link::create(
         $this->_buildModuleUrl('publish', $page->id, $version->id),
         $publishButton
@@ -247,11 +244,5 @@ class PagesController extends QuantumAdminController
     PathHelper::setPath($page->publishedPath, ContentController::class, new ParameterBag(['pageId' => $page->id]));
 
     return RedirectResponse::create($this->_buildModuleUrl($page->id));
-  }
-
-  public function getContentEditor()
-  {
-    $this->setTheme(new NoTheme());
-    return CkEditorComponent::create();
   }
 }

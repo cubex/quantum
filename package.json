@@ -6,8 +6,6 @@
   "author": "Tom Kay <oridan82@gmail.com>",
   "license": "MIT",
   "dependencies": {
-    "@ckeditor/ckeditor5-build-balloon": "^11.2.0",
-    "grapesjs": "^0.14.50",
-    "grapesjs-preset-newsletter": "^0.2.20"
+    "@packaged-ui/ckwidgets": "^1.0.0"
   }
 }
