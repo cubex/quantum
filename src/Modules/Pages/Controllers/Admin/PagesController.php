@@ -33,12 +33,22 @@ class PagesController extends QuantumAdminController
   public function getRoutes()
   {
     return [
+      self::route('_image', 'image'),
       self::route('publish/{pageId@num}/{version@num}', 'publish'),
       self::route('{pageId@num}/{version@num}', 'edit'),
       self::route('{pageId@num}', 'edit'),
       self::route('new', 'edit'),
       self::route('', 'list'),
     ];
+  }
+
+  public function postImage()
+  {
+    $class = $this->getContext()->config()->getItem('upload', 'class');
+    /** @var FileStorageInterface $uploadClass */
+    $uploadClass = new $class();
+
+    $file = $this->getRequest()->files->get('upload');
   }
 
   public function getList()
@@ -155,7 +165,7 @@ class PagesController extends QuantumAdminController
     if($content->save())
     {
       // contents changed, redirect to new edit url
-      return RedirectResponse::create($this->_buildModuleUrl($page->id));
+      return RedirectResponse::create($this->_buildModuleUrl($page->id, $content->id));
     }
     // no changes, just show same page
     return $this->getEdit();
