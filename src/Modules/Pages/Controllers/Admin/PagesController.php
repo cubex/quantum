@@ -177,9 +177,8 @@ class PagesController extends QuantumAdminController
    *
    * @return PageContent
    */
-  private function _getPageContent(Page $page, $version = '')
+  private function _getPageContent(Page $page, $version = null)
   {
-    $version = $version ?: $page->publishedVersion;
     if($version)
     {
       $content = PageContent::collection(
