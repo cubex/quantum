@@ -7,6 +7,7 @@ use Cubex\Quantum\Base\Controllers\AdminController;
 use Cubex\Quantum\Base\Controllers\FrontendController;
 use Cubex\Quantum\Base\Interfaces\QuantumAware;
 use Cubex\Quantum\Base\Interfaces\QuantumModule;
+use Cubex\Quantum\Base\Uri\Uri;
 use Cubex\Quantum\Modules\Pages\PagesModule;
 use Cubex\Quantum\Modules\Paths\Controllers\PathRouteController;
 use Cubex\Quantum\Modules\Paths\PathsModule;
@@ -34,9 +35,9 @@ abstract class QuantumProject
    */
   private $_modules = [];
 
-  public function getAdminPath()
+  public function getAdminUri(): Uri
   {
-    return '/admin';
+    return Uri::create('/admin');
   }
 
   public function contentHandler()
@@ -159,10 +160,10 @@ abstract class QuantumProject
         return Dispatch::instance()->handle($c->getRequest());
       }
     );
-    $adminPath = $this->getAdminPath();
+    $adminPath = $this->getAdminUri();
     if($adminPath)
     {
-      $router->handle($this->getAdminPath(), new AdminController());
+      $router->handle((string)$adminPath, new AdminController());
     }
     $router->handle('/', new FrontendController());
     return $this->_cubex->handle($router, $send, $catch);

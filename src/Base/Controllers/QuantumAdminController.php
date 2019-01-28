@@ -12,7 +12,7 @@ abstract class QuantumAdminController extends QuantumBaseController
   {
     $theme = $this->getQuantum()->getAdminTheme();
     $theme->getMenu(AdminTheme::MENU_LEFT)->addItem(
-      QuantumMenuItem::create('Dashboard', Path::url($this->getQuantum()->getAdminPath()))
+      QuantumMenuItem::create('Dashboard', Path::url($this->getQuantum()->getAdminUri()))
     );
     return $theme;
   }
@@ -30,7 +30,7 @@ abstract class QuantumAdminController extends QuantumBaseController
       $this->getTheme()->getMenu(AdminTheme::MENU_LEFT)->addItem(
         QuantumMenuItem::create(
           $module->getName(),
-          Path::url($this->getQuantum()->getAdminPath(), $module->getVendor(), $module->getPackage())
+          Path::url($this->getQuantum()->getAdminUri(), $module->getVendor(), $module->getPackage())
         )
       );
     }
@@ -38,7 +38,7 @@ abstract class QuantumAdminController extends QuantumBaseController
 
   protected function _buildModuleUrl(...$parts)
   {
-    return Path::url($this->getQuantum()->getAdminPath(), $this->_getVendor(), $this->_getPackage(), ...$parts);
+    return Path::url($this->getQuantum()->getAdminUri(), $this->_getVendor(), $this->_getPackage(), ...$parts);
   }
 
   protected function _getVendor()
