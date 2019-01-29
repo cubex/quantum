@@ -35,7 +35,7 @@ abstract class QuantumProject
    */
   private $_modules = [];
 
-  public function getAdminUri(): Uri
+  public function getAdminUri(): ?Uri
   {
     return Uri::create('/admin');
   }
