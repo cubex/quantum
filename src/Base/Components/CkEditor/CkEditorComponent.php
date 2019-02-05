@@ -1,5 +1,5 @@
 <?php
-namespace Cubex\Quantum\Modules\Pages\Components\CkEditor;
+namespace Cubex\Quantum\Base\Components\CkEditor;
 
 use Cubex\Ui\UiElement;
 use Packaged\Dispatch\Component\DispatchableComponent;

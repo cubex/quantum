@@ -5,6 +5,6 @@
     "package.json"
   ],
   "dependencies": {
-    "@ckeditor/ckeditor5-build-balloon": "^11.2.0"
+    "@packaged-ui/ckwidgets": "^1.0"
   }
 }

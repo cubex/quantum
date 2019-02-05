@@ -13,7 +13,8 @@
   "require": {
     "cubex/framework": "^3.0.0-beta.1",
     "packaged/dispatch": "^2.0.0-beta.1",
-    "packaged/glimpse": "^2.1.0",
+    "packaged/glimpse": "^2.2",
+    "packaged/form": "2.4.0",
     "packaged/dal": "^1.7"
   },
   "require-dev": {

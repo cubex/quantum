@@ -4,12 +4,10 @@ namespace Cubex\Quantum\Modules\Pages\Controllers\Admin;
 use Cubex\Quantum\Base\Components\DataList\DataFieldSchema;
 use Cubex\Quantum\Base\Components\DataList\DataList;
 use Cubex\Quantum\Base\Components\DataList\DataSchema;
-use Cubex\Quantum\Base\Components\Input\TextInput;
 use Cubex\Quantum\Base\Components\Panel\Panel;
 use Cubex\Quantum\Base\Components\Panel\PanelHeader;
 use Cubex\Quantum\Base\Controllers\QuantumAdminController;
-use Cubex\Quantum\Modules\FileStore\FileStorageInterface;
-use Cubex\Quantum\Modules\Pages\Components\CkEditor\CkEditorComponent;
+use Cubex\Quantum\Modules\Pages\Controllers\Admin\Forms\PageForm;
 use Cubex\Quantum\Modules\Pages\Controllers\ContentController;
 use Cubex\Quantum\Modules\Pages\Daos\Page;
 use Cubex\Quantum\Modules\Pages\Daos\PageContent;
@@ -19,9 +17,6 @@ use Packaged\Glimpse\Tags\Div;
 use Packaged\Glimpse\Tags\Link;
 use Packaged\Glimpse\Tags\Lists\ListItem;
 use Packaged\Glimpse\Tags\Lists\OrderedList;
-use Packaged\Glimpse\Tags\Table\Table;
-use Packaged\Glimpse\Tags\Table\TableCell;
-use Packaged\Glimpse\Tags\Table\TableRow;
 use Packaged\Glimpse\Tags\Text\StrongText;
 use Packaged\QueryBuilder\Predicate\EqualPredicate;
 use Packaged\SafeHtml\ISafeHtmlProducer;
@@ -30,6 +25,8 @@ use Symfony\Component\HttpFoundation\RedirectResponse;
 
 class PagesController extends QuantumAdminController
 {
+  const SESSION_ID = '';
+
   public function getRoutes()
   {
     return [
@@ -101,36 +98,13 @@ class PagesController extends QuantumAdminController
       $postUrl = $this->_buildModuleUrl('new');
     }
 
-    $table = Table::create();
-    $table->appendContent(TableRow::create()->appendContent(TableCell::collection(['ID', $page->id])));
-    $table->appendContent(
-      TableRow::create()->appendContent(
-        TableCell::collection(['Path', TextInput::create('path', $page->path)])
-      )
-    );
-    $table->appendContent(
-      TableRow::create()->appendContent(
-        TableCell::collection(['Version', $content->id])
-      )
-    );
-    $table->appendContent(
-      TableRow::create()->appendContent(
-        TableCell::collection(['Title', TextInput::create('title', $content->title)])
-      )
-    );
-
-    $form = CustomHtmlTag::build(
-      'form',
-      ['action' => $postUrl, 'method' => 'post'],
-      [
-        $table,
-        CkEditorComponent::create(
-          CustomHtmlTag::build('textarea')->setContent($content->content)
-            ->setAttributes(['name' => 'content'])
-        ),
-        CustomHtmlTag::build('button', [], 'Submit'),
-      ]
-    );
+    $form = new PageForm(self::SESSION_ID);
+    $form->setAction($postUrl);
+    $form->id = $page->id;
+    $form->path = $page->path;
+    $form->version = $content->id;
+    $form->title = $content->title;
+    $form->content = $content->content;
 
     return Div::create(
       [
