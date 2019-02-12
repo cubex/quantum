@@ -8,10 +8,8 @@ class AdminController extends QuantumAdminController
 {
   public function getRoutes()
   {
-    $routes = [];
-    $routes[] = self::route('{vendor}/{package}', 'packageHandler');
-    $routes[] = self::route('', 'dashboard');
-    return $routes;
+    yield self::route('{vendor}/{package}', 'packageHandler');
+    return 'dashboard';
   }
 
   public function processPackageHandler()

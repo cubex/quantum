@@ -8,10 +8,8 @@ class FrontendController extends QuantumBaseController
 {
   public function getRoutes()
   {
-    $routes = [];
-    $routes[] = self::route('/_/{vendor}/{package}', 'packageHandler');
-    $routes[] = self::route('/', $this->getQuantum()->contentHandler());
-    return $routes;
+    yield self::route('/{vendor}/{package}', 'packageHandler');
+    return $this->getQuantum()->contentHandler();
   }
 
   public function processPackageHandler()

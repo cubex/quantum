@@ -29,14 +29,12 @@ class PagesController extends QuantumAdminController
 
   public function getRoutes()
   {
-    return [
-      self::route('_image', 'image'),
-      self::route('publish/{pageId@num}/{version@num}', 'publish'),
-      self::route('{pageId@num}/{version@num}', 'edit'),
-      self::route('{pageId@num}', 'edit'),
-      self::route('new', 'edit'),
-      self::route('', 'list'),
-    ];
+    yield  self::route('_image', 'image');
+    yield  self::route('publish/{pageId@num}/{version@num}', 'publish');
+    yield  self::route('{pageId@num}/{version@num}', 'edit');
+    yield  self::route('{pageId@num}', 'edit');
+    yield  self::route('new', 'edit');
+    return 'list';
   }
 
   public function postImage()

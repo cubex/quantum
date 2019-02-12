@@ -9,7 +9,7 @@ class PathRouteController extends QuantumBaseController
 {
   public function getRoutes()
   {
-    return [self::route('', 'default')];
+    return 'default';
   }
 
   public function processDefault()
