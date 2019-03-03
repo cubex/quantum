@@ -1,11 +1,7 @@
 <?php
 namespace Cubex\Quantum\Base\Components\Menu;
 
-use Packaged\Glimpse\Tags\Link;
-use Packaged\Glimpse\Tags\Lists\UnorderedList;
-use Packaged\Ui\Element;
-
-class QuantumMenu extends Element
+class QuantumMenu
 {
   /**
    * @var QuantumMenuItem[]
@@ -36,15 +32,5 @@ class QuantumMenu extends Element
   public function getItems()
   {
     return $this->_items;
-  }
-
-  public function render(): string
-  {
-    $return = UnorderedList::create();
-    foreach($this->_items as $item)
-    {
-      $return->addItem(Link::create($item->getUrl(), $item->getTitle()));
-    }
-    return $return;
   }
 }

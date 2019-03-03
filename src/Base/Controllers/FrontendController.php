@@ -2,7 +2,6 @@
 namespace Cubex\Quantum\Base\Controllers;
 
 use Cubex\Quantum\Base\Interfaces\QuantumModule;
-use Exception;
 
 class FrontendController extends QuantumBaseController
 {
@@ -21,6 +20,6 @@ class FrontendController extends QuantumBaseController
     {
       return $module->getFrontendHandler();
     }
-    throw new Exception("Fucked");
+    throw new \RuntimeException(self::ERROR_NO_ROUTE, 404);
   }
 }

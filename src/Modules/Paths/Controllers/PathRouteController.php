@@ -16,7 +16,7 @@ class PathRouteController extends QuantumBaseController
   {
     $path = Path::loadOneWhere(
       [
-        'path' => $this->getRequest()->path(),
+        'path' => $this->request()->path(),
       ]
     );
     if(!$path)

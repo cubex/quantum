@@ -15,6 +15,7 @@ abstract class QuantumBaseController extends Controller implements QuantumAware
 {
   use QuantumAwareTrait;
 
+  private $_pageTitle;
   private $_theme;
 
   /**
@@ -38,6 +39,17 @@ abstract class QuantumBaseController extends Controller implements QuantumAware
   protected function _createTheme(): BaseTheme
   {
     return $this->getQuantum()->getFrontendTheme();
+  }
+
+  protected function _setPageTitle(string $pageTitle)
+  {
+    $this->_pageTitle = $pageTitle;
+    return $this;
+  }
+
+  private function _getPageTitle(): string
+  {
+    return $this->_pageTitle ?: '';
   }
 
   protected function _init()
@@ -64,17 +76,10 @@ abstract class QuantumBaseController extends Controller implements QuantumAware
     {
       $obj->setQuantum($this->getQuantum());
     }
-    if($obj instanceof ISafeHtmlProducer)
-    {
-      $obj = $obj->produceSafeHTML()->getContent();
-    }
-    if($obj instanceof Renderable)
-    {
-      $obj = $obj->render();
-    }
-    if(is_string($obj))
+    if(is_string($obj) || $obj instanceof Renderable || $obj instanceof ISafeHtmlProducer)
     {
       $theme = $this->getTheme();
+      $theme->setPageTitle($this->_getPageTitle());
       $obj = $theme->setContent($obj);
     }
     return parent::_prepareResponse($c, $obj);

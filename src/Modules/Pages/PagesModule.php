@@ -5,12 +5,18 @@ use Cubex\Http\Handler;
 use Cubex\Quantum\Base\Interfaces\QuantumModule;
 use Cubex\Quantum\Modules\Pages\Controllers\Admin\PagesController;
 use Cubex\Quantum\Modules\Pages\Controllers\ContentController;
+use PackagedUi\FontAwesome\FaIcon;
 
 class PagesModule implements QuantumModule
 {
   public function getName($language = 'en'): string
   {
     return 'Pages';
+  }
+
+  public function getIcon(): string
+  {
+    return FaIcon::BOOK;
   }
 
   public function getVendor(): string

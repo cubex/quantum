@@ -1,25 +1,26 @@
 <?php
 namespace Cubex\Quantum\Modules\Pages\Controllers\Admin;
 
-use Cubex\Quantum\Base\Components\DataList\DataFieldSchema;
-use Cubex\Quantum\Base\Components\DataList\DataList;
-use Cubex\Quantum\Base\Components\DataList\DataSchema;
-use Cubex\Quantum\Base\Components\Panel\Panel;
-use Cubex\Quantum\Base\Components\Panel\PanelHeader;
 use Cubex\Quantum\Base\Controllers\QuantumAdminController;
+use Cubex\Quantum\Base\FileStore\Interfaces\FileStoreInterface;
 use Cubex\Quantum\Modules\Pages\Controllers\Admin\Forms\PageForm;
 use Cubex\Quantum\Modules\Pages\Controllers\ContentController;
 use Cubex\Quantum\Modules\Pages\Daos\Page;
 use Cubex\Quantum\Modules\Pages\Daos\PageContent;
 use Cubex\Quantum\Modules\Paths\PathHelper;
-use Packaged\Glimpse\Core\CustomHtmlTag;
 use Packaged\Glimpse\Tags\Div;
 use Packaged\Glimpse\Tags\Link;
 use Packaged\Glimpse\Tags\Lists\ListItem;
 use Packaged\Glimpse\Tags\Lists\OrderedList;
+use Packaged\Glimpse\Tags\Table\TableCell;
 use Packaged\Glimpse\Tags\Text\StrongText;
 use Packaged\QueryBuilder\Predicate\EqualPredicate;
-use Packaged\SafeHtml\ISafeHtmlProducer;
+use PackagedUi\FontAwesome\FaIcon;
+use PackagedUi\Fusion\ButtonInferface;
+use PackagedUi\Fusion\Card\Card;
+use PackagedUi\Fusion\Layout\Flex;
+use PackagedUi\Fusion\Layout\FlexGrow;
+use PackagedUi\Fusion\Table\Table;
 use Symfony\Component\HttpFoundation\ParameterBag;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 
@@ -40,45 +41,47 @@ class PagesController extends QuantumAdminController
   public function postImage()
   {
     $class = $this->getContext()->config()->getItem('upload', 'class');
-    /** @var FileStorageInterface $uploadClass */
+    /** @var FileStoreInterface $uploadClass */
     $uploadClass = new $class();
 
-    $file = $this->getRequest()->files->get('upload');
+    $file = $this->request()->files->get('upload');
   }
 
   public function getList()
   {
-    $this->_applyDefaultMenu();
+    $this->_setPageTitle('Pages');
 
     /** @var  $pages */
     $pages = Page::collection()->limitWithOffset(0, 10);
 
-    $data = [];
+    $table = Table::create()->striped()
+      ->addHeaderRow('Path', 'Title', '');
+
     /** @var Page $page */
     foreach($pages as $page)
     {
-      $data[] = [
-        'page'    => $page->getDaoPropertyData(),
-        'content' => $this->_getPageContent($page)->getDaoPropertyData(),
-        'actions' => [Link::create($this->_buildModuleUrl($page->id), 'Edit')],
-      ];
+      $content = $this->_getPageContent($page);
+      $table->addRow(
+        $page->path,
+        $content->title,
+        TableCell::create(
+          Link::create($this->_buildModuleUrl($page->id), FaIcon::create(FaIcon::EDIT))
+        )->addClass('shrink')
+      );
     }
 
-    $schema = DataSchema::create($data)
-      ->addField(DataFieldSchema::create('actions', '')->addClass('shrink'))
-      //->addField(DataFieldSchema::create('page.id', 'ID')->addClass('shrink'))
-      ->addField(DataFieldSchema::create('page.path', 'Path'))
-      //->addField(DataFieldSchema::create('page.publishedPath', 'Published'))
-      ->addField(DataFieldSchema::create('content.title', 'Title'));
-
-    $header = PanelHeader::create('Pages')
-      ->addAction(Link::create($this->_buildModuleUrl('new'), 'New'));
-    return Panel::create(DataList::create($schema))->setHeader($header);
+    return Card::create($table)
+      ->setHeader(
+        Flex::create(
+          FlexGrow::create("Pages"),
+          Link::create($this->_buildModuleUrl('new'), FaIcon::create(FaIcon::PLUS))
+        )
+      );
   }
 
   public function getEdit()
   {
-    $this->_applyDefaultMenu();
+    $this->_setPageTitle('Edit Page');
 
     $pageId = $this->getContext()->routeData()->get('pageId');
     $version = $this->getContext()->routeData()->get('version');
@@ -128,12 +131,15 @@ class PagesController extends QuantumAdminController
       $page = new Page();
       $content = new PageContent();
     }
-    $page->path = $this->getRequest()->get('path');
+
+    $request = $this->request();
+
+    $page->path = $request->get('path');
     $page->save();
 
     $content->pageId = $page->id;
-    $content->title = $this->getRequest()->get('title');
-    $content->content = $this->getRequest()->get('content');
+    $content->title = $request->get('title');
+    $content->content = $request->get('content');
     if($content->save())
     {
       // contents changed, redirect to new edit url
@@ -175,35 +181,30 @@ class PagesController extends QuantumAdminController
   /**
    * @param Page $page
    *
-   * @return ISafeHtmlProducer
+   * @return OrderedList
    */
-  protected function _getVersionList(Page $page): ISafeHtmlProducer
+  protected function _getVersionList(Page $page)
   {
     // version history
     $versionList = OrderedList::create();
     $versions = PageContent::each(EqualPredicate::create('pageId', $page->id));
     foreach($versions as $version)
     {
-      $publishButton = CustomHtmlTag::build('button', [], 'PUBLISH');
-      $publishLink = Link::create(
-        $this->_buildModuleUrl('publish', $page->id, $version->id),
-        $publishButton
-      );
-      if($page->publishedVersion === $version->id)
+      $publishLink = null;
+      if($page->publishedVersion !== $version->id)
       {
-        $publishLink->removeAttribute('href');
-        $publishButton->setAttribute('disabled', true);
+        $publishLink = Link::create($this->_buildModuleUrl('publish', $page->id, $version->id), 'PUBLISH')
+          ->addClass(ButtonInferface::BUTTON);
       }
       $versionList->addItem(
         ListItem::create(
           [
-            $publishLink,
-            ' ',
             Link::create(
               $this->_buildModuleUrl($page->id, $version->id),
               '[' . date('Y-m-d H:i:s', $version->createdTime) . '] ' . $version->title
               . ' (' . strlen($version->content) . ' bytes)'
             ),
+            $publishLink,
           ]
         )
       );

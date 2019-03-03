@@ -1,16 +1,17 @@
 <?php
 namespace Cubex\Quantum\Base;
 
-use Cubex\Context\Context;
 use Cubex\Cubex;
 use Cubex\Quantum\Base\Controllers\AdminController;
 use Cubex\Quantum\Base\Controllers\FrontendController;
+use Cubex\Quantum\Base\Dispatch\QuantumDispatch;
 use Cubex\Quantum\Base\Interfaces\QuantumAware;
 use Cubex\Quantum\Base\Interfaces\QuantumModule;
 use Cubex\Quantum\Base\Uri\Uri;
 use Cubex\Quantum\Modules\Pages\PagesModule;
 use Cubex\Quantum\Modules\Paths\Controllers\PathRouteController;
 use Cubex\Quantum\Modules\Paths\PathsModule;
+use Cubex\Quantum\Modules\Upload\UploadModule;
 use Cubex\Quantum\Themes\Admin\AdminTheme;
 use Cubex\Quantum\Themes\BaseTheme;
 use Cubex\Quantum\Themes\Quantifi\QuantifiTheme;
@@ -55,8 +56,6 @@ abstract class QuantumProject
     return new QuantifiTheme();
   }
 
-  protected $_resourcePath = '/_r';
-
   public function __construct(Cubex $cubex)
   {
     $this->_cubex = $cubex;
@@ -72,8 +71,7 @@ abstract class QuantumProject
       }
     );
 
-    Dispatch::bind(new Dispatch($context->getProjectRoot(), $this->_resourcePath));
-    Dispatch::instance()->addComponentAlias('\Cubex\Quantum', 'quantum');
+    Dispatch::bind(new QuantumDispatch($context->getProjectRoot(), QuantumDispatch::PATH));
 
     // configure dal
     $cnf = new IniConfigProvider(
@@ -87,11 +85,12 @@ abstract class QuantumProject
     $resolver = new DalResolver($cnf);
     Dao::setDalResolver($resolver);
 
-    $this->_init();
-
     //add built in modules
+    $this->addModule(new UploadModule());
     $this->addModule(new PathsModule());
     $this->addModule(new PagesModule());
+
+    $this->_init();
   }
 
   public function getCubex()
@@ -154,12 +153,7 @@ abstract class QuantumProject
   public function handle($send = true, $catch = true)
   {
     $router = Router::i();
-    $router->handleFunc(
-      $this->_resourcePath,
-      function (Context $c) {
-        return Dispatch::instance()->handle($c->getRequest());
-      }
-    );
+    $router->handle(QuantumDispatch::PATH, QuantumDispatch::instance());
     $adminPath = $this->getAdminUri();
     if($adminPath)
     {

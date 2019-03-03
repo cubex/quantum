@@ -12,6 +12,11 @@ class PathsModule implements QuantumModule
     return 'Paths';
   }
 
+  public function getIcon(): string
+  {
+    return '';
+  }
+
   public function getVendor(): string
   {
     return 'quantum';

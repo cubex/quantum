@@ -7,6 +7,8 @@ interface QuantumModule
 {
   public function getName($language = 'en'): string;
 
+  public function getIcon(): string;
+
   public function getVendor(): string;
 
   public function getPackage(): string;

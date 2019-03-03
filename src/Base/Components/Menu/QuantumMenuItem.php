@@ -5,12 +5,14 @@ class QuantumMenuItem
 {
   protected $_title;
   protected $_url;
+  protected $_icon;
 
-  public static function create($title, $url)
+  public static function create($title, $url, $icon)
   {
     $object = new static;
     $object->_title = $title;
     $object->_url = $url;
+    $object->_icon = $icon;
     return $object;
   }
 
@@ -22,5 +24,10 @@ class QuantumMenuItem
   public function getUrl()
   {
     return $this->_url;
+  }
+
+  public function getIcon()
+  {
+    return $this->_icon;
   }
 }
