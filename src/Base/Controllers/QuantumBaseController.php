@@ -78,6 +78,15 @@ abstract class QuantumBaseController extends Controller implements QuantumAware
     }
     if(is_string($obj) || $obj instanceof Renderable || $obj instanceof ISafeHtmlProducer)
     {
+      if($obj instanceof Renderable)
+      {
+        $obj = $obj->render();
+      }
+      if($obj instanceof ISafeHtmlProducer)
+      {
+        $obj = $obj->produceSafeHTML();
+      }
+
       $theme = $this->getTheme();
       $theme->setPageTitle($this->_getPageTitle());
       $obj = $theme->setContent($obj);
