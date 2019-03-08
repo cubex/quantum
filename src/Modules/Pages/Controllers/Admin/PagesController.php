@@ -1,6 +1,7 @@
 <?php
 namespace Cubex\Quantum\Modules\Pages\Controllers\Admin;
 
+use Cubex\Quantum\Base\Components\CkEditor\CkEditorComponent;
 use Cubex\Quantum\Base\Controllers\QuantumAdminController;
 use Cubex\Quantum\Base\FileStore\Interfaces\FileStoreInterface;
 use Cubex\Quantum\Modules\Pages\Controllers\Admin\Forms\PageForm;
@@ -15,6 +16,7 @@ use Packaged\Glimpse\Tags\Lists\OrderedList;
 use Packaged\Glimpse\Tags\Table\TableCell;
 use Packaged\Glimpse\Tags\Text\StrongText;
 use Packaged\QueryBuilder\Predicate\EqualPredicate;
+use Packaged\SafeHtml\SafeHtml;
 use PackagedUi\FontAwesome\FaIcon;
 use PackagedUi\Fusion\ButtonInferface;
 use PackagedUi\Fusion\Card\Card;
@@ -32,10 +34,29 @@ class PagesController extends QuantumAdminController
   {
     yield  self::route('_image', 'image');
     yield  self::route('publish/{pageId@num}/{version@num}', 'publish');
+    yield  self::route('live/{pageId@num}/{version@num}', 'live');
+    yield  self::route('live/{pageId@num}', 'live');
     yield  self::route('{pageId@num}/{version@num}', 'edit');
     yield  self::route('{pageId@num}', 'edit');
     yield  self::route('new', 'edit');
     return 'list';
+  }
+
+  public function getLive()
+  {
+    $page = Page::loadById($this->routeData()->get('pageId'));
+    $content = $this->_getPageContent($page, $this->routeData()->get('version'));
+
+    if($content->theme)
+    {
+      $this->setTheme(new $content->theme);
+    }
+    else
+    {
+      $this->setTheme($this->getQuantum()->getFrontendTheme());
+    }
+    $this->getTheme()->setPageTitle($content->title);
+    return CkEditorComponent::create(new SafeHtml($content->content))->setTag('div');
   }
 
   public function postImage()
