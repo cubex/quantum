@@ -56,7 +56,7 @@ class PagesController extends QuantumAdminController
       $this->setTheme($this->getQuantum()->getFrontendTheme());
     }
     $this->getTheme()->setPageTitle($content->title);
-    return CkEditorComponent::create(new SafeHtml($content->content))->setTag('div');
+    return CkEditorComponent::create(new SafeHtml($content->content))->setInline();
   }
 
   public function postImage()
