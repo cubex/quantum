@@ -1,5 +1,5 @@
 <?php
-namespace Cubex\Quantum;
+namespace Cubex\Quantum\Example;
 
 use Cubex\Quantum\Base\QuantumProject;
 use Packaged\Dispatch\ResourceManager;

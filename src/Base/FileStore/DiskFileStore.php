@@ -8,6 +8,7 @@ use DirectoryIterator;
 use Exception;
 use Packaged\Config\ConfigSectionInterface;
 use Packaged\Helpers\Path;
+use Packaged\Helpers\ValueAs;
 
 class DiskFileStore implements FileStoreInterface
 {
@@ -94,6 +95,11 @@ class DiskFileStore implements FileStoreInterface
     return copy($fromPath, $toPath);
   }
 
+  public function getObject($path): FileStoreObjectInterface
+  {
+    return $this->_getFileObject($path);
+  }
+
   private function _getFullPath($path)
   {
     return Path::system($this->_getBasePath(), $path);
@@ -101,7 +107,7 @@ class DiskFileStore implements FileStoreInterface
 
   private function _getBasePath()
   {
-    return $this->_config->getItem('base_path', '/');
+    return $this->_config->getItem('base_path', ValueAs::nonempty(getenv('HOME')));
   }
 
   private function _getFileObject($fullPath)

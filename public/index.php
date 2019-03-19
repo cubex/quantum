@@ -10,7 +10,7 @@ $launcher = new \Cubex\Cubex(dirname(__DIR__), $loader);
 //$launcher->listen(Cubex::EVENT_HANDLE_START, function (Context $ctx) { /* Configure your request here  */ });
 try
 {
-  (new \Cubex\Quantum\Project($launcher))->handle(true, !$isDev);
+  (new \Cubex\Quantum\Example\Project($launcher))->handle(true, !$isDev);
 }
 catch(Throwable $e)
 {

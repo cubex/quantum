@@ -23,4 +23,6 @@ interface FileStoreInterface extends ConfigurableInterface
   public function move($fromPath, $toPath): bool;
 
   public function copy($fromPath, $toPath): bool;
+
+  public function getObject($path): FileStoreObjectInterface;
 }

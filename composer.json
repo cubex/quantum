@@ -29,6 +29,11 @@
       "Cubex\\Quantum\\": "src/"
     }
   },
+  "autoload-dev": {
+    "psr-4": {
+      "Cubex\\Quantum\\Example\\": "example_src/"
+    }
+  },
   "repositories": [
     {
       "type": "vcs",
