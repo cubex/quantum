@@ -7,7 +7,7 @@ class FrontendController extends QuantumBaseController
 {
   public function getRoutes()
   {
-    yield self::route('/{vendor}/{package}', 'packageHandler');
+    yield self::route('/_m/{vendor}/{package}', 'packageHandler');
     return $this->getQuantum()->contentHandler();
   }
 
