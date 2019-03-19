@@ -74,14 +74,18 @@ abstract class QuantumProject
     Dispatch::bind(new QuantumDispatch($context->getProjectRoot(), QuantumDispatch::PATH));
 
     // configure dal
-    $cnf = new IniConfigProvider(
-      Path::system(
-        $context->getProjectRoot(),
-        'conf',
-        'defaults',
-        'connections.ini'
-      )
-    );
+    $cnf = new IniConfigProvider(Path::system($context->getProjectRoot(), 'conf', 'defaults', 'connections.ini'));
+    try
+    {
+      $cnf->loadFile(
+        Path::system($context->getProjectRoot(), 'conf', $context->getEnvironment(), 'connections.ini'),
+        true
+      );
+    }
+    catch(\RuntimeException $e)
+    {
+    }
+
     $resolver = new DalResolver($cnf);
     Dao::setDalResolver($resolver);
 
