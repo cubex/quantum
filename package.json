@@ -6,6 +6,6 @@
   "author": "Tom Kay <oridan82@gmail.com>",
   "license": "MIT",
   "dependencies": {
-    "@packaged-ui/ckwidgets": "^1.0.0"
+    "@packaged-ui/ckwidgets": "^0.0.1"
   }
 }
