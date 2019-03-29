@@ -11,13 +11,13 @@
     }
   ],
   "require": {
-    "cubex/framework": "^3.0.0-beta.1",
-    "packaged/dispatch": "^2.0.0-beta.1",
+    "cubex/framework": "^3.0",
+    "packaged/dispatch": "^2.1",
     "packaged/glimpse": "^2.5",
     "packaged/form": "^2.4",
     "packaged/dal": "^1.8",
-    "packaged-ui/fontawesome": "^3.4",
-    "packaged-ui/fusion": "dev-master"
+    "packaged-ui/fontawesome": "^3.5",
+    "packaged-ui/fusion": "^0.4"
   },
   "require-dev": {
     "php-coveralls/php-coveralls": "^2.1",
