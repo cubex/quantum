@@ -2,6 +2,7 @@
 namespace Cubex\Quantum\Modules\Pages\Controllers\Admin;
 
 use Cubex\Quantum\Base\Components\CkEditor\CkEditorComponent;
+use Cubex\Quantum\Base\Components\Pagination\Pagination;
 use Cubex\Quantum\Base\Controllers\QuantumAdminController;
 use Cubex\Quantum\Base\FileStore\Interfaces\FileStoreInterface;
 use Cubex\Quantum\Modules\Pages\Controllers\Admin\Forms\PageForm;
@@ -72,8 +73,13 @@ class PagesController extends QuantumAdminController
   {
     $this->_setPageTitle('Pages');
 
+    $pageNumber = (int)$this->request()->get('page', 0);
+    $limit = 10;
     /** @var  $pages */
-    $pages = Page::collection()->limitWithOffset(0, 10);
+    $pages = Page::collection();
+    $pageCount = $pages->count();
+
+    $pages->limitWithOffset($pageNumber * $limit, $limit);
 
     $table = Table::create()->striped()
       ->addHeaderRow('Path', 'Title', '');
@@ -96,6 +102,14 @@ class PagesController extends QuantumAdminController
         Flex::create(
           FlexGrow::create("Pages"),
           Link::create($this->_buildModuleUrl('new'), FaIcon::create(FaIcon::PLUS))
+        )
+      )
+      ->setFooter(
+        Pagination::create(
+          $pageCount,
+          $limit,
+          $pageNumber,
+          function ($p) { return $this->_buildModuleUrl() . '?page=' . $p; }
         )
       );
   }
