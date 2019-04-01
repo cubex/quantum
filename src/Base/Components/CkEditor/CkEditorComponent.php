@@ -20,7 +20,7 @@ class CkEditorComponent extends Textarea implements DispatchableComponent
     return $ele;
   }
 
-  public function setInline(bool $inline)
+  public function setInline(bool $inline = true)
   {
     $this->_tag = $inline ? 'div' : 'textarea';
     return $this;
