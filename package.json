@@ -5,7 +5,10 @@
   "repository": "git@github.com:cubex/quantum.git",
   "author": "Tom Kay <oridan82@gmail.com>",
   "license": "MIT",
-  "dependencies": {
-    "@packaged-ui/ckwidgets": "^0.0.1"
+  "devDependencies": {
+    "@packaged-ui/ckwidgets": "^0.0.1",
+    "grunt": "^1.0",
+    "grunt-contrib-clean": "^2.0",
+    "grunt-contrib-copy": "^1.0"
   }
 }

@@ -20,11 +20,6 @@ class TextInput extends UiElement implements DispatchableComponent
     return $o;
   }
 
-  public function getResourceDirectory()
-  {
-    return __DIR__ . '/resource';
-  }
-
   public function render(): string
   {
     ResourceManager::component($this)->requireJs('input.js');

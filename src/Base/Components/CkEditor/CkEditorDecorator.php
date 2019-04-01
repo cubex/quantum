@@ -1,9 +1,9 @@
 <?php
 namespace Cubex\Quantum\Base\Components\CkEditor;
 
+use Packaged\Form\Decorators\AbstractDataHandlerDecorator;
 use Packaged\Glimpse\Core\HtmlTag;
 use Packaged\Glimpse\Tags\Div;
-use PackagedUi\Form\Decorators\AbstractDataHandlerDecorator;
 
 class CkEditorDecorator extends AbstractDataHandlerDecorator
 {

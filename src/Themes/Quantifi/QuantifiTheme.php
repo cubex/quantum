@@ -12,9 +12,4 @@ class QuantifiTheme extends BaseTheme implements DispatchableComponent
   {
     ResourceManager::component($this)->requireCss('css/styles.css');
   }
-
-  public function getResourceDirectory()
-  {
-    return Path::system(__DIR__, 'resources');
-  }
 }

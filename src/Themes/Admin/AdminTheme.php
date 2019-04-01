@@ -5,7 +5,6 @@ use Cubex\Quantum\Themes\BaseTheme;
 use Packaged\Dispatch\Component\DispatchableComponent;
 use Packaged\Dispatch\ResourceManager;
 use Packaged\Glimpse\Tags\Layout\Header;
-use Packaged\Helpers\Path;
 use PackagedUi\FontAwesome\FaIcon;
 use PackagedUi\Fusion\Fusion;
 use PackagedUi\Fusion\Layout\Drawer\Drawer;
@@ -22,14 +21,9 @@ class AdminTheme extends BaseTheme implements DispatchableComponent
     $rm = ResourceManager::component(new Fusion());
     $rm->requireJs(Fusion::FILE_BASE_JS);
     $rm->requireCss(Fusion::FILE_BASE_CSS);
-    ResourceManager::vendor('packaged-ui', 'fontawesome')->requireCss('assets/css/all.min.css');
+    ResourceManager::vendor('packaged-ui', 'fontawesome')->requireCss(FaIcon::CSS_PATH);
 
     ResourceManager::component($this)->requireCss('css/styles.css');
-  }
-
-  public function getResourceDirectory()
-  {
-    return Path::system(__DIR__, 'resources');
   }
 
   public function getHeader()

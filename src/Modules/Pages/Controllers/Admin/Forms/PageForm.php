@@ -2,8 +2,8 @@
 namespace Cubex\Quantum\Modules\Pages\Controllers\Admin\Forms;
 
 use Cubex\Quantum\Base\Components\CkEditor\CkEditorDecorator;
-use PackagedUi\Form\Csrf\CsrfForm;
-use PackagedUi\Form\DataHandlers\TextDataHandler;
+use Packaged\Form\Csrf\CsrfForm;
+use Packaged\Form\DataHandlers\TextDataHandler;
 
 class PageForm extends CsrfForm
 {

@@ -49,10 +49,4 @@ class PanelHeader extends UiElement implements DispatchableComponent
       ]
     )->addClass('panel-header');
   }
-
-  public function getResourceDirectory()
-  {
-    return __DIR__ . '/resources';
-  }
-
 }
