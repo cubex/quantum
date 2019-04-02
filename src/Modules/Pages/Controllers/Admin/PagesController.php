@@ -21,6 +21,7 @@ use Packaged\SafeHtml\SafeHtml;
 use PackagedUi\FontAwesome\FaIcon;
 use PackagedUi\Fusion\ButtonInferface;
 use PackagedUi\Fusion\Card\Card;
+use PackagedUi\Fusion\Fusion;
 use PackagedUi\Fusion\Layout\Flex;
 use PackagedUi\Fusion\Layout\FlexGrow;
 use PackagedUi\Fusion\Table\Table;
@@ -105,12 +106,14 @@ class PagesController extends QuantumAdminController
         )
       )
       ->setFooter(
-        Pagination::create(
-          $pageCount,
-          $limit,
-          $pageNumber,
-          function ($p) { return $this->_buildModuleUrl() . '?page=' . $p; }
-        )
+        Div::create(
+          Pagination::create(
+            $pageCount,
+            $limit,
+            $pageNumber,
+            function ($p) { return $this->_buildModuleUrl() . '?page=' . $p; }
+          )
+        )->addClass(Fusion::TEXT_RIGHT)
       );
   }
 
