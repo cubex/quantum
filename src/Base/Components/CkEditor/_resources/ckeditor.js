@@ -1,18 +1,25 @@
+window.QuantumEditorConfig = window.QuantumEditorConfig || {};
+
 QuantumWidgetEditor
   .create(
     document.querySelector('.content-editor'),
-    {
-      iframe: true,
-      filer: {
-        // Upload the images to the server using the CKFinder QuickUpload command.
-        uploadUrl: '/uploads/filer',
+    Object.assign(
+      { // enforced
+        iframe: true,
+      },
+      QuantumEditorConfig,
+      { // defaults
+        filer: {
+          // Upload the images to the server using the CKFinder QuickUpload command.
+          uploadUrl: '/uploads/filer',
 
-        // Define the CKFinder configuration (if necessary).
-        options: {
-          meta: ['image', 'video']
+          // Define the CKFinder configuration (if necessary).
+          options: {
+            meta: ['image', 'video']
+          }
         }
       }
-    }
+    )
   )
   .then(
     editor =>
