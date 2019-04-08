@@ -2,6 +2,7 @@
 namespace Cubex\Quantum\Base;
 
 use Cubex\Cubex;
+use Cubex\Quantum\Base\Components\CkEditor\CkEditorComponent;
 use Cubex\Quantum\Base\Controllers\AdminController;
 use Cubex\Quantum\Base\Controllers\FrontendController;
 use Cubex\Quantum\Base\Dispatch\QuantumDispatch;
@@ -20,6 +21,7 @@ use Packaged\Config\Provider\Ini\IniConfigProvider;
 use Packaged\Dal\DalResolver;
 use Packaged\Dal\Foundation\Dao;
 use Packaged\Dispatch\Dispatch;
+use Packaged\Dispatch\ResourceManager;
 use Packaged\Helpers\Path;
 use Symfony\Component\HttpFoundation\Response;
 
@@ -72,6 +74,7 @@ abstract class QuantumProject
     );
 
     Dispatch::bind(new QuantumDispatch($context->getProjectRoot(), QuantumDispatch::PATH));
+    ResourceManager::component(new CkEditorComponent())->requireCss('include.css');
 
     // configure dal
     $cnf = new IniConfigProvider(Path::system($context->getProjectRoot(), 'conf', 'defaults', 'connections.ini'));
