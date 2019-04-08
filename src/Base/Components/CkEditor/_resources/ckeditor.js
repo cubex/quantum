@@ -13,6 +13,7 @@ setTimeout(
           },
           QuantumEditorConfig,
           { // defaults
+            placeholder: 'Please type your content here...',
             filer: {
               // Upload the images to the server using the CKFinder QuickUpload command.
               uploadUrl: '/uploads/filer',
