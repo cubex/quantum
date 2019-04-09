@@ -7,6 +7,7 @@ use Cubex\Quantum\Base\Interfaces\QuantumAware;
 use Cubex\Quantum\Base\Traits\QuantumAwareTrait;
 use Cubex\Quantum\Themes\BaseTheme;
 use Packaged\SafeHtml\ISafeHtmlProducer;
+use Packaged\SafeHtml\SafeHtml;
 use Packaged\Ui\Renderable;
 use Symfony\Component\HttpFoundation\Response;
 use Throwable;
@@ -80,7 +81,7 @@ abstract class QuantumBaseController extends Controller implements QuantumAware
     {
       if($obj instanceof Renderable)
       {
-        $obj = $obj->render();
+        $obj = new SafeHtml($obj->render());
       }
       if($obj instanceof ISafeHtmlProducer)
       {

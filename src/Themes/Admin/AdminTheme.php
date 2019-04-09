@@ -2,6 +2,7 @@
 namespace Cubex\Quantum\Themes\Admin;
 
 use Cubex\Quantum\Themes\BaseTheme;
+use Exception;
 use Packaged\Dispatch\Component\DispatchableComponent;
 use Packaged\Dispatch\ResourceManager;
 use Packaged\Glimpse\Tags\Layout\Header;
@@ -15,6 +16,9 @@ class AdminTheme extends BaseTheme implements DispatchableComponent
 {
   const MENU_LEFT = 'menu_left';
 
+  /**
+   * @throws Exception
+   */
   public function __construct()
   {
     Fusion::includeGoogleFont();
