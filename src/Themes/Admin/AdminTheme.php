@@ -49,10 +49,10 @@ class AdminTheme extends BaseTheme implements DispatchableComponent
     return $menu;
   }
 
-  public function getContent(bool $withDrawer = false)
+  public function getContent(bool $withDrawer = null)
   {
     $content = parent::getContent();
-    if(!$withDrawer)
+    if($withDrawer !== true)
     {
       return $content;
     }

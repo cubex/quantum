@@ -1,15 +1,15 @@
 <?php
 namespace Cubex\Quantum\Base\Components\Panel;
 
-use Cubex\Ui\UiElement;
 use Packaged\Dispatch\Component\DispatchableComponent;
 use Packaged\Dispatch\ResourceManager;
 use Packaged\Glimpse\Core\CustomHtmlTag;
 use Packaged\Glimpse\Tags\Lists\UnorderedList;
 use Packaged\Glimpse\Tags\Text\HeadingOne;
 use Packaged\SafeHtml\ISafeHtmlProducer;
+use Packaged\Ui\Element;
 
-class PanelHeader extends UiElement implements DispatchableComponent
+class PanelHeader extends Element implements DispatchableComponent
 {
   protected $_title;
 

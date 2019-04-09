@@ -24,6 +24,7 @@ class UploadController extends QuantumBaseController
     $path = $this->getContext()->routeData()->get('path', '');
 
     $pathObj = $store->getObject($path);
+    $list = [];
     if($pathObj->isDir())
     {
       /** @var FileStoreObjectInterface[] $list */

@@ -3,12 +3,12 @@ namespace Cubex\Quantum\Base\Components\CkEditor;
 
 use Packaged\Dispatch\Component\DispatchableComponent;
 use Packaged\Dispatch\ResourceManager;
-use Packaged\Glimpse\Core\HtmlTag;
 use Packaged\Glimpse\Tags\Form\Textarea;
+use Packaged\Ui\Html\HtmlElement;
 
 class CkEditorComponent extends Textarea implements DispatchableComponent
 {
-  protected function _prepareForProduce(): HtmlTag
+  protected function _prepareForProduce(): HtmlElement
   {
     $rm = ResourceManager::component($this);
     $rm->requireJs('widget/ckeditor.min.js');

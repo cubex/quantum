@@ -2,10 +2,10 @@
 namespace Cubex\Quantum\Themes;
 
 use Cubex\Quantum\Base\Components\Menu\QuantumMenu;
-use Cubex\Ui\UiElement;
+use Packaged\Ui\Element;
 use Symfony\Component\HttpFoundation\ParameterBag;
 
-abstract class BaseTheme extends UiElement
+abstract class BaseTheme extends Element
 {
   protected $_data;
 

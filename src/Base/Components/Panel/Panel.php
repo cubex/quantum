@@ -1,11 +1,11 @@
 <?php
 namespace Cubex\Quantum\Base\Components\Panel;
 
-use Cubex\Ui\UiElement;
 use Packaged\Glimpse\Tags\Div;
 use Packaged\SafeHtml\ISafeHtmlProducer;
+use Packaged\Ui\Element;
 
-class Panel extends UiElement
+class Panel extends Element
 {
   /**
    * @var PanelHeader

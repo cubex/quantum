@@ -32,7 +32,7 @@ abstract class QuantumProject
   private $_frontendModules = [];
   private $_adminModules = [];
   /**
-   * @var QuantumModule[] module class name
+   * @var QuantumModule[][] module class name
    */
   private $_modules = [];
 

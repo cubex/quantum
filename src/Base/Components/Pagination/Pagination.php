@@ -2,13 +2,13 @@
 
 namespace Cubex\Quantum\Base\Components\Pagination;
 
-use Cubex\Ui\UiElement;
 use Packaged\Glimpse\Tags\Div;
 use Packaged\Glimpse\Tags\Link;
 use Packaged\Glimpse\Tags\Span;
+use Packaged\Ui\Element;
 use PackagedUi\Fusion\Fusion;
 
-class Pagination extends UiElement
+class Pagination extends Element
 {
   protected $_totalItems;
   protected $_itemsPerPage;
@@ -17,7 +17,7 @@ class Pagination extends UiElement
 
   public static function create(int $totalItems, int $itemsPerPage, int $currentPage, callable $urlCallback)
   {
-    $o = new static;
+    $o = new static();
     $o->_totalItems = $totalItems;
     $o->_itemsPerPage = $itemsPerPage;
     $o->_currentPage = $currentPage;

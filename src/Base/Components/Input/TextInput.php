@@ -1,13 +1,13 @@
 <?php
 namespace Cubex\Quantum\Base\Components\Input;
 
-use Cubex\Ui\UiElement;
 use Packaged\Dispatch\Component\DispatchableComponent;
 use Packaged\Dispatch\ResourceManager;
 use Packaged\Glimpse\Tags\Div;
 use Packaged\Glimpse\Tags\Form\Input;
+use Packaged\Ui\Element;
 
-class TextInput extends UiElement implements DispatchableComponent
+class TextInput extends Element implements DispatchableComponent
 {
   protected $_name;
   protected $_value;
