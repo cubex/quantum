@@ -156,7 +156,12 @@ abstract class QuantumProject
    */
   public function handle($send = true, $catch = true)
   {
-    $router = Router::i();
+    $router = $this->configureRouter(Router::i());
+    return $this->_cubex->handle($router, $send, $catch);
+  }
+
+  public function configureRouter(Router $router): Router
+  {
     $router->handle(QuantumDispatch::PATH, QuantumDispatch::instance());
     $adminPath = $this->getAdminUri();
     if($adminPath)
@@ -164,7 +169,7 @@ abstract class QuantumProject
       $router->handle((string)$adminPath, new AdminController());
     }
     $router->handle('/', new FrontendController());
-    return $this->_cubex->handle($router, $send, $catch);
+    return $router;
   }
 }
 
