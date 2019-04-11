@@ -39,6 +39,10 @@
     {
       "type": "vcs",
       "url": "git@github.com:packaged-ui/fusion.git"
+    },
+    {
+      "type": "vcs",
+      "url": "git@github.com:packaged/dispatch.git"
     }
   ]
 }

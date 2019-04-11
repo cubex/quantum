@@ -1,16 +1,20 @@
 <?php
 define('PHP_START', microtime(true));
 
+use Cubex\Context\Context;
+use Cubex\Cubex;
+use Cubex\Quantum\Example\Project;
 use Whoops\Handler\PrettyPageHandler;
 use Whoops\Run;
 
 $isDev = true;
 $loader = require_once(dirname(__DIR__) . '/vendor/autoload.php');
-$launcher = new \Cubex\Cubex(dirname(__DIR__), $loader);
+$cubex = new Cubex(dirname(__DIR__), $loader);
 //$launcher->listen(Cubex::EVENT_HANDLE_START, function (Context $ctx) { /* Configure your request here  */ });
 try
 {
-  (new \Cubex\Quantum\Example\Project($launcher))->handle(true, !$isDev);
+  $project = new Project($cubex);
+  $cubex->handle($project, true, !$cubex->getContext()->isEnv(Context::ENV_LOCAL));
 }
 catch(Throwable $e)
 {

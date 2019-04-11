@@ -1,11 +1,13 @@
 <?php
 namespace Cubex\Quantum\Base;
 
+use Cubex\Context\Context;
 use Cubex\Cubex;
+use Cubex\Http\LazyHandler;
 use Cubex\Quantum\Base\Controllers\AdminController;
 use Cubex\Quantum\Base\Controllers\FrontendController;
+use Cubex\Quantum\Base\Controllers\QuantumBaseController;
 use Cubex\Quantum\Base\Dispatch\QuantumDispatch;
-use Cubex\Quantum\Base\Interfaces\QuantumAware;
 use Cubex\Quantum\Base\Interfaces\QuantumModule;
 use Cubex\Quantum\Base\Uri\Uri;
 use Cubex\Quantum\Modules\Pages\PagesModule;
@@ -20,10 +22,10 @@ use Packaged\Config\Provider\Ini\IniConfigProvider;
 use Packaged\Dal\DalResolver;
 use Packaged\Dal\Foundation\Dao;
 use Packaged\Dispatch\Dispatch;
+use Packaged\Dispatch\Resources\ResourceFactory;
 use Packaged\Helpers\Path;
-use Symfony\Component\HttpFoundation\Response;
 
-abstract class QuantumProject
+abstract class QuantumProject extends Router
 {
   /**
    * @var Cubex
@@ -59,19 +61,41 @@ abstract class QuantumProject
   public function __construct(Cubex $cubex)
   {
     $this->_cubex = $cubex;
-    $context = $cubex->getContext();
+    $projectRoot = $cubex->getContext()->getProjectRoot();
+    $dispatch = new QuantumDispatch($projectRoot, QuantumDispatch::PATH);
+    Dispatch::bind($dispatch);
+    $this->handle(QuantumDispatch::PATH, $dispatch);
 
-    $cubex->listen(
-      Cubex::EVENT_HANDLE_PRE_EXECUTE,
-      function ($context, $handler) {
-        if($handler instanceof QuantumAware)
-        {
-          $handler->setQuantum($this);
+    $this->_configureRoutes();
+
+    $adminPath = $this->getAdminUri();
+    if($adminPath)
+    {
+      $this->handle(
+        (string)$adminPath,
+        new LazyHandler(
+          function () {
+            return $this->handleController(new AdminController());
+          }
+        )
+      );
+    }
+
+    $this->handle(
+      "/",
+      new LazyHandler(
+        function () {
+          return $this->handleController(new FrontendController());
         }
-      }
+      )
     );
+  }
 
-    Dispatch::bind(new QuantumDispatch($context->getProjectRoot(), QuantumDispatch::PATH));
+  public function handleController(QuantumBaseController $c)
+  {
+    $c->setQuantum($this);
+    $cubex = $this->_cubex;
+    $context = $cubex->getContext();
 
     // configure dal
     $cnf = new IniConfigProvider(Path::system($context->getProjectRoot(), 'conf', 'defaults', 'connections.ini'));
@@ -94,7 +118,9 @@ abstract class QuantumProject
     $this->addModule(new PathsModule());
     $this->addModule(new PagesModule());
 
-    $this->_init();
+    $this->_configureModules();
+
+    return $c;
   }
 
   public function getCubex()
@@ -145,31 +171,21 @@ abstract class QuantumProject
     return $modules;
   }
 
-  abstract protected function _init();
+  protected function _configureModules() { }
 
-  /**
-   * @param bool $send
-   * @param bool $catch
-   *
-   * @return Response
-   * @throws \Throwable
-   */
-  public function handle($send = true, $catch = true)
+  protected function _configureRoutes()
   {
-    $router = $this->configureRouter(Router::i());
-    return $this->_cubex->handle($router, $send, $catch);
-  }
-
-  public function configureRouter(Router $router): Router
-  {
-    $router->handle(QuantumDispatch::PATH, QuantumDispatch::instance());
-    $adminPath = $this->getAdminUri();
-    if($adminPath)
+    foreach(["favicon.ico", "robots.txt"] as $resource)
     {
-      $router->handle((string)$adminPath, new AdminController());
+      $this->handleFunc(
+        "/" . $resource,
+        function (Context $c) use ($resource) {
+          return ResourceFactory::fromFile(
+            Path::system($c->getProjectRoot(), 'public', $resource)
+          );
+        }
+      );
     }
-    $router->handle('/', new FrontendController());
-    return $router;
   }
 }
 
