@@ -94,33 +94,27 @@ abstract class QuantumProject extends Router
   public function handleController(QuantumBaseController $c)
   {
     $c->setQuantum($this);
-    $cubex = $this->_cubex;
-    $context = $cubex->getContext();
+    $this->_configureDal();
 
-    // configure dal
-    $cnf = new IniConfigProvider(Path::system($context->getProjectRoot(), 'conf', 'defaults', 'connections.ini'));
-    try
-    {
-      $cnf->loadFile(
-        Path::system($context->getProjectRoot(), 'conf', $context->getEnvironment(), 'connections.ini'),
-        true
-      );
-    }
-    catch(\RuntimeException $e)
-    {
-    }
-
-    $resolver = new DalResolver($cnf);
-    Dao::setDalResolver($resolver);
-
-    //add built in modules
-    $this->addModule(new UploadModule());
     $this->addModule(new PathsModule());
-    $this->addModule(new PagesModule());
-
     $this->_configureModules();
-
     return $c;
+  }
+
+  protected function _configureDal()
+  {
+    $projectRoot = $this->getContext()->getProjectRoot();
+    // configure dal
+    $cnf = (new IniConfigProvider())->loadFiles(
+      [
+        Path::system($projectRoot, 'conf', 'defaults', 'connections.ini'),
+        Path::system($projectRoot, 'conf', $this->getContext()->getEnvironment(), 'connections.ini'),
+      ],
+      true,
+      false
+    );
+
+    Dao::setDalResolver(new DalResolver($cnf));
   }
 
   public function getCubex()
@@ -171,7 +165,12 @@ abstract class QuantumProject extends Router
     return $modules;
   }
 
-  protected function _configureModules() { }
+  protected function _configureModules()
+  {
+    //add built in modules
+    $this->addModule(new UploadModule());
+    $this->addModule(new PagesModule());
+  }
 
   protected function _configureRoutes()
   {
