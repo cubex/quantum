@@ -5,7 +5,7 @@ use Cubex\Quantum\Base\Interfaces\QuantumModule;
 
 class FrontendController extends QuantumBaseController
 {
-  public function getRoutes()
+  protected function _getConditions()
   {
     yield self::route('/_m/{vendor}/{package}', 'packageHandler');
     return $this->getQuantum()->contentHandler();

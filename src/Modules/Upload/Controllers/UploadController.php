@@ -12,7 +12,7 @@ use Packaged\Http\Response;
 
 class UploadController extends QuantumBaseController
 {
-  public function getRoutes()
+  protected function _getConditions()
   {
     yield self::route('{path@all}', 'upload');
     return 'upload';

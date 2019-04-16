@@ -64,14 +64,14 @@ abstract class QuantumProject extends Router
     $projectRoot = $cubex->getContext()->getProjectRoot();
     $dispatch = new QuantumDispatch($projectRoot, QuantumDispatch::PATH);
     Dispatch::bind($dispatch);
-    $this->handle(QuantumDispatch::PATH, $dispatch);
+    $this->onPath(QuantumDispatch::PATH, $dispatch);
 
     $this->_configureRoutes();
 
     $adminPath = $this->getAdminUri();
     if($adminPath)
     {
-      $this->handle(
+      $this->onPath(
         (string)$adminPath,
         new LazyHandler(
           function () {
@@ -81,7 +81,7 @@ abstract class QuantumProject extends Router
       );
     }
 
-    $this->handle(
+    $this->onPath(
       "/",
       new LazyHandler(
         function () {
@@ -176,7 +176,7 @@ abstract class QuantumProject extends Router
   {
     foreach(["favicon.ico", "robots.txt"] as $resource)
     {
-      $this->handleFunc(
+      $this->onPathFunc(
         "/" . $resource,
         function (Context $c) use ($resource) {
           return ResourceFactory::fromFile(

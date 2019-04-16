@@ -5,7 +5,7 @@ use Cubex\Quantum\Base\Interfaces\QuantumModule;
 
 class AdminController extends QuantumAdminController
 {
-  public function getRoutes()
+  protected function _getConditions()
   {
     yield self::route('{vendor}/{package}', 'packageHandler');
     return 'dashboard';

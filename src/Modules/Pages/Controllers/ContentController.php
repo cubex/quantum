@@ -16,14 +16,14 @@ class ContentController extends QuantumBaseController implements QuantumFrontend
    */
   protected $_options;
 
+  protected function _getConditions()
+  {
+    return 'default';
+  }
+
   public function setOptions(ParameterBag $options)
   {
     $this->_options = $options;
-  }
-
-  public function getRoutes()
-  {
-    return 'default';
   }
 
   public function processDefault()
