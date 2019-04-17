@@ -73,10 +73,6 @@ abstract class QuantumBaseController extends Controller implements QuantumAware
 
   protected function _prepareResponse(Context $c, $obj)
   {
-    if($obj instanceof QuantumAware)
-    {
-      $obj->setQuantum($this->getQuantum());
-    }
     if(is_string($obj) || $obj instanceof Renderable || $obj instanceof ISafeHtmlProducer)
     {
       if($obj instanceof Renderable)

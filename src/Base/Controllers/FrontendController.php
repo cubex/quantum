@@ -7,7 +7,7 @@ class FrontendController extends QuantumBaseController
 {
   protected function _getConditions()
   {
-    yield self::route('/_m/{vendor}/{package}', 'packageHandler');
+    yield self::_route('/_m/{vendor}/{package}', 'packageHandler');
     return $this->getQuantum()->contentHandler();
   }
 

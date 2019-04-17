@@ -7,7 +7,7 @@ class AdminController extends QuantumAdminController
 {
   protected function _getConditions()
   {
-    yield self::route('{vendor}/{package}', 'packageHandler');
+    yield self::_route('{vendor}/{package}', 'packageHandler');
     return 'dashboard';
   }
 

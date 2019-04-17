@@ -34,13 +34,13 @@ class PagesController extends QuantumAdminController
 
   protected function _getConditions()
   {
-    yield  self::route('_image', 'image');
-    yield  self::route('publish/{pageId@num}/{version@num}', 'publish');
-    yield  self::route('live/{pageId@num}/{version@num}', 'live');
-    yield  self::route('live/{pageId@num}', 'live');
-    yield  self::route('{pageId@num}/{version@num}', 'edit');
-    yield  self::route('{pageId@num}', 'edit');
-    yield  self::route('new', 'edit');
+    yield  self::_route('_image', 'image');
+    yield  self::_route('publish/{pageId@num}/{version@num}', 'publish');
+    yield  self::_route('live/{pageId@num}/{version@num}', 'live');
+    yield  self::_route('live/{pageId@num}', 'live');
+    yield  self::_route('{pageId@num}/{version@num}', 'edit');
+    yield  self::_route('{pageId@num}', 'edit');
+    yield  self::_route('new', 'edit');
     return 'list';
   }
 

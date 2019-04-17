@@ -14,7 +14,7 @@ class UploadController extends QuantumBaseController
 {
   protected function _getConditions()
   {
-    yield self::route('{path@all}', 'upload');
+    yield self::_route('{path@all}', 'upload');
     return 'upload';
   }
 
