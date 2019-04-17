@@ -58,9 +58,7 @@ abstract class QuantumProject extends Application
 
   protected function _defaultHandler(): Handler
   {
-    $handler = new QuantumDefaultHandler();
-    $handler->setQuantum($this);
-    return $handler;
+    return new QuantumDefaultHandler();
   }
 
   public function getAdminUri(): ?Uri
