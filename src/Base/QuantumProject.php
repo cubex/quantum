@@ -4,6 +4,7 @@ namespace Cubex\Quantum\Base;
 use Cubex\Application\Application;
 use Cubex\Context\Context;
 use Cubex\Events\PreExecuteEvent;
+use Cubex\Http\FuncHandler;
 use Cubex\Http\Handler;
 use Cubex\Quantum\Base\Dispatch\QuantumDispatch;
 use Cubex\Quantum\Base\Interfaces\QuantumAware;
@@ -38,11 +39,13 @@ abstract class QuantumProject extends Application
     {
       yield self::_route(
         "/" . $resource,
-        function (Context $c) use ($resource) {
-          return ResourceFactory::fromFile(
-            Path::system($c->getProjectRoot(), 'public', $resource)
-          );
-        }
+        new FuncHandler(
+          function (Context $c) use ($resource) {
+            return ResourceFactory::fromFile(
+              Path::system($c->getProjectRoot(), 'public', $resource)
+            );
+          }
+        )
       );
     }
 
