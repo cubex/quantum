@@ -49,14 +49,18 @@ abstract class QuantumProject extends Application
       );
     }
 
-    $projectRoot = $this->getCubex()->getContext()->getProjectRoot();
-    $dispatch = new QuantumDispatch($projectRoot, QuantumDispatch::PATH);
+    $dispatch = $this->_prepareDispatch($this->getCubex()->getContext()->getProjectRoot());
     Dispatch::bind($dispatch);
     yield self::_route(QuantumDispatch::PATH, $dispatch);
 
     $this->_init();
 
     return $this->_defaultHandler();
+  }
+
+  protected function _prepareDispatch(string $projectRoot): Dispatch
+  {
+    return new QuantumDispatch($projectRoot, QuantumDispatch::PATH);
   }
 
   protected function _defaultHandler(): Handler
