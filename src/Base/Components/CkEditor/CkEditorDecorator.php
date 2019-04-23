@@ -3,15 +3,21 @@ namespace Cubex\Quantum\Base\Components\CkEditor;
 
 use Packaged\Form\Decorators\AbstractDataHandlerDecorator;
 use Packaged\Glimpse\Core\HtmlTag;
-use Packaged\Glimpse\Tags\Div;
+use Packaged\Ui\Html\HtmlElement;
 
 class CkEditorDecorator extends AbstractDataHandlerDecorator
 {
-  protected function _getInputElement(): HtmlTag
+  protected function _initInputElement(): HtmlTag
   {
-    return Div::create(
-      CkEditorComponent::create($this->_handler->getValue())
-        ->setAttribute('name', $this->_handler->getName())
-    );
+    return CkEditorComponent::create();
+  }
+
+  protected function _configureInputElement(HtmlElement $input)
+  {
+    parent::_configureInputElement($input);
+    if($input instanceof HtmlTag)
+    {
+      $input->setContent($this->_handler->getValue());
+    }
   }
 }
