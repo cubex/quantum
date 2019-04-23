@@ -18,7 +18,7 @@
     "packaged/form": "^2.4",
     "packaged/dal": "^1.8",
     "packaged-ui/fontawesome": "^3.5",
-    "packaged-ui/fusion": "^0.6"
+    "packaged-ui/fusion": "^1.0"
   },
   "require-dev": {
     "php-coveralls/php-coveralls": "^2.1",
