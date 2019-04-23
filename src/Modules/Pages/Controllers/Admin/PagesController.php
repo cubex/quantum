@@ -32,7 +32,7 @@ class PagesController extends QuantumAdminController
 {
   const SESSION_ID = '';
 
-  protected function _getConditions()
+  protected function _generateRoutes()
   {
     yield  self::_route('_image', 'image');
     yield  self::_route('publish/{pageId@num}/{version@num}', 'publish');

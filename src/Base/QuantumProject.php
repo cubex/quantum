@@ -3,6 +3,7 @@ namespace Cubex\Quantum\Base;
 
 use Cubex\Application\Application;
 use Cubex\Context\Context;
+use Cubex\Events\Handle\ResponsePreSendHeadersEvent;
 use Cubex\Events\PreExecuteEvent;
 use Cubex\Http\FuncHandler;
 use Cubex\Http\Handler;
@@ -23,6 +24,7 @@ use Packaged\Dal\Foundation\Dao;
 use Packaged\Dispatch\Dispatch;
 use Packaged\Dispatch\Resources\ResourceFactory;
 use Packaged\Helpers\Path;
+use Packaged\Http\Response;
 
 abstract class QuantumProject extends Application
 {
@@ -33,7 +35,7 @@ abstract class QuantumProject extends Application
    */
   private $_modules = [];
 
-  protected function _getConditions()
+  protected function _generateRoutes()
   {
     foreach(["favicon.ico", "robots.txt"] as $resource)
     {
@@ -90,15 +92,29 @@ abstract class QuantumProject extends Application
 
   protected function _init()
   {
-    $setQuantumFn = function (PreExecuteEvent $event) {
-      $handler = $event->getHandler();
-      if($handler instanceof QuantumAware)
-      {
-        $handler->setQuantum($this);
+    //Send debug headers locally
+    $this->getCubex()->listen(
+      ResponsePreSendHeadersEvent::class,
+      function (ResponsePreSendHeadersEvent $e) {
+        $r = $e->getResponse();
+        if($r instanceof Response && $e->getContext()->isEnv(Context::ENV_LOCAL))
+        {
+          $r->enableDebugHeaders();
+        }
       }
-    };
-    // add event on context
-    $this->getContext()->events()->listen(PreExecuteEvent::class, $setQuantumFn);
+    );
+
+    // add quantum to any executing handler
+    $this->getContext()->events()->listen(
+      PreExecuteEvent::class,
+      function (PreExecuteEvent $event) {
+        $handler = $event->getHandler();
+        if($handler instanceof QuantumAware)
+        {
+          $handler->setQuantum($this);
+        }
+      }
+    );
 
     $this->_configureDal();
 

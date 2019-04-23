@@ -16,7 +16,7 @@ class ContentController extends QuantumBaseController implements QuantumFrontend
    */
   protected $_options;
 
-  protected function _getConditions()
+  protected function _generateRoutes()
   {
     return 'default';
   }

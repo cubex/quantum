@@ -71,23 +71,23 @@ abstract class QuantumBaseController extends Controller implements QuantumAware
     }
   }
 
-  protected function _prepareResponse(Context $c, $obj)
+  protected function _prepareResponse(Context $c, $result, $buffer = null)
   {
-    if(is_string($obj) || $obj instanceof Renderable || $obj instanceof ISafeHtmlProducer)
+    if(is_string($result) || $result instanceof Renderable || $result instanceof ISafeHtmlProducer)
     {
-      if($obj instanceof Renderable)
+      if($result instanceof Renderable)
       {
-        $obj = new SafeHtml($obj->render());
+        $result = new SafeHtml($result->render());
       }
-      if($obj instanceof ISafeHtmlProducer)
+      if($result instanceof ISafeHtmlProducer)
       {
-        $obj = $obj->produceSafeHTML();
+        $result = $result->produceSafeHTML();
       }
 
       $theme = $this->getTheme();
       $theme->setPageTitle($this->_getPageTitle());
-      $obj = $theme->setContent($obj);
+      $result = $theme->setContent($result);
     }
-    return parent::_prepareResponse($c, $obj);
+    return parent::_prepareResponse($c, $result);
   }
 }

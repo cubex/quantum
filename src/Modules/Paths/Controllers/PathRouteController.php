@@ -7,7 +7,7 @@ use Cubex\Quantum\Modules\Paths\Daos\Path;
 
 class PathRouteController extends QuantumBaseController
 {
-  protected function _getConditions()
+  protected function _generateRoutes()
   {
     return 'default';
   }

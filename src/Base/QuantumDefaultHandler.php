@@ -8,7 +8,7 @@ use Cubex\Quantum\Base\Controllers\QuantumBaseController;
 
 class QuantumDefaultHandler extends QuantumBaseController
 {
-  protected function _getConditions()
+  protected function _generateRoutes()
   {
     $adminPath = $this->getQuantum()->getAdminUri();
     if($adminPath)
