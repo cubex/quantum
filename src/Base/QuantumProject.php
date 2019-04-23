@@ -55,9 +55,7 @@ abstract class QuantumProject extends Application
     Dispatch::bind($dispatch);
     yield self::_route(QuantumDispatch::PATH, $dispatch);
 
-    $this->_init();
-
-    return $this->_defaultHandler();
+    return parent::_generateRoutes();
   }
 
   protected function _prepareDispatch(string $projectRoot): Dispatch
@@ -90,7 +88,7 @@ abstract class QuantumProject extends Application
     return new QuantifiTheme();
   }
 
-  protected function _init()
+  protected function _initialize()
   {
     //Send debug headers locally
     $this->getCubex()->listen(
