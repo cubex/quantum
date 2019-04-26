@@ -22,27 +22,6 @@ class PageForm extends CsrfForm
    */
   public $content;
 
-  /**
-   * @var string
-   */
-  private $_action;
-
-  /**
-   * @param string $action
-   *
-   * @return $this
-   */
-  public function setAction($action)
-  {
-    $this->_action = $action;
-    return $this;
-  }
-
-  public function getAction()
-  {
-    return $this->_action;
-  }
-
   protected function _initDataHandlers()
   {
     parent::_initDataHandlers();
