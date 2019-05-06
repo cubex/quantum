@@ -15,6 +15,7 @@ use Packaged\Helpers\Objects;
 use Packaged\Helpers\Path;
 use Packaged\Http\Response;
 use Packaged\Http\Responses\JsonResponse;
+use PackagedUi\Fusion\Card\Card;
 
 class UploadController extends QuantumAdminController implements DispatchableComponent
 {
@@ -30,7 +31,9 @@ class UploadController extends QuantumAdminController implements DispatchableCom
   public function getPage()
   {
     ResourceManager::component($this)->requireJs('filer.min.js');
-    return Div::create()->setId('filer-container');
+    return Card::create()
+      ->setHeader('Uploads')
+      ->setContent(Div::create()->setId('filer-container'));
   }
 
   public function postUpload()
