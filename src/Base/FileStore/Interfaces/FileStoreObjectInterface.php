@@ -5,6 +5,8 @@ interface FileStoreObjectInterface
 {
   public function getPath(): string;
 
+  public function getUrl(): string;
+
   public function getExtension(): string;
 
   public function getFileSize(): int;
@@ -28,4 +30,8 @@ interface FileStoreObjectInterface
    * @return string
    */
   public function getlinkTarget(): string;
+
+  public function getMimeType(): string;
+
+  public function getContents(): string;
 }

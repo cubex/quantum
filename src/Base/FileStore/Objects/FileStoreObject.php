@@ -2,60 +2,100 @@
 namespace Cubex\Quantum\Base\FileStore\Objects;
 
 use Cubex\Quantum\Base\FileStore\Interfaces\FileStoreObjectInterface;
+use Packaged\Helpers\Path;
 
 class FileStoreObject implements FileStoreObjectInterface
 {
   /**
    * @var string
    */
-  protected $_path;
+  protected $_relativePath;
   /**
    * @var string
    */
-  protected $_pseudoPath;
+  protected $_localBasePath;
+  /**
+   * @var string
+   */
+  protected $_urlBasePath;
 
-  public function __construct(string $path, string $basePath)
+  public function __construct(string $relativePath, string $localBasePath, string $urlBasePath)
   {
-    $this->_path = $path;
-    $this->_pseudoPath = preg_replace('~^' . preg_quote($basePath, '~') . '~', '', $path);
+    $this->_relativePath = $relativePath;
+    $this->_localBasePath = $localBasePath;
+    $this->_urlBasePath = $urlBasePath;
   }
 
   public function getPath(): string
   {
-    return $this->_pseudoPath;
+    return $this->_relativePath;
+  }
+
+  public function getUrl(): string
+  {
+    return Path::url($this->_urlBasePath, $this->_relativePath);
   }
 
   public function getExtension(): string
   {
-    return substr($this->_path, strrpos($this->_path, '.'));
+    return substr($this->_relativePath, strrpos($this->_relativePath, '.'));
   }
 
   public function getFileSize(): int
   {
     if($this->isFile())
     {
-      return filesize($this->_path) ?: 0;
+      return filesize($this->_getLocalPath()) ?: 0;
     }
     return 0;
   }
 
   public function isDir(): bool
   {
-    return is_dir($this->_path);
+    return is_dir($this->_getLocalPath());
   }
 
   public function isFile(): bool
   {
-    return is_file($this->_path);
+    return is_file($this->_getLocalPath());
   }
 
   public function isLink(): bool
   {
-    return is_link($this->_path);
+    return is_link($this->_getLocalPath());
   }
 
   public function getlinkTarget(): string
   {
-    return $this->isLink() ? readlink($this->_path) : $this->_path;
+    return $this->isLink() ? readlink($this->_getLocalPath()) : $this->_getLocalPath();
+  }
+
+  public function getMimeType(): string
+  {
+    $filePath = $this->_getLocalPath();
+    if(function_exists('finfo_open'))
+    {
+      $finfo = finfo_open(FILEINFO_MIME_TYPE);
+      $mimeType = finfo_file($finfo, $filePath);
+      finfo_close($finfo);
+    }
+    else
+    {
+      $mimeType = mime_content_type($filePath);
+    }
+    return $mimeType ?: 'application/octet-stream';
+  }
+
+  public function getContents(): string
+  {
+    return file_get_contents($this->_getLocalPath());
+  }
+
+  /**
+   * @return string
+   */
+  private function _getLocalPath(): string
+  {
+    return Path::system($this->_localBasePath, $this->_relativePath);
   }
 }

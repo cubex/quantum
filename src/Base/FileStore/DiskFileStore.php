@@ -8,7 +8,6 @@ use DirectoryIterator;
 use Exception;
 use Packaged\Config\ConfigSectionInterface;
 use Packaged\Helpers\Path;
-use Packaged\Helpers\ValueAs;
 
 class DiskFileStore implements FileStoreInterface
 {
@@ -44,7 +43,9 @@ class DiskFileStore implements FileStoreInterface
       $base = $file->getBasename();
       if($base !== '.' && $base !== '..')
       {
-        $objects[] = $this->_getFileObject($file->getPathname());
+        $path = $file->getPathname();
+        $relPath = preg_replace('~^' . preg_quote($this->_getBasePath(), '~') . '~', '', $path);
+        $objects[] = $this->_getFileObject($relPath);
       }
     }
     return $objects;
@@ -95,9 +96,9 @@ class DiskFileStore implements FileStoreInterface
     return copy($fromPath, $toPath);
   }
 
-  public function getObject($path): FileStoreObjectInterface
+  public function getObject($relativePath): FileStoreObjectInterface
   {
-    return $this->_getFileObject($path);
+    return $this->_getFileObject($relativePath);
   }
 
   private function _getFullPath($path)
@@ -107,11 +108,16 @@ class DiskFileStore implements FileStoreInterface
 
   private function _getBasePath()
   {
-    return $this->_config->getItem('base_path', ValueAs::nonempty(getenv('HOME')));
+    return $this->_config->getItem('base_path');
   }
 
-  private function _getFileObject($fullPath)
+  private function _getUrlBasePath()
   {
-    return new FileStoreObject($fullPath, $this->_getBasePath());
+    return '/_m/quantum/upload';
+  }
+
+  private function _getFileObject($relativePath)
+  {
+    return new FileStoreObject($relativePath, $this->_getBasePath(), $this->_getUrlBasePath());
   }
 }

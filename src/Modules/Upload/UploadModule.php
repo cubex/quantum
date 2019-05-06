@@ -4,6 +4,7 @@ namespace Cubex\Quantum\Modules\Upload;
 use Cubex\Http\Handler;
 use Cubex\Quantum\Base\Interfaces\QuantumModule;
 use Cubex\Quantum\Modules\Upload\Controllers\UploadController;
+use Cubex\Quantum\Modules\Upload\Controllers\UploadFrontendController;
 use PackagedUi\FontAwesome\FaIcon;
 
 class UploadModule implements QuantumModule
@@ -30,16 +31,16 @@ class UploadModule implements QuantumModule
 
   public function hasAdmin(): bool
   {
-    return false;
+    return true;
   }
 
   public function getAdminHandler(): Handler
   {
-    return null;
+    return new UploadController();
   }
 
   public function getFrontendHandler(): Handler
   {
-    return new UploadController();
+    return new UploadFrontendController();
   }
 }
