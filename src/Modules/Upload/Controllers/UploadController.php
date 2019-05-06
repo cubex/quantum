@@ -120,7 +120,10 @@ class UploadController extends QuantumAdminController implements DispatchableCom
     {
       $basePath = Path::system($this->getContext()->getProjectRoot(), '.upload');
       $config->addItem('base_path', $basePath);
-      mkdir($basePath, 0777, true);
+      if(!file_exists($basePath))
+      {
+        mkdir($basePath, 0777, true);
+      }
     }
     $obj->configure($config);
     return $obj;
