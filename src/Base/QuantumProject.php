@@ -9,7 +9,7 @@ use Cubex\Events\PreExecuteEvent;
 use Cubex\Http\FuncHandler;
 use Cubex\Http\Handler;
 use Cubex\Quantum\Base\Dispatch\QuantumDispatch;
-use Cubex\Quantum\Base\FileStore\DiskFileStore;
+use Cubex\Quantum\Base\FileStore\DiskStore\DiskFileStore;
 use Cubex\Quantum\Base\FileStore\Interfaces\FileStoreInterface;
 use Cubex\Quantum\Base\Interfaces\QuantumAware;
 use Cubex\Quantum\Base\Interfaces\QuantumModule;

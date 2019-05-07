@@ -1,11 +1,11 @@
 <?php
-namespace Cubex\Quantum\Base\FileStore;
+namespace Cubex\Quantum\Base\FileStore\DiskStore;
 
+use Cubex\Quantum\Base\FileStore\FileStoreException;
 use Cubex\Quantum\Base\FileStore\Interfaces\FileStoreInterface;
 use Cubex\Quantum\Base\FileStore\Interfaces\FileStoreObjectInterface;
-use Cubex\Quantum\Base\FileStore\Objects\FileStoreObject;
-use DirectoryIterator;
 use Exception;
+use FilesystemIterator;
 use Packaged\Config\ConfigSectionInterface;
 use Packaged\Helpers\Path;
 
@@ -28,7 +28,7 @@ class DiskFileStore implements FileStoreInterface
   {
     $this->_config = $configuration;
     $basePath = $this->_config->getItem('upload_dir');
-    if(substr($basePath, 0, 1) !== '/')
+    if(substr($basePath, 0, 1) !== '/' && empty(parse_url($basePath, PHP_URL_SCHEME)))
     {
       $basePath = Path::system($this->_config->getItem('project_root'), $basePath);
     }
@@ -51,7 +51,7 @@ class DiskFileStore implements FileStoreInterface
     $objects = [];
     try
     {
-      $iterator = new DirectoryIterator($this->_getFullPath($path));
+      $iterator = new FilesystemIterator($this->_getFullPath($path));
     }
     catch(Exception $e)
     {
@@ -59,13 +59,9 @@ class DiskFileStore implements FileStoreInterface
     }
     foreach($iterator as $file)
     {
-      $base = $file->getBasename();
-      if($base !== '.' && $base !== '..')
-      {
-        $path = $file->getPathname();
-        $relPath = preg_replace('~^' . preg_quote($this->_resolvedBasePath, '~') . '~', '', $path);
-        $objects[] = $this->_getFileObject($relPath);
-      }
+      $path = $file->getPathname();
+      $relPath = preg_replace('~^' . preg_quote($this->_resolvedBasePath, '~') . '~', '', $path);
+      $objects[] = $this->_getFileObject($relPath);
     }
     return $objects;
   }
@@ -136,7 +132,7 @@ class DiskFileStore implements FileStoreInterface
 
   private function _getFullPath($path)
   {
-    return Path::system($this->_resolvedBasePath, $path);
+    return rtrim(Path::system($this->_resolvedBasePath, $path), '/');
   }
 
   private function _getUrlBasePath()
@@ -146,6 +142,6 @@ class DiskFileStore implements FileStoreInterface
 
   private function _getFileObject($relativePath)
   {
-    return new FileStoreObject($relativePath, $this->_resolvedBasePath, $this->_getUrlBasePath());
+    return new DiskFileStoreObject($relativePath, $this->_resolvedBasePath, $this->_getUrlBasePath());
   }
 }

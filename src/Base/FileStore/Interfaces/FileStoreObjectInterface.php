@@ -16,21 +16,6 @@ interface FileStoreObjectInterface
    */
   public function isDir(): bool;
 
-  /**
-   * @return bool
-   */
-  public function isFile(): bool;
-
-  /**
-   * @return bool
-   */
-  public function isLink(): bool;
-
-  /**
-   * @return string
-   */
-  public function getlinkTarget(): string;
-
   public function getMimeType(): string;
 
   public function getContents(): string;

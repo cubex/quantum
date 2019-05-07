@@ -1,10 +1,10 @@
 <?php
-namespace Cubex\Quantum\Base\FileStore\Objects;
+namespace Cubex\Quantum\Base\FileStore\DiskStore;
 
 use Cubex\Quantum\Base\FileStore\Interfaces\FileStoreObjectInterface;
 use Packaged\Helpers\Path;
 
-class FileStoreObject implements FileStoreObjectInterface
+class DiskFileStoreObject implements FileStoreObjectInterface
 {
   /**
    * @var string
@@ -53,21 +53,6 @@ class FileStoreObject implements FileStoreObjectInterface
   public function isDir(): bool
   {
     return is_dir($this->_getLocalPath());
-  }
-
-  public function isFile(): bool
-  {
-    return is_file($this->_getLocalPath());
-  }
-
-  public function isLink(): bool
-  {
-    return is_link($this->_getLocalPath());
-  }
-
-  public function getlinkTarget(): string
-  {
-    return $this->isLink() ? readlink($this->_getLocalPath()) : $this->_getLocalPath();
   }
 
   public function getMimeType(): string
