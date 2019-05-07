@@ -16,11 +16,13 @@ interface FileStoreInterface extends ConfigurableInterface
 
   public function store($path, $data, $metadata): bool;
 
+  public function mkdir($path): bool;
+
   public function delete($path): bool;
 
   public function retrieve($path): string;
 
-  public function move($fromPath, $toPath): bool;
+  public function rename($fromPath, $toPath): bool;
 
   public function copy($fromPath, $toPath): bool;
 

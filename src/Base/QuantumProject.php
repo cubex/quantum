@@ -3,11 +3,14 @@ namespace Cubex\Quantum\Base;
 
 use Cubex\Application\Application;
 use Cubex\Context\Context;
+use Cubex\Cubex;
 use Cubex\Events\Handle\ResponsePreSendHeadersEvent;
 use Cubex\Events\PreExecuteEvent;
 use Cubex\Http\FuncHandler;
 use Cubex\Http\Handler;
 use Cubex\Quantum\Base\Dispatch\QuantumDispatch;
+use Cubex\Quantum\Base\FileStore\DiskFileStore;
+use Cubex\Quantum\Base\FileStore\Interfaces\FileStoreInterface;
 use Cubex\Quantum\Base\Interfaces\QuantumAware;
 use Cubex\Quantum\Base\Interfaces\QuantumModule;
 use Cubex\Quantum\Base\Uri\Uri;
@@ -34,6 +37,19 @@ abstract class QuantumProject extends Application
    * @var QuantumModule[][] module class name
    */
   private $_modules = [];
+
+  public function __construct(Cubex $cubex)
+  {
+    parent::__construct($cubex);
+    $this->getCubex()->factory(
+      'upload-' . FileStoreInterface::class,
+      function () {
+        $config = $this->getContext()->config()->getSection('upload');
+        $config->addItem('project_root', $this->getContext()->getProjectRoot());
+        return (new DiskFileStore())->configure($config);
+      }
+    );
+  }
 
   protected function _generateRoutes()
   {

@@ -15,10 +15,7 @@ setTimeout(
           { // defaults
             placeholder: 'Please type your content here...',
             filer: {
-              // Upload the images to the server using the CKFinder QuickUpload command.
               url: '/admin/quantum/upload/connector',
-
-              // Define the CKFinder configuration (if necessary).
               options: {
                 meta: ['image', 'video']
               }

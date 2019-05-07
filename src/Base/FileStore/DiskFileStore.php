@@ -16,9 +16,28 @@ class DiskFileStore implements FileStoreInterface
    */
   private $_config;
 
+  private $_resolvedBasePath;
+
+  /**
+   * @param ConfigSectionInterface $configuration
+   *
+   * @return $this
+   * @throws Exception
+   */
   public function configure(ConfigSectionInterface $configuration)
   {
     $this->_config = $configuration;
+    $basePath = $this->_config->getItem('upload_dir');
+    if(substr($basePath, 0, 1) !== '/')
+    {
+      $basePath = Path::system($this->_config->getItem('project_root'), $basePath);
+    }
+    if($basePath && !file_exists($basePath))
+    {
+      mkdir($basePath);
+    }
+    $this->_resolvedBasePath = $basePath;
+    return $this;
   }
 
   /**
@@ -44,7 +63,7 @@ class DiskFileStore implements FileStoreInterface
       if($base !== '.' && $base !== '..')
       {
         $path = $file->getPathname();
-        $relPath = preg_replace('~^' . preg_quote($this->_getBasePath(), '~') . '~', '', $path);
+        $relPath = preg_replace('~^' . preg_quote($this->_resolvedBasePath, '~') . '~', '', $path);
         $objects[] = $this->_getFileObject($relPath);
       }
     }
@@ -57,9 +76,19 @@ class DiskFileStore implements FileStoreInterface
     return $result !== false ? true : false;
   }
 
+  public function mkdir($path): bool
+  {
+    return mkdir($path);
+  }
+
   public function delete($path): bool
   {
-    return unlink($this->_getFullPath($path));
+    $fullPath = $this->_getFullPath($path);
+    if(is_dir($fullPath))
+    {
+      return rmdir($fullPath);
+    }
+    return unlink($fullPath);
   }
 
   /**
@@ -82,10 +111,14 @@ class DiskFileStore implements FileStoreInterface
     throw new FileStoreException('file not found', 404);
   }
 
-  public function move($fromPath, $toPath): bool
+  public function rename($fromPath, $toPath): bool
   {
     $fromPath = $this->_getFullPath($fromPath);
     $toPath = $this->_getFullPath($toPath);
+    if((!file_exists($fromPath)) || file_exists($toPath))
+    {
+      return false;
+    }
     return rename($fromPath, $toPath);
   }
 
@@ -103,21 +136,16 @@ class DiskFileStore implements FileStoreInterface
 
   private function _getFullPath($path)
   {
-    return Path::system($this->_getBasePath(), $path);
-  }
-
-  private function _getBasePath()
-  {
-    return $this->_config->getItem('base_path');
+    return Path::system($this->_resolvedBasePath, $path);
   }
 
   private function _getUrlBasePath()
   {
-    return '/_m/quantum/upload';
+    return $this->_config->getItem('url_root', '/');
   }
 
   private function _getFileObject($relativePath)
   {
-    return new FileStoreObject($relativePath, $this->_getBasePath(), $this->_getUrlBasePath());
+    return new FileStoreObject($relativePath, $this->_resolvedBasePath, $this->_getUrlBasePath());
   }
 }

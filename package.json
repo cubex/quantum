@@ -6,8 +6,8 @@
   "author": "Tom Kay <oridan82@gmail.com>",
   "license": "MIT",
   "devDependencies": {
-    "@packaged-ui/ckwidgets": "^0.0.7",
-    "@packaged-ui/filer": "^0.0.3",
+    "@packaged-ui/ckwidgets": "^0.0.8",
+    "@packaged-ui/filer": "^0.0.5",
     "css-loader": "^2.1.1",
     "grunt": "^1.0",
     "grunt-contrib-clean": "^2.0",

@@ -2,10 +2,7 @@
 namespace Cubex\Quantum\Modules\Upload\Controllers;
 
 use Cubex\Quantum\Base\Controllers\QuantumBaseController;
-use Cubex\Quantum\Base\FileStore\DiskFileStore;
 use Cubex\Quantum\Base\FileStore\Interfaces\FileStoreInterface;
-use Packaged\Config\ConfigSectionInterface;
-use Packaged\Helpers\Path;
 use Packaged\Http\Response;
 
 class UploadFrontendController extends QuantumBaseController
@@ -25,33 +22,11 @@ class UploadFrontendController extends QuantumBaseController
   }
 
   /**
-   * @return ConfigSectionInterface
-   * @throws \Exception
-   */
-  private function _getConfig()
-  {
-    return $this->getContext()->config()->getSection('upload');
-  }
-
-  /**
    * @return FileStoreInterface
    * @throws \Exception
    */
   private function _getStore(): FileStoreInterface
   {
-    $config = $this->_getConfig();
-    $class = $config->getItem('filestore_class');
-
-    /** @var FileStoreInterface $obj */
-    $obj = new $class();
-
-    if($obj instanceof DiskFileStore && !$config->has('base_path'))
-    {
-      $basePath = Path::system($this->getContext()->getProjectRoot(), '.upload');
-      $config->addItem('base_path', $basePath);
-      mkdir($basePath, 0777, true);
-    }
-    $obj->configure($config);
-    return $obj;
+    return $this->getContext()->getCubex()->retrieve('upload-' . FileStoreInterface::class);
   }
 }

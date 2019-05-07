@@ -2,17 +2,17 @@
 namespace Cubex\Quantum\Modules\Upload\Controllers;
 
 use Cubex\Quantum\Base\Controllers\QuantumAdminController;
-use Cubex\Quantum\Base\FileStore\DiskFileStore;
 use Cubex\Quantum\Base\FileStore\FileStoreException;
 use Cubex\Quantum\Base\FileStore\Interfaces\FileStoreInterface;
 use Cubex\Quantum\Base\FileStore\Interfaces\FileStoreObjectInterface;
 use Cubex\Quantum\Modules\Upload\Filer\FilerObject;
-use Packaged\Config\ConfigSectionInterface;
+use Cubex\Routing\RequestDataConstraint;
 use Packaged\Dispatch\Component\DispatchableComponent;
 use Packaged\Dispatch\ResourceManager;
 use Packaged\Glimpse\Tags\Div;
 use Packaged\Helpers\Objects;
 use Packaged\Helpers\Path;
+use Packaged\Helpers\ValueAs;
 use Packaged\Http\Response;
 use Packaged\Http\Responses\JsonResponse;
 use PackagedUi\Fusion\Card\Card;
@@ -22,8 +22,9 @@ class UploadController extends QuantumAdminController implements DispatchableCom
   protected function _generateRoutes()
   {
     // these routes fail because the path is matched and routedPath is updated, but the other conditions fail
-    //yield self::_route('connector', 'upload')->add(RequestDataContraint::i()->post('action', 'upload'));
-    //yield self::_route('connector', 'delete')->add(RequestDataContraint::i()->post('action', 'delete'));
+    yield self::_route('connector', 'rename')->add(RequestDataConstraint::i()->post('action', 'rename'));
+    yield self::_route('connector', 'upload')->add(RequestDataConstraint::i()->post('action', 'upload'));
+    yield self::_route('connector', 'delete')->add(RequestDataConstraint::i()->post('action', 'delete'));
     yield self::_route('connector', 'connector');
     yield self::_route('', 'page');
   }
@@ -36,35 +37,33 @@ class UploadController extends QuantumAdminController implements DispatchableCom
       ->setContent(Div::create()->setId('filer-container'));
   }
 
+  public function postRename()
+  {
+    $success = $this->_getStore()->rename($this->request()->request->get('from'), $this->request()->request->get('to'));
+    return JsonResponse::create($success ? true : 'unable to rename');
+  }
+
   public function postUpload()
   {
     $name = basename($_FILES['file']['name']);
-    $this->_getStore()->store(
+    $success = $this->_getStore()->store(
       Path::system($this->request()->request->get('path'), $name),
       file_get_contents($_FILES['file']['tmp_name']),
       []
     );
-    return 'success';
+    return JsonResponse::create($success ? true : 'unable to upload');
   }
 
   public function postDelete()
   {
-    $this->_getStore()->delete($this->request()->request->get('path'));
-    return 'success';
+    $success = $this->_getStore()->delete($this->request()->request->get('path'));
+    return JsonResponse::create($success ? true : 'unable to delete');
   }
 
   public function postConnector()
   {
-    switch($this->request()->request->get('action'))
-    {
-      case 'upload':
-        return $this->postUpload();
-      case 'delete':
-        return $this->postDelete();
-    }
-
     $store = $this->_getStore();
-    $path = $this->getContext()->routeData()->get('path', '');
+    $path = ValueAs::nonempty($this->request()->request->get('path'), '/');
 
     $pathObj = $store->getObject($path);
     $list = [];
@@ -82,12 +81,22 @@ class UploadController extends QuantumAdminController implements DispatchableCom
       }
     }
 
-    $return = [];
-    $return[] = [
-      'path' => '!trash!',
-      'name' => '',
-      'type' => 'trash',
+    $return = [
+      [ // trash
+        'path' => '!trash!',
+        'name' => '',
+        'type' => 'trash',
+      ],
     ];
+    // up a level
+    if($path !== '/')
+    {
+      $return[] = [
+        'path' => dirname($path),
+        'name' => '..',
+        'type' => 'dir',
+      ];
+    }
     foreach($list as $f)
     {
       $return[] = FilerObject::create($f);
@@ -96,36 +105,10 @@ class UploadController extends QuantumAdminController implements DispatchableCom
   }
 
   /**
-   * @return ConfigSectionInterface
-   * @throws \Exception
-   */
-  private function _getConfig()
-  {
-    return $this->getContext()->config()->getSection('upload');
-  }
-
-  /**
    * @return FileStoreInterface
-   * @throws \Exception
    */
   private function _getStore(): FileStoreInterface
   {
-    $config = $this->_getConfig();
-    $class = $config->getItem('filestore_class');
-
-    /** @var FileStoreInterface $obj */
-    $obj = new $class();
-
-    if($obj instanceof DiskFileStore && !$config->has('base_path'))
-    {
-      $basePath = Path::system($this->getContext()->getProjectRoot(), '.upload');
-      $config->addItem('base_path', $basePath);
-      if(!file_exists($basePath))
-      {
-        mkdir($basePath, 0777, true);
-      }
-    }
-    $obj->configure($config);
-    return $obj;
+    return $this->getContext()->getCubex()->retrieve('upload-' . FileStoreInterface::class);
   }
 }
