@@ -21,9 +21,13 @@
     "packaged-ui/fusion": "^1.0"
   },
   "require-dev": {
+    "google/cloud-storage": "^1.9",
     "php-coveralls/php-coveralls": "^2.1",
     "phpunit/phpunit": "^6.5",
     "filp/whoops": "^2.3"
+  },
+  "suggest": {
+    "google/cloud-storage": "^1.9"
   },
   "autoload": {
     "psr-4": {

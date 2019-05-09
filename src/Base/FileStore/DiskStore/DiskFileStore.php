@@ -41,17 +41,17 @@ class DiskFileStore implements FileStoreInterface
   }
 
   /**
-   * @param $path
+   * @param $relativePath
    *
    * @return FileStoreObjectInterface[]
    * @throws FileStoreException
    */
-  public function list($path): array
+  public function list(string $relativePath): array
   {
     $objects = [];
     try
     {
-      $iterator = new FilesystemIterator($this->_getFullPath($path));
+      $iterator = new FilesystemIterator($this->_getFullPath($relativePath));
     }
     catch(Exception $e)
     {
@@ -59,27 +59,27 @@ class DiskFileStore implements FileStoreInterface
     }
     foreach($iterator as $file)
     {
-      $path = $file->getPathname();
-      $relPath = preg_replace('~^' . preg_quote($this->_resolvedBasePath, '~') . '~', '', $path);
+      $relativePath = $file->getPathname();
+      $relPath = preg_replace('~^' . preg_quote($this->_resolvedBasePath, '~') . '~', '', $relativePath);
       $objects[] = $this->_getFileObject($relPath);
     }
     return $objects;
   }
 
-  public function store($path, $data, $metadata): bool
+  public function store(string $relativePath, $data, array $metadata): bool
   {
-    $result = file_put_contents($this->_getFullPath($path), $data);
+    $result = file_put_contents($this->_getFullPath($relativePath), $data);
     return $result !== false ? true : false;
   }
 
-  public function mkdir($path): bool
+  public function mkdir(string $relativePath): bool
   {
-    return mkdir($path);
+    return mkdir($relativePath);
   }
 
-  public function delete($path): bool
+  public function delete(string $relativePath): bool
   {
-    $fullPath = $this->_getFullPath($path);
+    $fullPath = $this->_getFullPath($relativePath);
     if(is_dir($fullPath))
     {
       return rmdir($fullPath);
@@ -88,17 +88,17 @@ class DiskFileStore implements FileStoreInterface
   }
 
   /**
-   * @param $path
+   * @param string $relativePath
    *
    * @return string
    * @throws FileStoreException
    */
-  public function retrieve($path): string
+  public function retrieve(string $relativePath): string
   {
-    $path = $this->_getFullPath($path);
-    if(file_exists($path))
+    $relativePath = $this->_getFullPath($relativePath);
+    if(file_exists($relativePath))
     {
-      $contents = file_get_contents($path);
+      $contents = file_get_contents($relativePath);
       if($contents !== false)
       {
         return $contents;
@@ -107,25 +107,25 @@ class DiskFileStore implements FileStoreInterface
     throw new FileStoreException('file not found', 404);
   }
 
-  public function rename($fromPath, $toPath): bool
+  public function rename(string $fromRelativePath, string $toRelativePath): bool
   {
-    $fromPath = $this->_getFullPath($fromPath);
-    $toPath = $this->_getFullPath($toPath);
-    if((!file_exists($fromPath)) || file_exists($toPath))
+    $fromRelativePath = $this->_getFullPath($fromRelativePath);
+    $toRelativePath = $this->_getFullPath($toRelativePath);
+    if((!file_exists($fromRelativePath)) || file_exists($toRelativePath))
     {
       return false;
     }
-    return rename($fromPath, $toPath);
+    return rename($fromRelativePath, $toRelativePath);
   }
 
-  public function copy($fromPath, $toPath): bool
+  public function copy(string $fromRelativePath, string $toRelativePath): bool
   {
-    $fromPath = $this->_getFullPath($fromPath);
-    $toPath = $this->_getFullPath($toPath);
-    return copy($fromPath, $toPath);
+    $fromRelativePath = $this->_getFullPath($fromRelativePath);
+    $toRelativePath = $this->_getFullPath($toRelativePath);
+    return copy($fromRelativePath, $toRelativePath);
   }
 
-  public function getObject($relativePath): FileStoreObjectInterface
+  public function getObject(string $relativePath): FileStoreObjectInterface
   {
     return $this->_getFileObject($relativePath);
   }

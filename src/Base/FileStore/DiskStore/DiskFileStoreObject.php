@@ -43,7 +43,7 @@ class DiskFileStoreObject implements FileStoreObjectInterface
 
   public function getFileSize(): int
   {
-    if($this->isFile())
+    if(!$this->isDir())
     {
       return filesize($this->_getLocalPath()) ?: 0;
     }

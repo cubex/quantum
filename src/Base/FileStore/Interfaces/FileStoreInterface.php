@@ -7,24 +7,24 @@ use Packaged\Config\ConfigurableInterface;
 interface FileStoreInterface extends ConfigurableInterface
 {
   /**
-   * @param $path
+   * @param $relativePath
    *
    * @return FileStoreObjectInterface[]
    * @throws FileStoreException
    */
-  public function list($path): array;
+  public function list(string $relativePath): array;
 
-  public function store($path, $data, $metadata): bool;
+  public function store(string $relativePath, $data, array $metadata): bool;
 
-  public function mkdir($path): bool;
+  public function mkdir(string $relativePath): bool;
 
-  public function delete($path): bool;
+  public function delete(string $relativePath): bool;
 
-  public function retrieve($path): string;
+  public function retrieve(string $relativePath): string;
 
-  public function rename($fromPath, $toPath): bool;
+  public function rename(string $fromRelativePath, string $toRelativePath): bool;
 
-  public function copy($fromPath, $toPath): bool;
+  public function copy(string $fromRelativePath, string $toRelativePath): bool;
 
-  public function getObject($relativePath): FileStoreObjectInterface;
+  public function getObject(string $relativePath): FileStoreObjectInterface;
 }
