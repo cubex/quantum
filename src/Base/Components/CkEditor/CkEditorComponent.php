@@ -11,8 +11,7 @@ class CkEditorComponent extends Textarea implements DispatchableComponent
   protected function _prepareForProduce(): HtmlElement
   {
     $rm = ResourceManager::component($this);
-    $rm->requireJs('widget/ckeditor.min.js');
-    $rm->requireJs('ckeditor.js');
+    $rm->requireJs('ckeditor.min.js');
     $rm->requireCss('ckeditor.css');
 
     $ele = parent::_prepareForProduce();
