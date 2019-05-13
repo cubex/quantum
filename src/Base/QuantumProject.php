@@ -31,6 +31,8 @@ use Packaged\Http\Response;
 
 abstract class QuantumProject extends Application
 {
+  private $_adminTheme;
+  private $_frontendTheme;
   private $_frontendModules = [];
   private $_adminModules = [];
   /**
@@ -94,12 +96,30 @@ abstract class QuantumProject extends Application
     return PathRouteController::class;
   }
 
-  public function getAdminTheme(): BaseTheme
+  final public function getAdminTheme(): BaseTheme
+  {
+    if(!$this->_adminTheme)
+    {
+      $this->_adminTheme = $this->_getNewAdminTheme();
+    }
+    return $this->_adminTheme;
+  }
+
+  protected function _getNewAdminTheme()
   {
     return new AdminTheme();
   }
 
-  public function getFrontendTheme(): BaseTheme
+  final public function getFrontendTheme(): BaseTheme
+  {
+    if(!$this->_frontendTheme)
+    {
+      $this->_frontendTheme = $this->_getNewFrontendTheme();
+    }
+    return $this->_frontendTheme;
+  }
+
+  protected function _getNewFrontendTheme(): BaseTheme
   {
     return new QuantifiTheme();
   }
