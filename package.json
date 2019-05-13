@@ -6,10 +6,6 @@
   "author": "Tom Kay <oridan82@gmail.com>",
   "license": "MIT",
   "devDependencies": {
-    "@packaged-ui/ckeditor5-editor-iframe": "^0.0.1",
-    "@packaged-ui/filer": "^0.0.5",
-    "@packaged-ui/ckeditor5-filer": "^0.0.1",
-    "@packaged-ui/ckeditor5-layout": "^0.0.1",
     "@ckeditor/ckeditor5-alignment": "^11.1.0",
     "@ckeditor/ckeditor5-autoformat": "^11.0.1",
     "@ckeditor/ckeditor5-basic-styles": "^11.1.0",
@@ -32,18 +28,25 @@
     "@ckeditor/ckeditor5-upload": "^11.0.1",
     "@ckeditor/ckeditor5-utils": "^12.1.0",
     "@ckeditor/ckeditor5-widget": "^11.0.1",
-    "raw-loader": "^2.0.0",
-    "terser-webpack-plugin": "^1.2.3",
-    "postcss-loader": "^3.0.0",
+    "@packaged-ui/ckeditor5-editor-iframe": "^0.0.1",
+    "@packaged-ui/ckeditor5-filer": "^0.0.1",
+    "@packaged-ui/ckeditor5-layout": "^0.0.1",
+    "@packaged-ui/filer": "^0.0.5",
     "css-loader": "^2.1.1",
     "grunt": "^1.0",
     "grunt-contrib-clean": "^2.0",
     "grunt-contrib-copy": "^1.0",
+    "postcss-loader": "^3.0.0",
+    "raw-loader": "^2.0.0",
     "style-loader": "^0.23.1",
+    "terser-webpack-plugin": "^1.2.3",
     "webpack": "^4.31.0",
     "webpack-cli": "^3.3.2"
   },
   "scripts": {
     "build": "webpack --mode=production"
+  },
+  "dependencies": {
+    "extend": "^3.0.2"
   }
 }

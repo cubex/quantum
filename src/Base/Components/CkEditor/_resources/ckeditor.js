@@ -20,99 +20,84 @@ import Table from '@ckeditor/ckeditor5-table/src/table';
 import TableToolbar from '@ckeditor/ckeditor5-table/src/tabletoolbar';
 import Filer from '@packaged-ui/ckeditor5-filer/src/filer';
 import Layout from '@packaged-ui/ckeditor5-layout/src/layout';
+import extend from 'extend/index';
 
 window.QuantumEditorConfig = window.QuantumEditorConfig || {};
 
-// delay creating editor
-document.addEventListener(
-  'DOMContentLoaded',
-  function ()
-  {
-    InlineIframeEditor.create(
-      document.querySelector('.content-editor'),
-      Object.assign(
-        QuantumEditorConfig,
-        { // defaults
-          placeholder: 'Please type your content here...',
-          plugins: [
-            Alignment,
-            Essentials,
-            Autoformat,
-            Bold,
-            Italic,
-            BlockQuote,
-            Heading,
-            Image,
-            ImageCaption,
-            ImageStyle,
-            ImageToolbar,
-            ImageUpload,
-            Link,
-            List,
-            MediaEmbed,
-            Paragraph,
-            PasteFromOffice,
-            Table,
-            TableToolbar,
-            Filer,
-            Layout
-          ],
-          filer: {
-            url: '/admin/quantum/upload/connector',
-            options: {
-              meta: ['image', 'video']
-            }
-          },
-          toolbar: {
-            items: [
-              'heading',
-              '|',
-              'alignment',
-              'bold',
-              'italic',
-              'link',
-              'bulletedList',
-              'numberedList',
-              'imageUpload',
-              'blockQuote',
-              'insertTable',
-              'mediaEmbed',
-              'undo',
-              'redo',
-              '|', 'filer',
-              '|', 'layout'
-            ]
-          },
-          image: {
-            toolbar: [
-              'imageStyle:full',
-              'imageStyle:side',
-              '|',
-              'imageTextAlternative'
-            ]
-          },
-          table: {
-            contentToolbar: [
-              'tableColumn',
-              'tableRow',
-              'mergeTableCells'
-            ]
-          },
-          // This value must be kept in sync with the language defined in webpack.config.js.
-          language: 'en'
+InlineIframeEditor.create(
+  document.querySelector('.content-editor'),
+  extend(
+    true,
+    {},
+    { // defaults
+      placeholder: 'Please type your content here...',
+      plugins: [
+        Alignment,
+        Essentials,
+        Autoformat,
+        Bold,
+        Italic,
+        BlockQuote,
+        Heading,
+        Image,
+        ImageCaption,
+        ImageStyle,
+        ImageToolbar,
+        ImageUpload,
+        Link,
+        List,
+        MediaEmbed,
+        Paragraph,
+        PasteFromOffice,
+        Table,
+        TableToolbar,
+        Filer,
+        Layout
+      ],
+      filer: {
+        url: '/admin/quantum/upload/connector',
+        options: {
+          meta: ['image', 'video']
         }
-      )
-    )
-                      .then(
-                        function (editor)
-                        {
-
-                          //    import {toWidget} from '@ckeditor/ckeditor5-widget/src/utils';
-                          //    import {downcastElementToElement} from '@ckeditor/ckeditor5-engine/src/conversion/downcast-converters';
-                          //    import {upcastElementToElement} from '@ckeditor/ckeditor5-engine/src/conversion/upcast-converters';
-
-                        }
-                      )
-                      .catch(function (error) {console.error(error);});
-  }
+      },
+      toolbar: {
+        items: [
+          'heading',
+          '|',
+          'alignment',
+          'bold',
+          'italic',
+          'link',
+          'bulletedList',
+          'numberedList',
+          'imageUpload',
+          'blockQuote',
+          'insertTable',
+          'mediaEmbed',
+          'undo',
+          'redo',
+          '|', 'filer',
+          '|', 'layout'
+        ]
+      },
+      image: {
+        toolbar: [
+          'imageStyle:full',
+          'imageStyle:side',
+          '|',
+          'imageTextAlternative'
+        ]
+      },
+      table: {
+        contentToolbar: [
+          'tableColumn',
+          'tableRow',
+          'mergeTableCells'
+        ]
+      },
+      // This value must be kept in sync with the language defined in webpack.config.js.
+      language: 'en'
+    },
+    QuantumEditorConfig
+  )
 );
