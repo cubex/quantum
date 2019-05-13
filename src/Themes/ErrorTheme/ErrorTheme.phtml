@@ -1,0 +1,33 @@
+<?php
+/**
+ * @var $this \Cubex\Quantum\Themes\ErrorTheme\ErrorTheme
+ */
+
+use Packaged\Dispatch\Dispatch;
+use Packaged\Dispatch\ResourceStore;
+
+?>
+<!DOCTYPE html>
+<html>
+<head lang="en">
+  <meta charset="UTF-8">
+  <?= Dispatch::instance()->store()->generateHtmlIncludes(ResourceStore::TYPE_CSS); ?>
+  <title><?= $this->getPageTitle() ?></title>
+  <style>
+    body {
+      font-family: sans-serif;
+      text-align: center;
+    }
+  </style>
+</head>
+<body>
+<h1><?= $this->getTitle() ?></h1>
+<p>
+  <?php if($this->getCode()): ?>
+    <strong>[<?= $this->getCode() ?>]</strong><?php endif; ?>
+  <?= $this->getContent() ?>
+</p>
+
+<?= Dispatch::instance()->store()->generateHtmlIncludes(ResourceStore::TYPE_JS); ?>
+</body>
+</html>

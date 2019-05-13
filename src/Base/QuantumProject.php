@@ -20,6 +20,7 @@ use Cubex\Quantum\Modules\Paths\PathsModule;
 use Cubex\Quantum\Modules\Upload\UploadModule;
 use Cubex\Quantum\Themes\Admin\AdminTheme;
 use Cubex\Quantum\Themes\BaseTheme;
+use Cubex\Quantum\Themes\ErrorTheme\ErrorTheme;
 use Cubex\Quantum\Themes\Quantifi\QuantifiTheme;
 use Packaged\Config\Provider\Ini\IniConfigProvider;
 use Packaged\Dal\DalResolver;
@@ -33,6 +34,7 @@ abstract class QuantumProject extends Application
 {
   private $_adminTheme;
   private $_frontendTheme;
+  private $_errorTheme;
   private $_frontendModules = [];
   private $_adminModules = [];
   /**
@@ -122,6 +124,20 @@ abstract class QuantumProject extends Application
   protected function _getNewFrontendTheme(): BaseTheme
   {
     return new QuantifiTheme();
+  }
+
+  final public function getErrorTheme(): ErrorTheme
+  {
+    if(!$this->_errorTheme)
+    {
+      $this->_errorTheme = $this->_getNewErrorTheme();
+    }
+    return $this->_errorTheme;
+  }
+
+  protected function _getNewErrorTheme()
+  {
+    return new ErrorTheme();
   }
 
   protected function _initialize()
