@@ -1,7 +1,6 @@
 <?php
 namespace Cubex\Quantum\Modules\Pages\Controllers\Admin\Forms;
 
-use Cubex\Quantum\Base\Components\CkEditor\CkEditorDecorator;
 use Packaged\Form\Csrf\CsrfForm;
 use Packaged\Form\DataHandlers\TextDataHandler;
 
@@ -28,6 +27,5 @@ class PageForm extends CsrfForm
     $this->path = new TextDataHandler();
     $this->title = new TextDataHandler();
     $this->content = new TextDataHandler();
-    $this->content->setDecorator(new CkEditorDecorator());
   }
 }

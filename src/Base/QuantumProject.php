@@ -8,6 +8,7 @@ use Cubex\Events\Handle\ResponsePreSendHeadersEvent;
 use Cubex\Events\PreExecuteEvent;
 use Cubex\Http\FuncHandler;
 use Cubex\Http\Handler;
+use Cubex\Quantum\Base\Components\CkEditor\CkEditorComponent;
 use Cubex\Quantum\Base\Dispatch\QuantumDispatch;
 use Cubex\Quantum\Base\FileStore\DiskStore\DiskFileStore;
 use Cubex\Quantum\Base\FileStore\Interfaces\FileStoreInterface;
@@ -45,14 +46,16 @@ abstract class QuantumProject extends Application
   public function __construct(Cubex $cubex)
   {
     parent::__construct($cubex);
-    $this->getCubex()->factory(
-      'upload-' . FileStoreInterface::class,
-      function () {
-        $config = $this->getContext()->config()->getSection('upload');
-        $config->addItem('project_root', $this->getContext()->getProjectRoot());
-        return (new DiskFileStore())->configure($config);
-      }
-    );
+    $this->getCubex()
+      ->factory(
+        'upload-' . FileStoreInterface::class,
+        function () {
+          $config = $this->getContext()->config()->getSection('upload');
+          $config->addItem('project_root', $this->getContext()->getProjectRoot());
+          return (new DiskFileStore())->configure($config);
+        }
+      )
+      ->share(CkEditorComponent::class, CkEditorComponent::class);
   }
 
   protected function _generateRoutes()

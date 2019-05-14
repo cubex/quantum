@@ -33,6 +33,7 @@
     "@packaged-ui/ckeditor5-layout": "^0.0.1",
     "@packaged-ui/filer": "^0.0.5",
     "css-loader": "^2.1.1",
+    "extract-text-webpack-plugin": "^4.0.0-beta.0",
     "grunt": "^1.0",
     "grunt-contrib-clean": "^2.0",
     "grunt-contrib-copy": "^1.0",

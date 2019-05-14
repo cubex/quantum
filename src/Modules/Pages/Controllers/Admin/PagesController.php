@@ -2,6 +2,7 @@
 namespace Cubex\Quantum\Modules\Pages\Controllers\Admin;
 
 use Cubex\Quantum\Base\Components\CkEditor\CkEditorComponent;
+use Cubex\Quantum\Base\Components\CkEditor\CkEditorDecorator;
 use Cubex\Quantum\Base\Components\Pagination\Pagination;
 use Cubex\Quantum\Base\Controllers\QuantumAdminController;
 use Cubex\Quantum\Base\FileStore\Interfaces\FileStoreInterface;
@@ -58,7 +59,8 @@ class PagesController extends QuantumAdminController
       $this->setTheme($this->getQuantum()->getFrontendTheme());
     }
     $this->getTheme()->setPageTitle($content->title);
-    return CkEditorComponent::create(new SafeHtml($content->content))->setInline();
+
+    return $this->getContext()->getCubex()->retrieve(CkEditorComponent::class, [new SafeHtml($content->content)]);
   }
 
   public function postImage()
@@ -144,6 +146,9 @@ class PagesController extends QuantumAdminController
     $form->version = $content->id;
     $form->title = $content->title;
     $form->content = $content->content;
+    $form->content->setDecorator(
+      new CkEditorDecorator($this->getContext()->getCubex()->retrieve(CkEditorComponent::class))
+    );
 
     return Div::create(
       [

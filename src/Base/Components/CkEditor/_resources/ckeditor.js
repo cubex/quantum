@@ -104,15 +104,22 @@ InlineIFrameEditor.create(
 ).then(
   function (editor)
   {
-    // find ckeditorStyle css
-    const originalLink = document.getElementById('ckeditor-styles');
-    // clone it and add into iframe head
-    const link = document.createElement('link');
-    link.setAttribute('href', originalLink.getAttribute('href'));
-    link.setAttribute('rel', originalLink.getAttribute('rel'));
-    link.setAttribute('type', originalLink.getAttribute('type'));
-    //get iframe
-    const iframeHead = getIframeDocument(editor.iframeElement).head;
-    iframeHead.appendChild(link);
+    const originalLinks = document.querySelectorAll('link.ckeditor-style');
+    for(let i in originalLinks)
+    {
+      if(originalLinks.hasOwnProperty(i))
+      {
+        // find ckeditorStyle css
+        const originalLink = originalLinks[i];
+        // clone it and add into iframe head
+        const link = document.createElement('link');
+        link.setAttribute('href', originalLink.getAttribute('href'));
+        link.setAttribute('rel', originalLink.getAttribute('rel'));
+        link.setAttribute('type', originalLink.getAttribute('type'));
+        //get iframe
+        const iframeHead = getIframeDocument(editor.iframeElement).head;
+        iframeHead.appendChild(link);
+      }
+    }
   }
 );

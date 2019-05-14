@@ -28,7 +28,8 @@ class ContentController extends QuantumBaseController implements QuantumFrontend
 
   public function processDefault()
   {
-    ResourceManager::component(new CkEditorComponent())->requireCss('include.css');
+    $editorComponent = $this->getContext()->getCubex()->retrieve(CkEditorComponent::class);
+    ResourceManager::component($editorComponent)->requireCss('styles/styles.css');
 
     $page = Page::loadById($this->_options->get('pageId'));
     $content = PageContent::loadById($page->id, $page->publishedVersion);
