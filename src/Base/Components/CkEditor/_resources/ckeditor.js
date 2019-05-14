@@ -1,4 +1,4 @@
-import InlineIframeEditor from "@packaged-ui/ckeditor5-editor-iframe/src/inline";
+import InlineIFrameEditor from "@packaged-ui/ckeditor5-editor-iframe/src/inline";
 import Alignment from '@ckeditor/ckeditor5-alignment/src/alignment';
 import Essentials from '@ckeditor/ckeditor5-essentials/src/essentials';
 import Autoformat from '@ckeditor/ckeditor5-autoformat/src/autoformat';
@@ -21,10 +21,11 @@ import TableToolbar from '@ckeditor/ckeditor5-table/src/tabletoolbar';
 import Filer from '@packaged-ui/ckeditor5-filer/src/filer';
 import Layout from '@packaged-ui/ckeditor5-layout/src/layout';
 import extend from 'extend/index';
+import {getIframeDocument} from '@packaged-ui/ckeditor5-editor-iframe/src/shared'
 
 window.QuantumEditorConfig = window.QuantumEditorConfig || {};
 
-InlineIframeEditor.create(
+InlineIFrameEditor.create(
   document.querySelector('.content-editor'),
   extend(
     true,
@@ -100,4 +101,18 @@ InlineIframeEditor.create(
     },
     QuantumEditorConfig
   )
+).then(
+  function (editor)
+  {
+    // find ckeditorStyle css
+    const originalLink = document.getElementById('ckeditor-styles');
+    // clone it and add into iframe head
+    const link = document.createElement('link');
+    link.setAttribute('href', originalLink.getAttribute('href'));
+    link.setAttribute('rel', originalLink.getAttribute('rel'));
+    link.setAttribute('type', originalLink.getAttribute('type'));
+    //get iframe
+    const iframeHead = getIframeDocument(editor.iframeElement).head;
+    iframeHead.appendChild(link);
+  }
 );
