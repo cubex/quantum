@@ -47,8 +47,5 @@
   },
   "scripts": {
     "build": "webpack --mode=production"
-  },
-  "dependencies": {
-    "extend": "^3.0.2"
   }
 }
