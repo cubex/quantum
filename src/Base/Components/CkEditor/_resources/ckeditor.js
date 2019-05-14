@@ -23,8 +23,6 @@ import Layout from '@packaged-ui/ckeditor5-layout/src/layout';
 import extend from 'extend/index';
 import {getIframeDocument} from '@packaged-ui/ckeditor5-editor-iframe/src/shared'
 
-window.QuantumEditorConfig = window.QuantumEditorConfig || {};
-
 InlineIFrameEditor.create(
   document.querySelector('.content-editor'),
   extend(
@@ -99,7 +97,6 @@ InlineIFrameEditor.create(
       // This value must be kept in sync with the language defined in webpack.config.js.
       language: 'en'
     },
-    QuantumEditorConfig
   )
 ).then(
   function (editor)
