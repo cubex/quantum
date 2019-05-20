@@ -13,7 +13,6 @@ class CkEditorComponent extends Textarea implements DispatchableComponent
     $rm = ResourceManager::componentClass(self::class);
     $rm->requireCss('ckeditor.css');
     $this->includeEditorResources();
-    $this->includeExternalResources();
 
     $ele = parent::_prepareForProduce();
     $ele->addClass('content-editor');
