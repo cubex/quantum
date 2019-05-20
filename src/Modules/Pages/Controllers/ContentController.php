@@ -6,7 +6,6 @@ use Cubex\Quantum\Base\Controllers\QuantumBaseController;
 use Cubex\Quantum\Base\Interfaces\QuantumFrontendHandler;
 use Cubex\Quantum\Modules\Pages\Daos\Page;
 use Cubex\Quantum\Modules\Pages\Daos\PageContent;
-use Packaged\Dispatch\ResourceManager;
 use Symfony\Component\HttpFoundation\ParameterBag;
 
 class ContentController extends QuantumBaseController implements QuantumFrontendHandler
@@ -28,8 +27,9 @@ class ContentController extends QuantumBaseController implements QuantumFrontend
 
   public function processDefault()
   {
+    /** @var CkEditorComponent $editorComponent */
     $editorComponent = $this->getContext()->getCubex()->retrieve(CkEditorComponent::class);
-    ResourceManager::component($editorComponent)->requireCss('styles/styles.css');
+    $editorComponent->includeExternalResources();
 
     $page = Page::loadById($this->_options->get('pageId'));
     $content = PageContent::loadById($page->id, $page->publishedVersion);

@@ -10,25 +10,26 @@ class CkEditorComponent extends Textarea implements DispatchableComponent
 {
   protected function _prepareForProduce(): HtmlElement
   {
+    $rm = ResourceManager::componentClass(self::class);
+    $rm->requireCss('ckeditor.css');
     $this->includeEditorResources();
-    $this->includePageResources();
+    $this->includeExternalResources();
 
     $ele = parent::_prepareForProduce();
     $ele->addClass('content-editor');
     return $ele;
   }
 
-  public function includePageResources()
-  {
-    $rm = ResourceManager::componentClass(self::class);
-    $rm->requireCss('ckeditor.css');
-    $rm->requireCss('styles/styles.css', ['class' => 'ckeditor-style']);
-  }
-
   public function includeEditorResources()
   {
     $rm = ResourceManager::component($this);
     $rm->requireJs('plugin/ckeditor.min.js');
-    $rm->requireCss('plugin/ckeditor.min.css');
+    $rm->requireCss('plugin/ckeditor.min.css', ['class' => 'ckeditor-style']);
+  }
+
+  public function includeExternalResources()
+  {
+    $rm = ResourceManager::component($this);
+    $rm->requireCss('plugin/external-styles.css', ['class' => 'ckeditor-style']);
   }
 }

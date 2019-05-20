@@ -1,11 +1,11 @@
 const path = require('path');
-const glob = require("glob");
 const webpack = require('webpack');
 const {bundler, styles} = require('@ckeditor/ckeditor5-dev-utils');
 const CKEditorWebpackPlugin = require('@ckeditor/ckeditor5-dev-webpack-plugin');
 const TerserWebpackPlugin = require('terser-webpack-plugin');
 const MiniCssExtractPlugin = require('mini-css-extract-plugin');
-const ExtractTextPlugin = require('extract-text-webpack-plugin');
+const CleanWebpackPlugin = require('clean-webpack-plugin');
+const FileExtractPlugin = require('webpack-file-extract-plugin');
 
 const filerCfg = {
   entry: {
@@ -19,8 +19,8 @@ const filerCfg = {
       },
     ]
   },
+  performance: {hints: false},
   output: {
-    libraryTarget: "global",
     path: path.resolve(__dirname, 'src/Modules/Upload/Controllers/_resources/'), //directory for output files
     filename: '[name].min.js' //using [name] will create a bundle with same file name as source
   },
@@ -28,10 +28,9 @@ const filerCfg = {
 
 const ckeditorCfg = {
   entry: {
-    'ckeditor': './src/Base/Components/Ckeditor/_resources/ckeditor.js'
+    'ckeditor': './src/Base/Components/Ckeditor/_resources_src/ckeditor.js'
   },
   output: {
-    //    libraryTarget: 'umd',
     path: path.resolve(__dirname, 'src/Base/Components/Ckeditor/_resources/plugin/'), //directory for output files
     filename: '[name].min.js' //using [name] will create a bundle with same file name as source
   },
@@ -48,6 +47,7 @@ const ckeditorCfg = {
   },
 
   plugins: [
+    new CleanWebpackPlugin(),
     new CKEditorWebpackPlugin(
       {
         // UI language. Language codes follow the https://en.wikipedia.org/wiki/ISO_639-1 format.
@@ -67,6 +67,12 @@ const ckeditorCfg = {
         filename: '[name].min.css'
       }
     ),
+    new FileExtractPlugin(
+      {
+        match: [/\.css$/, /\/node_modules\/(?!@ckeditor)/],
+        output: {filename: 'external-styles.css'}
+      }
+    )
   ],
 
   module: {
@@ -97,36 +103,4 @@ const ckeditorCfg = {
   }
 };
 
-const stylesCfg = {
-  entry: {
-    'styles': glob.sync('./node_modules/@packaged-ui/ckeditor5-layout/src/**/*.css'),
-  },
-  output: {
-    //    libraryTarget: 'umd',
-    path: path.resolve(__dirname, 'src/Base/Components/Ckeditor/_resources/styles/'), //directory for output files
-    filename: '[name].css' //using [name] will create a bundle with same file name as source
-  },
-  plugins: [
-    new ExtractTextPlugin('[name].css') // css file will override generated js file
-  ],
-
-  module: {
-    rules: [
-      {
-        test: /\.svg$/,
-        use: ['raw-loader']
-      },
-      {
-        test: /\.css$/,
-        use: ExtractTextPlugin.extract(
-          {
-            fallback: 'style-loader',
-            use: 'css-loader'
-          }
-        ),
-      }
-    ]
-  }
-};
-
-module.exports = [filerCfg, stylesCfg, ckeditorCfg];
+module.exports = [filerCfg, ckeditorCfg];
