@@ -6,8 +6,6 @@ use Cubex\Context\Context;
 use Cubex\Cubex;
 use Cubex\Events\Handle\ResponsePreSendHeadersEvent;
 use Cubex\Events\PreExecuteEvent;
-use Cubex\Http\FuncHandler;
-use Cubex\Http\Handler;
 use Cubex\Quantum\Base\Components\CkEditor\CkEditorComponent;
 use Cubex\Quantum\Base\Dispatch\QuantumDispatch;
 use Cubex\Quantum\Base\FileStore\DiskStore\DiskFileStore;
@@ -30,6 +28,8 @@ use Packaged\Dispatch\Dispatch;
 use Packaged\Dispatch\Resources\ResourceFactory;
 use Packaged\Helpers\Path;
 use Packaged\Http\Response;
+use Packaged\Routing\Handler\FuncHandler;
+use Packaged\Routing\Handler\Handler;
 
 abstract class QuantumProject extends Application
 {

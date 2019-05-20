@@ -1,7 +1,7 @@
 <?php
 namespace Cubex\Quantum\Base\Interfaces;
 
-use Cubex\Http\Handler;
+use Packaged\Routing\Handler\Handler;
 
 interface QuantumModule
 {

@@ -1,9 +1,9 @@
 <?php
 namespace Cubex\Quantum\Base\Uri;
 
-use Cubex\Context\Context;
-use Cubex\Routing\Condition;
-use Cubex\Routing\RequestConstraint;
+use Packaged\Context\Context;
+use Packaged\Routing\Condition;
+use Packaged\Routing\RequestConstraint;
 
 class Uri implements Condition
 {

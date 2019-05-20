@@ -1,9 +1,9 @@
 <?php
 namespace Cubex\Quantum\Modules\Paths;
 
-use Cubex\Http\Handler;
 use Cubex\Quantum\Base\Interfaces\QuantumModule;
 use Cubex\Quantum\Modules\Paths\Controllers\PathRouteController;
+use Packaged\Routing\Handler\Handler;
 
 class PathsModule implements QuantumModule
 {

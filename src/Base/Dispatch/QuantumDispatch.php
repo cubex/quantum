@@ -1,9 +1,9 @@
 <?php
 namespace Cubex\Quantum\Base\Dispatch;
 
-use Cubex\Context\Context;
-use Cubex\Http\Handler;
+use Packaged\Context\Context;
 use Packaged\Dispatch\Dispatch;
+use Packaged\Routing\Handler\Handler;
 use Symfony\Component\HttpFoundation\Response;
 
 class QuantumDispatch extends Dispatch implements Handler

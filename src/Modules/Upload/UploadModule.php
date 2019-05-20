@@ -1,10 +1,10 @@
 <?php
 namespace Cubex\Quantum\Modules\Upload;
 
-use Cubex\Http\Handler;
 use Cubex\Quantum\Base\Interfaces\QuantumModule;
 use Cubex\Quantum\Modules\Upload\Controllers\UploadController;
 use Cubex\Quantum\Modules\Upload\Controllers\UploadFrontendController;
+use Packaged\Routing\Handler\Handler;
 use PackagedUi\FontAwesome\FaIcon;
 
 class UploadModule implements QuantumModule

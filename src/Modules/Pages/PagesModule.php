@@ -1,10 +1,10 @@
 <?php
 namespace Cubex\Quantum\Modules\Pages;
 
-use Cubex\Http\Handler;
 use Cubex\Quantum\Base\Interfaces\QuantumModule;
 use Cubex\Quantum\Modules\Pages\Controllers\Admin\PagesController;
 use Cubex\Quantum\Modules\Pages\Controllers\ContentController;
+use Packaged\Routing\Handler\Handler;
 use PackagedUi\FontAwesome\FaIcon;
 
 class PagesModule implements QuantumModule

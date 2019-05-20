@@ -6,7 +6,7 @@ use Cubex\Quantum\Base\FileStore\FileStoreException;
 use Cubex\Quantum\Base\FileStore\Interfaces\FileStoreInterface;
 use Cubex\Quantum\Base\FileStore\Interfaces\FileStoreObjectInterface;
 use Cubex\Quantum\Modules\Upload\Filer\FilerObject;
-use Cubex\Routing\RequestDataConstraint;
+use Packaged\Routing\RequestDataConstraint;
 use Packaged\Dispatch\Component\DispatchableComponent;
 use Packaged\Dispatch\ResourceManager;
 use Packaged\Glimpse\Tags\Div;
