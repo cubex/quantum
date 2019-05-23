@@ -69,7 +69,7 @@ const ckeditorCfg = {
     ),
     new FileExtractPlugin(
       {
-        match: [/\.css$/, /\/node_modules\/(?!@ckeditor)/],
+        match: [/\.css$/, /^(?!.*\/node_modules\/@ckeditor).*$/],
         output: {filename: 'external-styles.css'}
       }
     )
