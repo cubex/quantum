@@ -34,7 +34,6 @@
     "@packaged-ui/filer": "^0.0.5",
     "clean-webpack-plugin": "^2.0.2",
     "css-loader": "^2.1.1",
-    "extract-text-webpack-plugin": "^4.0.0-beta.0",
     "file-loader": "^3.0.1",
     "grunt": "^1.0",
     "grunt-contrib-clean": "^2.0",
