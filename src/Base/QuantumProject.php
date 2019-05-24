@@ -2,7 +2,6 @@
 namespace Cubex\Quantum\Base;
 
 use Cubex\Application\Application;
-use Cubex\Context\Context;
 use Cubex\Cubex;
 use Cubex\Events\Handle\ResponsePreSendHeadersEvent;
 use Cubex\Events\PreExecuteEvent;
@@ -22,6 +21,7 @@ use Cubex\Quantum\Themes\BaseTheme;
 use Cubex\Quantum\Themes\ErrorTheme\ErrorTheme;
 use Cubex\Quantum\Themes\Quantifi\QuantifiTheme;
 use Packaged\Config\Provider\Ini\IniConfigProvider;
+use Packaged\Context\Context;
 use Packaged\Dal\DalResolver;
 use Packaged\Dal\Foundation\Dao;
 use Packaged\Dispatch\Dispatch;
