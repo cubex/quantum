@@ -29,6 +29,6 @@ class CkEditorComponent extends Textarea implements DispatchableComponent
   public function includeExternalResources()
   {
     $rm = ResourceManager::component($this);
-    $rm->requireCss('plugin/external-styles.css');
+    $rm->requireCss('plugin/ckeditor.min.css');
   }
 }

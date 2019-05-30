@@ -6,6 +6,8 @@ use Cubex\Quantum\Base\Controllers\QuantumBaseController;
 use Cubex\Quantum\Base\Interfaces\QuantumFrontendHandler;
 use Cubex\Quantum\Modules\Pages\Daos\Page;
 use Cubex\Quantum\Modules\Pages\Daos\PageContent;
+use Packaged\Glimpse\Tags\Div;
+use Packaged\SafeHtml\SafeHtml;
 use Symfony\Component\HttpFoundation\ParameterBag;
 
 class ContentController extends QuantumBaseController implements QuantumFrontendHandler
@@ -40,6 +42,6 @@ class ContentController extends QuantumBaseController implements QuantumFrontend
     }
 
     $this->getTheme()->setPageTitle($content->title);
-    return $content->content;
+    return Div::create(new SafeHtml($content->content))->addClass('ck-content');
   }
 }

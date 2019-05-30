@@ -5,7 +5,6 @@ const CKEditorWebpackPlugin = require('@ckeditor/ckeditor5-dev-webpack-plugin');
 const TerserWebpackPlugin = require('terser-webpack-plugin');
 const MiniCssExtractPlugin = require('mini-css-extract-plugin');
 const CleanWebpackPlugin = require('clean-webpack-plugin');
-const FileExtractPlugin = require('webpack-file-extract-plugin');
 
 const filerCfg = {
   entry: {
@@ -65,12 +64,6 @@ const ckeditorCfg = {
     new MiniCssExtractPlugin(
       {
         filename: '[name].min.css'
-      }
-    ),
-    new FileExtractPlugin(
-      {
-        match: [/\.css$/, /^(?!.*\/node_modules\/@ckeditor).*$/],
-        output: {filename: 'external-styles.css'}
       }
     )
   ],
