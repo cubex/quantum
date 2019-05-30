@@ -28,7 +28,7 @@
     "@ckeditor/ckeditor5-upload": "^11.0.1",
     "@ckeditor/ckeditor5-utils": "^12.1.0",
     "@ckeditor/ckeditor5-widget": "^11.0.1",
-    "@packaged-ui/ckeditor5-editor-iframe": "^0.0.2",
+    "@packaged-ui/ckeditor5-editor-iframe": "^0.0.3",
     "@packaged-ui/ckeditor5-filer": "^0.0.2",
     "@packaged-ui/ckeditor5-layout": "^0.0.1",
     "@packaged-ui/filer": "^0.0.5",
