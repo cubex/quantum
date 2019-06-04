@@ -1,4 +1,5 @@
 import InlineIFrameEditor from "@packaged-ui/ckeditor5-editor-iframe/src/inline";
+import {getIframeDocument} from '@packaged-ui/ckeditor5-editor-iframe/src/shared';
 import Alignment from '@ckeditor/ckeditor5-alignment/src/alignment';
 import Essentials from '@ckeditor/ckeditor5-essentials/src/essentials';
 import Autoformat from '@ckeditor/ckeditor5-autoformat/src/autoformat';
@@ -19,7 +20,6 @@ import Table from '@ckeditor/ckeditor5-table/src/table';
 import TableToolbar from '@ckeditor/ckeditor5-table/src/tabletoolbar';
 import Filer from '@packaged-ui/ckeditor5-filer/src/filer';
 import Layout from '@packaged-ui/ckeditor5-layout/src/layout';
-import {getIframeDocument} from '@packaged-ui/ckeditor5-editor-iframe/src/shared'
 
 let editor = {};
 editor.config = {
