@@ -68,6 +68,11 @@ abstract class BaseTheme extends Element
 
   public function render(): string
   {
+    $this->includeResources();
     return parent::render();
+  }
+
+  public function includeResources()
+  {
   }
 }

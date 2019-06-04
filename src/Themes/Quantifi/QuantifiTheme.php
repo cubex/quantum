@@ -7,8 +7,8 @@ use Packaged\Dispatch\ResourceManager;
 
 class QuantifiTheme extends BaseTheme implements DispatchableComponent
 {
-  public function __construct()
+  public function includeResources()
   {
-    ResourceManager::component($this)->requireCss('css/styles.css');
+    ResourceManager::componentClass(static::class)->requireCss('css/styles.css');
   }
 }

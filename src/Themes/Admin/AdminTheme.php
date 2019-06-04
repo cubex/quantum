@@ -2,7 +2,6 @@
 namespace Cubex\Quantum\Themes\Admin;
 
 use Cubex\Quantum\Themes\BaseTheme;
-use Exception;
 use Packaged\Dispatch\Component\DispatchableComponent;
 use Packaged\Dispatch\ResourceManager;
 use Packaged\Glimpse\Tags\Layout\Header;
@@ -16,18 +15,15 @@ class AdminTheme extends BaseTheme implements DispatchableComponent
 {
   const MENU_LEFT = 'menu_left';
 
-  /**
-   * @throws Exception
-   */
-  public function __construct()
+  public function includeResources()
   {
     Fusion::includeGoogleFont();
-    $rm = ResourceManager::component(new Fusion());
+    $rm = ResourceManager::componentClass(Fusion::class);
     $rm->requireJs(Fusion::FILE_BASE_JS);
     $rm->requireCss(Fusion::FILE_BASE_CSS);
     ResourceManager::vendor('packaged-ui', 'fontawesome')->requireCss(FaIcon::CSS_PATH);
 
-    ResourceManager::component($this)->requireCss('css/styles.css');
+    ResourceManager::componentClass(static::class)->requireCss('css/styles.css');
   }
 
   public function getHeader()
@@ -65,5 +61,4 @@ class AdminTheme extends BaseTheme implements DispatchableComponent
       ->setReveal(Drawer::REVEAL_PEEK)
       ->setAppContent($this->_content);
   }
-
 }
