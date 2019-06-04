@@ -31,7 +31,7 @@ class ContentController extends QuantumBaseController implements QuantumFrontend
   {
     /** @var CkEditorComponent $editorComponent */
     $editorComponent = $this->getContext()->getCubex()->retrieve(CkEditorComponent::class);
-    $editorComponent->includeExternalResources();
+    $editorComponent->includePageResources();
 
     $page = Page::loadById($this->_options->get('pageId'));
     $content = PageContent::loadById($page->id, $page->publishedVersion);

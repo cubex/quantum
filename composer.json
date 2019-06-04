@@ -13,7 +13,7 @@
   "require": {
     "ext-json": "*",
     "cubex/framework": "^4.0",
-    "packaged/dispatch": "^2.3",
+    "packaged/dispatch": "^2.8",
     "packaged/glimpse": "^2.6",
     "packaged/form": "^2.4",
     "packaged/dal": "^1.8",

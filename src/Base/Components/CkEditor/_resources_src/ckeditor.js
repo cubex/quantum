@@ -21,95 +21,102 @@ import Filer from '@packaged-ui/ckeditor5-filer/src/filer';
 import Layout from '@packaged-ui/ckeditor5-layout/src/layout';
 import {getIframeDocument} from '@packaged-ui/ckeditor5-editor-iframe/src/shared'
 
-InlineIFrameEditor.create(
-  document.querySelector('.content-editor'),
-  {
-    placeholder: 'Please type your content here...',
-    plugins: [
-      Alignment,
-      Essentials,
-      Autoformat,
-      Bold,
-      Italic,
-      BlockQuote,
-      Heading,
-      Image,
-      ImageCaption,
-      ImageStyle,
-      ImageToolbar,
-      Link,
-      List,
-      MediaEmbed,
-      Paragraph,
-      PasteFromOffice,
-      Table,
-      TableToolbar,
-      Filer,
-      Layout
-    ],
-    filer: {
-      url: '/admin/quantum/upload/connector',
-      options: {
-        meta: ['image', 'video']
-      }
-    },
-    toolbar: {
-      items: [
-        'heading',
-        '|',
-        'alignment',
-        'bold',
-        'italic',
-        'link',
-        'bulletedList',
-        'numberedList',
-        'imageUpload',
-        'blockQuote',
-        'insertTable',
-        'mediaEmbed',
-        'undo',
-        'redo',
-        '|', 'filer',
-        '|', 'layout'
-      ]
-    },
-    image: {
-      toolbar: [
-        'imageStyle:full',
-        'imageStyle:side',
-        '|',
-        'imageTextAlternative'
-      ]
-    },
-    table: {
-      contentToolbar: [
-        'tableColumn',
-        'tableRow',
-        'mergeTableCells'
-      ]
-    },
-    // This value must be kept in sync with the language defined in webpack.config.js.
-    language: 'en'
-  }
-).then(
-  function (editor)
-  {
-    const originalLinks = document.querySelectorAll('link.ckeditor-style');
-    for(let i in originalLinks)
+let editor = {};
+editor.config = {
+  placeholder: 'Please type your content here...',
+  plugins: [
+    Alignment,
+    Essentials,
+    Autoformat,
+    Bold,
+    Italic,
+    BlockQuote,
+    Heading,
+    Image,
+    ImageCaption,
+    ImageStyle,
+    ImageToolbar,
+    Link,
+    List,
+    MediaEmbed,
+    Paragraph,
+    PasteFromOffice,
+    Table,
+    TableToolbar,
+    Filer,
+    Layout
+  ],
+  filer: {
+    url: '/admin/quantum/upload/connector',
+    options: {
+      meta: ['image', 'video']
+    }
+  },
+  toolbar: {
+    items: [
+      'heading',
+      '|',
+      'alignment',
+      'bold',
+      'italic',
+      'link',
+      'bulletedList',
+      'numberedList',
+      'blockQuote',
+      'insertTable',
+      'mediaEmbed',
+      'undo',
+      'redo',
+      '|', 'filer',
+      '|', 'layout'
+    ]
+  },
+  image: {
+    toolbar: [
+      'imageStyle:full',
+      'imageStyle:side',
+      '|',
+      'imageTextAlternative'
+    ]
+  },
+  table: {
+    contentToolbar: [
+      'tableColumn',
+      'tableRow',
+      'mergeTableCells'
+    ]
+  },
+  // This value must be kept in sync with the language defined in webpack.config.js.
+  language: 'en'
+};
+
+editor.Init = (selector, config, resources) =>
+{
+  InlineIFrameEditor.create(
+    document.querySelector(selector),
+    config || window.Quantum.Editor.config
+  ).then(
+    function (editor)
     {
-      if(originalLinks.hasOwnProperty(i))
+      if(resources)
       {
-        // find ckeditorStyle css
-        const originalLink = originalLinks[i];
-        // clone it and add into iframe head
-        const link = document.createElement('link');
-        link.setAttribute('href', originalLink.getAttribute('href'));
-        link.setAttribute('rel', originalLink.getAttribute('rel'));
-        link.setAttribute('type', originalLink.getAttribute('type'));
-        //get iframe
-        const iframeHead = getIframeDocument(editor.iframeElement).head;
-        iframeHead.appendChild(link);
+        resources.forEach(
+          function (url)
+          {
+            // clone it and add into iframe head
+            const link = document.createElement('link');
+            link.setAttribute('href', url);
+            link.setAttribute('rel', 'stylesheet');
+            link.setAttribute('type', 'text/css');
+            //get iframe
+            const iframeHead = getIframeDocument(editor.iframeElement).head;
+            iframeHead.appendChild(link);
+          }
+        );
       }
     }
-  }
-);
+  );
+};
+
+window.Quantum = window.Quantum || {};
+window.Quantum.Editor = editor;

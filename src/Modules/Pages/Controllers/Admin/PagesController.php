@@ -11,6 +11,7 @@ use Cubex\Quantum\Modules\Pages\Controllers\ContentController;
 use Cubex\Quantum\Modules\Pages\Daos\Page;
 use Cubex\Quantum\Modules\Pages\Daos\PageContent;
 use Cubex\Quantum\Modules\Paths\PathHelper;
+use Packaged\Dispatch\Dispatch;
 use Packaged\Glimpse\Tags\Div;
 use Packaged\Glimpse\Tags\Link;
 use Packaged\Glimpse\Tags\Lists\ListItem;
@@ -139,6 +140,23 @@ class PagesController extends QuantumAdminController
       $postUrl = $this->_buildModuleUrl('new');
     }
 
+    $globalStore = Dispatch::instance()->store();
+    /** @var CkEditorComponent $ckComponent */
+    $ckComponent = $this->getContext()->getCubex()->retrieve(CkEditorComponent::class);
+    Dispatch::instance()->setResourceStore($ckComponent->getIframeResourceStore());
+
+    if($content->theme)
+    {
+      $theme = new $content->theme;
+    }
+    else
+    {
+      $theme = $this->getQuantum()->getFrontendTheme();
+    }
+    $theme->includeResources();
+
+    Dispatch::instance()->setResourceStore($globalStore);
+
     $form = new PageForm(self::SESSION_ID);
     $form->setAction($postUrl);
     $form->id = $page->id;
@@ -146,9 +164,7 @@ class PagesController extends QuantumAdminController
     $form->version = $content->id;
     $form->title = $content->title;
     $form->content = $content->content;
-    $form->content->setDecorator(
-      new CkEditorDecorator($this->getContext()->getCubex()->retrieve(CkEditorComponent::class))
-    );
+    $form->content->setDecorator(new CkEditorDecorator($ckComponent));
 
     return Div::create(
       [
