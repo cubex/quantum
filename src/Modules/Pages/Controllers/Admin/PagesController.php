@@ -283,16 +283,10 @@ class PagesController extends QuantumAdminController
 
   public function getPublish()
   {
-    [$page, $changes] = $this->_publish(
+    $page = $this->_publish(
       $this->getContext()->routeData()->get('pageId'),
       $this->getContext()->routeData()->get('version')
     );
-
-    if(!empty($changes['publishedPath']['from']))
-    {
-      PathHelper::removePath($changes['publishedPath']['from'], ContentController::class);
-    }
-    PathHelper::setPath($page->publishedPath, ContentController::class, new ParameterBag(['pageId' => $page->id]));
 
     return RedirectResponse::create($this->_buildModuleUrl($page->id));
   }
@@ -303,6 +297,13 @@ class PagesController extends QuantumAdminController
     $page->publishedVersion = $version;
     $page->publishedPath = $page->path;
     $changes = $page->save();
-    return [$page, $changes];
+
+    if(!empty($changes['publishedPath']['from']))
+    {
+      PathHelper::removePath($changes['publishedPath']['from'], ContentController::class);
+    }
+    PathHelper::setPath($page->publishedPath, ContentController::class, new ParameterBag(['pageId' => $page->id]));
+
+    return $page;
   }
 }
