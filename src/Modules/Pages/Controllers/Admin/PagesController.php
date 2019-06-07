@@ -12,10 +12,9 @@ use Cubex\Quantum\Modules\Pages\Daos\Page;
 use Cubex\Quantum\Modules\Pages\Daos\PageContent;
 use Cubex\Quantum\Modules\Paths\PathHelper;
 use Packaged\Dispatch\Dispatch;
+use Packaged\Dispatch\ResourceManager;
 use Packaged\Glimpse\Tags\Div;
 use Packaged\Glimpse\Tags\Link;
-use Packaged\Glimpse\Tags\Lists\ListItem;
-use Packaged\Glimpse\Tags\Lists\OrderedList;
 use Packaged\Glimpse\Tags\Table\TableCell;
 use Packaged\Glimpse\Tags\Text\StrongText;
 use Packaged\QueryBuilder\Predicate\EqualPredicate;
@@ -53,7 +52,7 @@ class PagesController extends QuantumAdminController
 
     if($content->theme)
     {
-      $this->setTheme(new $content->theme);
+      $this->setTheme(new $content->theme());
     }
     else
     {
@@ -147,7 +146,7 @@ class PagesController extends QuantumAdminController
 
     if($content->theme)
     {
-      $theme = new $content->theme;
+      $theme = new $content->theme();
     }
     else
     {
@@ -156,6 +155,8 @@ class PagesController extends QuantumAdminController
     $theme->includeResources();
 
     Dispatch::instance()->setResourceStore($globalStore);
+
+    ResourceManager::vendor('packaged', 'form')->requireCss('assets/form.css');
 
     $form = new PageForm(self::SESSION_ID);
     $form->setAction($postUrl);
@@ -201,6 +202,12 @@ class PagesController extends QuantumAdminController
     $content->content = $request->get('content');
     if($content->save())
     {
+
+      if($this->request()->request->get('_submit', 'Save') === 'Save & Publish')
+      {
+        $this->_publish($content->pageId, $content->id);
+      }
+
       // contents changed, redirect to new edit url
       return RedirectResponse::create($this->_buildModuleUrl($page->id, $content->id));
     }
@@ -237,16 +244,12 @@ class PagesController extends QuantumAdminController
     return $content;
   }
 
-  /**
-   * @param Page $page
-   *
-   * @return OrderedList
-   */
   protected function _getVersionList(Page $page)
   {
     // version history
-    $versionList = OrderedList::create();
-    $versions = PageContent::each(EqualPredicate::create('pageId', $page->id));
+    $versionList = Table::create()->striped();
+    $versions = PageContent::collection(EqualPredicate::create('pageId', $page->id))
+      ->orderBy(['createdTime' => 'DESC']);
     foreach($versions as $version)
     {
       $publishLink = null;
@@ -255,17 +258,13 @@ class PagesController extends QuantumAdminController
         $publishLink = Link::create($this->_buildModuleUrl('publish', $page->id, $version->id), 'PUBLISH')
           ->addClass(ButtonInferface::BUTTON);
       }
-      $versionList->addItem(
-        ListItem::create(
-          [
-            Link::create(
-              $this->_buildModuleUrl($page->id, $version->id),
-              '[' . date('Y-m-d H:i:s', $version->createdTime) . '] ' . $version->title
-              . ' (' . strlen($version->content) . ' bytes)'
-            ),
-            $publishLink,
-          ]
-        )
+      $versionList->addRow(
+        Link::create(
+          $this->_buildModuleUrl($page->id, $version->id),
+          '[' . date('Y-m-d H:i:s', $version->createdTime) . '] ' . $version->title
+          . ' (' . strlen($version->content) . ' bytes)'
+        ),
+        $publishLink
       );
     }
     return $versionList;
@@ -273,10 +272,10 @@ class PagesController extends QuantumAdminController
 
   public function getPublish()
   {
-    $page = Page::loadById($this->getContext()->routeData()->get('pageId'));
-    $page->publishedVersion = $this->getContext()->routeData()->get('version');
-    $page->publishedPath = $page->path;
-    $changes = $page->save();
+    [$page, $changes] = $this->_publish(
+      $this->getContext()->routeData()->get('pageId'),
+      $this->getContext()->routeData()->get('version')
+    );
 
     if(!empty($changes['publishedPath']['from']))
     {
@@ -285,5 +284,14 @@ class PagesController extends QuantumAdminController
     PathHelper::setPath($page->publishedPath, ContentController::class, new ParameterBag(['pageId' => $page->id]));
 
     return RedirectResponse::create($this->_buildModuleUrl($page->id));
+  }
+
+  protected function _publish($pageId, $version)
+  {
+    $page = Page::loadById($pageId);
+    $page->publishedVersion = $version;
+    $page->publishedPath = $page->path;
+    $changes = $page->save();
+    return [$page, $changes];
   }
 }

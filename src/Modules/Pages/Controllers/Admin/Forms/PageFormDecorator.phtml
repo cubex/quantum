@@ -1,0 +1,40 @@
+<?php
+/**
+ * @var $this PageFormDecorator
+ */
+
+use Cubex\Quantum\Modules\Pages\Controllers\Admin\Forms\PageForm;
+use Cubex\Quantum\Modules\Pages\Controllers\Admin\Forms\PageFormDecorator;
+use Packaged\Glimpse\Tags\Form\Input;
+
+/** @var PageForm $form */
+$form = $this->getForm();
+?>
+<style>
+  .page-attributes {
+    display: flex;
+  }
+
+  .page-attributes .p-form-field {
+    flex-basis: 50%;
+  }
+
+  .page-attributes .p-form-field .p-form--input input {
+    width: 100%;
+  }
+</style>
+<div class="page-attributes">
+  <?= $form->title->render(); ?>
+  <?= $form->path->render(); ?>
+</div>
+<?= $form->content->render(); ?>
+<div style="display: flex; padding: 10px 0;">
+  <?= Input::create()->setValue('Save')->setType(Input::TYPE_SUBMIT)->setAttribute('name', '_submit'); ?> &nbsp;
+  <?= Input::create()->setValue('Save & Publish')->setType(Input::TYPE_SUBMIT)->setAttribute('name', '_submit'); ?>
+</div>
+
+<div style="display: none;">
+  <?= $form->id->render(); ?>
+  <?= $form->version->render(); ?>
+</div>
+
