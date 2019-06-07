@@ -17,7 +17,9 @@ use Packaged\Glimpse\Tags\Div;
 use Packaged\Glimpse\Tags\Link;
 use Packaged\Glimpse\Tags\Table\TableCell;
 use Packaged\Glimpse\Tags\Text\StrongText;
+use Packaged\QueryBuilder\Expression\Like\StartsWithExpression;
 use Packaged\QueryBuilder\Predicate\EqualPredicate;
+use Packaged\QueryBuilder\Predicate\LikePredicate;
 use Packaged\SafeHtml\SafeHtml;
 use PackagedUi\FontAwesome\FaIcon;
 use PackagedUi\Fusion\ButtonInferface;
@@ -79,7 +81,16 @@ class PagesController extends QuantumAdminController
     $pageNumber = (int)$this->request()->get('page', 0);
     $limit = 10;
     /** @var  $pages */
-    $pages = Page::collection();
+
+    $where = [];
+    $pathSearch = $this->request()->query->get('path');
+    if($pathSearch)
+    {
+      $where[] = LikePredicate::create('path', StartsWithExpression::create($pathSearch));
+    }
+
+    $pages = Page::collection($where)->orderBy('path');
+
     $pageCount = $pages->count();
 
     $pages->limitWithOffset($pageNumber * $limit, $limit);
