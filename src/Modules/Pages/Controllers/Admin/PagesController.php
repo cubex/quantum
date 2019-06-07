@@ -260,7 +260,7 @@ class PagesController extends QuantumAdminController
     // version history
     $versionList = Table::create()->striped();
     $versions = PageContent::collection(EqualPredicate::create('pageId', $page->id))
-      ->orderBy(['createdTime' => 'DESC']);
+      ->orderBy(['createdTime' => 'DESC'])->limit(20);
     foreach($versions as $version)
     {
       $publishLink = null;
