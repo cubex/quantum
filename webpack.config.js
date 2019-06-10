@@ -4,7 +4,7 @@ const {bundler, styles} = require('@ckeditor/ckeditor5-dev-utils');
 const CKEditorWebpackPlugin = require('@ckeditor/ckeditor5-dev-webpack-plugin');
 const TerserWebpackPlugin = require('terser-webpack-plugin');
 const MiniCssExtractPlugin = require('mini-css-extract-plugin');
-const CleanWebpackPlugin = require('clean-webpack-plugin');
+const {CleanWebpackPlugin} = require('clean-webpack-plugin');
 
 const filerCfg = {
   entry: {
