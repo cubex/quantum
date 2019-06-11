@@ -69,7 +69,13 @@ abstract class QuantumBaseController extends Controller implements QuantumAware
       $theme->setPageTitle($e->getMessage())
         ->setCode($e->getCode())
         ->setContent($e->getMessage());
-      return Response::create($theme);
+
+      $httpCode = $e->getCode();
+      if($httpCode === 0 || $httpCode > 599)
+      {
+        $httpCode = 500;
+      }
+      return Response::create($theme, $httpCode);
     }
   }
 
