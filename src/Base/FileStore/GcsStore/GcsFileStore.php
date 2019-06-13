@@ -176,4 +176,12 @@ class GcsFileStore implements FileStoreInterface
     $bucketPath = $this->_getFullPath($relativePath);
     return $bucket->object($bucketPath);
   }
+
+  /**
+   * Don't serialize the client, we will regenerate it
+   */
+  public function __sleep()
+  {
+    return ['_config', '_resolvedBasePath'];
+  }
 }
