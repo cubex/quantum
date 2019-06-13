@@ -160,6 +160,7 @@ class UploadController extends QuantumAdminController implements DispatchableCom
     try
     {
       $cache = $this->getQuantum()->getCubex()->retrieve('upload-' . ICacheConnection::class);
+      $cache->connect();
     }
     catch(\Exception $e)
     {
