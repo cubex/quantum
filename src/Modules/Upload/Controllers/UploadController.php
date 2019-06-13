@@ -157,15 +157,15 @@ class UploadController extends QuantumAdminController implements DispatchableCom
 
   private function _getCache(): ?ICacheConnection
   {
-    $class = $this->getContext()->config()->getItem('upload', 'cache_class');
-    if($class)
+    try
     {
-      /** @var ICacheConnection $cacheConnection */
-      $cacheConnection = new $class();
-      $cacheConnection->connect();
-      return $cacheConnection;
+      $cache = $this->getQuantum()->getCubex()->retrieve('upload-' . ICacheConnection::class);
     }
-    return null;
+    catch(\Exception $e)
+    {
+      $cache = null;
+    }
+    return $cache;
   }
 
   /**
