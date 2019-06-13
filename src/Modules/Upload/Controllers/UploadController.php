@@ -175,6 +175,6 @@ class UploadController extends QuantumAdminController implements DispatchableCom
    */
   private function _getCacheKey($path): string
   {
-    return 'list-' . md5($path);
+    return get_class($this->getQuantum()) . '~upload-list#' . md5($path);
   }
 }
