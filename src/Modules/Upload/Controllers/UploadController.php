@@ -6,7 +6,8 @@ use Cubex\Quantum\Base\FileStore\FileStoreException;
 use Cubex\Quantum\Base\FileStore\Interfaces\FileStoreInterface;
 use Cubex\Quantum\Base\FileStore\Interfaces\FileStoreObjectInterface;
 use Cubex\Quantum\Modules\Upload\Filer\FilerObject;
-use Packaged\Routing\RequestDataConstraint;
+use Packaged\Dal\Cache\CacheItem;
+use Packaged\Dal\Cache\ICacheConnection;
 use Packaged\Dispatch\Component\DispatchableComponent;
 use Packaged\Dispatch\ResourceManager;
 use Packaged\Glimpse\Tags\Div;
@@ -15,6 +16,7 @@ use Packaged\Helpers\Path;
 use Packaged\Helpers\ValueAs;
 use Packaged\Http\Response;
 use Packaged\Http\Responses\JsonResponse;
+use Packaged\Routing\RequestDataConstraint;
 use PackagedUi\Fusion\Card\Card;
 
 class UploadController extends QuantumAdminController implements DispatchableComponent
@@ -45,18 +47,29 @@ class UploadController extends QuantumAdminController implements DispatchableCom
 
   public function postUpload()
   {
+    $path = ValueAs::nonempty($this->request()->request->get('path'), '/');
     $name = basename($_FILES['file']['name']);
     $success = $this->_getStore()->store(
-      Path::system($this->request()->request->get('path'), $name),
+      Path::unix($path, $name),
       file_get_contents($_FILES['file']['tmp_name']),
       []
     );
+    if($success)
+    {
+      $this->_getCache()->deleteKey($this->_getCacheKey($path));
+    }
     return JsonResponse::create($success ? true : 'unable to upload');
   }
 
   public function postDelete()
   {
-    $success = $this->_getStore()->delete($this->request()->request->get('path'));
+    $path = $this->request()->request->get('path');
+    $dirPath = dirname($path);
+    $success = $this->_getStore()->delete($path);
+    if($success)
+    {
+      $this->_getCache()->deleteKey($this->_getCacheKey($dirPath));
+    }
     return JsonResponse::create($success ? true : 'unable to delete');
   }
 
@@ -65,6 +78,9 @@ class UploadController extends QuantumAdminController implements DispatchableCom
     $store = $this->_getStore();
     $path = ValueAs::nonempty($this->request()->request->get('path'), '/');
 
+    $cacheKey = $this->_getCacheKey($path);
+    $cache = $this->_getCache();
+
     $pathObj = $store->getObject($path);
     $list = [];
     if($pathObj->isDir())
@@ -72,8 +88,21 @@ class UploadController extends QuantumAdminController implements DispatchableCom
       /** @var FileStoreObjectInterface[] $list */
       try
       {
-        $list = $store->list($path);
-        $list = array_reverse(Objects::msort($list, 'isDir'));
+        $list = null;
+        if($cache)
+        {
+          $cacheItem = $cache->getItem($cacheKey);
+          if($cacheItem->exists())
+          {
+            $list = $cacheItem->get();
+          }
+        }
+        if($list === null)
+        {
+          $list = $store->list($path);
+          $list = array_reverse(Objects::msort($list, 'isDir'));
+          $cache->saveItem(new CacheItem($cacheKey, $list));
+        }
       }
       catch(FileStoreException $e)
       {
@@ -110,5 +139,28 @@ class UploadController extends QuantumAdminController implements DispatchableCom
   private function _getStore(): FileStoreInterface
   {
     return $this->getContext()->getCubex()->retrieve('upload-' . FileStoreInterface::class);
+  }
+
+  private function _getCache(): ?ICacheConnection
+  {
+    $class = $this->getContext()->config()->getItem('upload', 'cache_class');
+    if($class)
+    {
+      /** @var ICacheConnection $cacheConnection */
+      $cacheConnection = new $class();
+      $cacheConnection->connect();
+      return $cacheConnection;
+    }
+    return null;
+  }
+
+  /**
+   * @param $path
+   *
+   * @return string
+   */
+  private function _getCacheKey($path): string
+  {
+    return 'list-' . md5($path);
   }
 }
