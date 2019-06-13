@@ -41,7 +41,18 @@ class UploadController extends QuantumAdminController implements DispatchableCom
 
   public function postRename()
   {
-    $success = $this->_getStore()->rename($this->request()->request->get('from'), $this->request()->request->get('to'));
+    $fromPath = $this->request()->request->get('from');
+    $toPath = $this->request()->request->get('to');
+    $success = $this->_getStore()->rename($fromPath, $toPath);
+    if($success && ($cache = $this->_getCache()))
+    {
+      $cache->deleteItems(
+        [
+          $this->_getCacheKey(dirname($fromPath)),
+          $this->_getCacheKey(dirname($toPath)),
+        ]
+      );
+    }
     return JsonResponse::create($success ? true : 'unable to rename');
   }
 
@@ -54,9 +65,9 @@ class UploadController extends QuantumAdminController implements DispatchableCom
       file_get_contents($_FILES['file']['tmp_name']),
       []
     );
-    if($success)
+    if($success && ($cache = $this->_getCache()))
     {
-      $this->_getCache()->deleteKey($this->_getCacheKey($path));
+      $cache->deleteKey($this->_getCacheKey($path));
     }
     return JsonResponse::create($success ? true : 'unable to upload');
   }
@@ -66,9 +77,9 @@ class UploadController extends QuantumAdminController implements DispatchableCom
     $path = $this->request()->request->get('path');
     $dirPath = dirname($path);
     $success = $this->_getStore()->delete($path);
-    if($success)
+    if($success && ($cache = $this->_getCache()))
     {
-      $this->_getCache()->deleteKey($this->_getCacheKey($dirPath));
+      $cache->deleteKey($this->_getCacheKey($dirPath));
     }
     return JsonResponse::create($success ? true : 'unable to delete');
   }
@@ -101,7 +112,10 @@ class UploadController extends QuantumAdminController implements DispatchableCom
         {
           $list = $store->list($path);
           $list = array_reverse(Objects::msort($list, 'isDir'));
-          $cache->saveItem(new CacheItem($cacheKey, $list));
+          if($cache)
+          {
+            $cache->saveItem(new CacheItem($cacheKey, $list));
+          }
         }
       }
       catch(FileStoreException $e)
