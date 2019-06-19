@@ -4,6 +4,7 @@ namespace Cubex\Quantum\Modules\Paths\Controllers;
 use Cubex\Quantum\Base\Controllers\QuantumBaseController;
 use Cubex\Quantum\Base\Interfaces\QuantumFrontendHandler;
 use Cubex\Quantum\Modules\Paths\Daos\Path;
+use Exception;
 
 class PathRouteController extends QuantumBaseController
 {
@@ -21,7 +22,7 @@ class PathRouteController extends QuantumBaseController
     );
     if(!$path)
     {
-      throw new \Exception('Page Not Found', 404);
+      throw new Exception('Page Not Found', 404);
     }
 
     // defer to specified page handler

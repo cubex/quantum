@@ -3,6 +3,7 @@ namespace Cubex\Quantum\Modules\Upload\Controllers;
 
 use Cubex\Quantum\Base\Controllers\QuantumBaseController;
 use Cubex\Quantum\Base\FileStore\Interfaces\FileStoreInterface;
+use Exception;
 use Packaged\Http\Response;
 
 class UploadFrontendController extends QuantumBaseController
@@ -23,7 +24,7 @@ class UploadFrontendController extends QuantumBaseController
 
   /**
    * @return FileStoreInterface
-   * @throws \Exception
+   * @throws Exception
    */
   private function _getStore(): FileStoreInterface
   {

@@ -2,6 +2,7 @@
 namespace Cubex\Quantum\Base\Controllers;
 
 use Cubex\Quantum\Base\Interfaces\QuantumModule;
+use RuntimeException;
 
 class AdminController extends QuantumAdminController
 {
@@ -20,7 +21,7 @@ class AdminController extends QuantumAdminController
     {
       return $module->getAdminHandler();
     }
-    throw new \RuntimeException(self::ERROR_NO_ROUTE, 404);
+    throw new RuntimeException(self::ERROR_NO_ROUTE, 404);
   }
 
   public function getDashboard()

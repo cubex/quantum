@@ -6,6 +6,7 @@ use Cubex\Quantum\Base\FileStore\FileStoreException;
 use Cubex\Quantum\Base\FileStore\Interfaces\FileStoreInterface;
 use Cubex\Quantum\Base\FileStore\Interfaces\FileStoreObjectInterface;
 use Cubex\Quantum\Modules\Upload\Filer\FilerObject;
+use Exception;
 use Packaged\Dal\Cache\CacheItem;
 use Packaged\Dal\Cache\ICacheConnection;
 use Packaged\Dispatch\Component\DispatchableComponent;
@@ -16,7 +17,7 @@ use Packaged\Helpers\Path;
 use Packaged\Helpers\ValueAs;
 use Packaged\Http\Response;
 use Packaged\Http\Responses\JsonResponse;
-use Packaged\Routing\RequestDataConstraint;
+use Packaged\Routing\RequestDataCondition;
 use PackagedUi\Fusion\Card\Card;
 
 class UploadController extends QuantumAdminController implements DispatchableComponent
@@ -162,7 +163,7 @@ class UploadController extends QuantumAdminController implements DispatchableCom
       $cache = $this->getQuantum()->getCubex()->retrieve('upload-' . ICacheConnection::class);
       $cache->connect();
     }
-    catch(\Exception $e)
+    catch(Exception $e)
     {
       $cache = null;
     }

@@ -1,6 +1,7 @@
 <?php
 namespace Cubex\Quantum\Base\Dispatch;
 
+use Exception;
 use Packaged\Context\Context;
 use Packaged\Dispatch\Dispatch;
 use Packaged\Routing\Handler\Handler;
@@ -20,7 +21,7 @@ class QuantumDispatch extends Dispatch implements Handler
    * @param Context $c
    *
    * @return Response
-   * @throws \Exception
+   * @throws Exception
    */
   public function handle(Context $c): Response
   {
