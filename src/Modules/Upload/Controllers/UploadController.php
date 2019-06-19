@@ -25,9 +25,9 @@ class UploadController extends QuantumAdminController implements DispatchableCom
   protected function _generateRoutes()
   {
     // these routes fail because the path is matched and routedPath is updated, but the other conditions fail
-    yield self::_route('connector', 'rename')->add(RequestDataConstraint::i()->post('action', 'rename'));
-    yield self::_route('connector', 'upload')->add(RequestDataConstraint::i()->post('action', 'upload'));
-    yield self::_route('connector', 'delete')->add(RequestDataConstraint::i()->post('action', 'delete'));
+    yield self::_route('connector', 'rename')->add(RequestDataCondition::i()->post('action', 'rename'));
+    yield self::_route('connector', 'upload')->add(RequestDataCondition::i()->post('action', 'upload'));
+    yield self::_route('connector', 'delete')->add(RequestDataCondition::i()->post('action', 'delete'));
     yield self::_route('connector', 'connector');
     yield self::_route('', 'page');
   }
