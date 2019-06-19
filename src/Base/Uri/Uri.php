@@ -3,7 +3,7 @@ namespace Cubex\Quantum\Base\Uri;
 
 use Packaged\Context\Context;
 use Packaged\Routing\Condition;
-use Packaged\Routing\RequestConstraint;
+use Packaged\Routing\RequestCondition;
 
 class Uri implements Condition
 {
@@ -30,7 +30,7 @@ class Uri implements Condition
 
   protected function _getConstraint()
   {
-    $c = RequestConstraint::i();
+    $c = RequestCondition::i();
 
     $parts = parse_url($this->_uri);
     if(isset($parts['scheme']))
