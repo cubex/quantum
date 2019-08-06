@@ -5,6 +5,7 @@ import Essentials from '@ckeditor/ckeditor5-essentials/src/essentials';
 import Autoformat from '@ckeditor/ckeditor5-autoformat/src/autoformat';
 import Bold from '@ckeditor/ckeditor5-basic-styles/src/bold';
 import Italic from '@ckeditor/ckeditor5-basic-styles/src/italic';
+import Underline from "@ckeditor/ckeditor5-basic-styles/src/underline";
 import BlockQuote from '@ckeditor/ckeditor5-block-quote/src/blockquote';
 import Heading from '@ckeditor/ckeditor5-heading/src/heading';
 import Image from '@ckeditor/ckeditor5-image/src/image';
@@ -30,6 +31,7 @@ editor.config = {
     Autoformat,
     Bold,
     Italic,
+    Underline,
     BlockQuote,
     Heading,
     Image,
@@ -59,6 +61,7 @@ editor.config = {
       'alignment',
       'bold',
       'italic',
+      'underline',
       'link',
       'bulletedList',
       'numberedList',
