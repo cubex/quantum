@@ -30,7 +30,7 @@ class AdminTheme extends BaseTheme implements DispatchableComponent
   {
     return Header::create(
       FaIcon::create(FaIcon::BARS)->fixedWidth()->sizeLarge()
-        ->addClass('pin-menu', Fusion::DRAWER_TOGGLE, Fusion::DRAWER_HIDE_MOBILE)
+        ->addClass('pin-menu', Fusion::DRAWER_TOGGLE)
     );
   }
 
