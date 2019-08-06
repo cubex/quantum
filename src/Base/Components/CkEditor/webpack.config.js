@@ -6,31 +6,12 @@ const TerserWebpackPlugin = require('terser-webpack-plugin');
 const MiniCssExtractPlugin = require('mini-css-extract-plugin');
 const {CleanWebpackPlugin} = require('clean-webpack-plugin');
 
-const filerCfg = {
-  entry: {
-    'filer': './src/Modules/Upload/Controllers/_resources/filer.js'
-  },
-  module: {
-    rules: [
-      {
-        test: /\.css$/,
-        use: ['style-loader', 'css-loader'],
-      },
-    ]
-  },
-  performance: {hints: false},
-  output: {
-    path: path.resolve(__dirname, 'src/Modules/Upload/Controllers/_resources/'), //directory for output files
-    filename: '[name].min.js' //using [name] will create a bundle with same file name as source
-  },
-};
-
 const ckeditorCfg = {
   entry: {
-    'ckeditor': './src/Base/Components/Ckeditor/_resources_src/ckeditor.js'
+    'ckeditor': './_resources_src/ckeditor.js'
   },
   output: {
-    path: path.resolve(__dirname, 'src/Base/Components/Ckeditor/_resources/plugin/'), //directory for output files
+    path: path.resolve(__dirname, '_resources/plugin/'), //directory for output files
     filename: '[name].min.js' //using [name] will create a bundle with same file name as source
   },
   performance: {hints: false},
@@ -96,4 +77,4 @@ const ckeditorCfg = {
   }
 };
 
-module.exports = [filerCfg, ckeditorCfg];
+module.exports = [ckeditorCfg];

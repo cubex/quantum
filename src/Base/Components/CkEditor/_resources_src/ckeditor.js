@@ -18,8 +18,8 @@ import Paragraph from '@ckeditor/ckeditor5-paragraph/src/paragraph';
 import PasteFromOffice from '@ckeditor/ckeditor5-paste-from-office/src/pastefromoffice';
 import Table from '@ckeditor/ckeditor5-table/src/table';
 import TableToolbar from '@ckeditor/ckeditor5-table/src/tabletoolbar';
-import Filer from '@packaged-ui/ckeditor5-filer/src/filer';
-import Layout from '@packaged-ui/ckeditor5-layout/src/layout';
+import Filer from '@packaged-ui/ckeditor5-filer';
+import Layout from '@packaged-ui/ckeditor5-layout';
 
 let editor = {};
 editor.config = {

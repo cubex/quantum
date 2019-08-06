@@ -1,6 +1,6 @@
 /vendor
-/node_modules
 /.upload
+node_modules/
 composer.lock
 yarn.lock
 yarn-error.log
