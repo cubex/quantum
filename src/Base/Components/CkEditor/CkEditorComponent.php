@@ -47,11 +47,6 @@ class CkEditorComponent extends Textarea implements DispatchableComponent
     $rm = ResourceManager::component($this);
     $rm->requireJs('plugin/ckeditor.min.js');
     $rm->requireCss('plugin/ckeditor.min.css');
-
-    // css also goes in the frame
-    $this->getIframeResourceStore()->requireCss(
-      $rm->getResourceUri('plugin/ckeditor.min.css')
-    );
   }
 
   public function includePageResources()
