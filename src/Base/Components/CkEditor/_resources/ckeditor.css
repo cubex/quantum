@@ -1,3 +1,8 @@
+.ck {
+  --ck-color-widget-editable-focus-background: transparent;
+  --ck-color-table-focused-cell-background: transparent;
+}
+
 .content-editor {
   box-sizing: border-box;
   display: block;
