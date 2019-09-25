@@ -80,7 +80,6 @@ class PagesController extends QuantumAdminController
 
     $pageNumber = (int)$this->request()->get('page', 0);
     $limit = 10;
-    /** @var  $pages */
 
     $where = [];
     $pathSearch = $this->request()->query->get('path');
@@ -93,32 +92,41 @@ class PagesController extends QuantumAdminController
 
     $pageCount = $pages->count();
 
-    $pages->limitWithOffset($pageNumber * $limit, $limit);
-
-    $table = Table::create()->striped()
-      ->addHeaderRow('Path', 'Title', '');
-
-    /** @var Page $page */
-    foreach($pages as $page)
+    if($pageCount)
     {
-      $content = $this->_getPageContent($page);
-      $table->addRow(
-        $page->path,
-        $content->title,
-        TableCell::create(
-          Link::create($this->_buildModuleUrl($page->id), FaIcon::create(FaIcon::EDIT))
-        )->addClass('shrink')
-      );
+      $pages->limitWithOffset($pageNumber * $limit, $limit);
+
+      $content = Table::create()->striped()
+        ->addHeaderRow('Path', 'Title', '');
+
+      /** @var Page $page */
+      foreach($pages as $page)
+      {
+        $pageContent = $this->_getPageContent($page);
+        $content->addRow(
+          $page->path,
+          $pageContent->title,
+          TableCell::create(
+            Link::create($this->_buildModuleUrl($page->id), FaIcon::create(FaIcon::EDIT))
+          )->addClass('shrink')
+        );
+      }
+    }
+    else
+    {
+      $content = 'No pages';
     }
 
-    return Card::create($table)
+    $card = Card::create($content)
       ->setHeader(
         Flex::create(
           FlexGrow::create("Pages"),
           Link::create($this->_buildModuleUrl('new'), FaIcon::create(FaIcon::PLUS))
         )
-      )
-      ->setFooter(
+      );
+    if($pageCount > $limit)
+    {
+      $card->setFooter(
         Div::create(
           Pagination::create(
             $pageCount,
@@ -128,6 +136,8 @@ class PagesController extends QuantumAdminController
           )
         )->addClass(Fusion::TEXT_RIGHT)
       );
+    }
+    return $card;
   }
 
   public function getEdit()

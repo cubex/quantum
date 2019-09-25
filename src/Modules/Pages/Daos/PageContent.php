@@ -19,6 +19,7 @@ class PageContent extends QuantumQlDao
 
   public function save()
   {
+    // immutable, always create new content
     if($this->hasChanges())
     {
       $this->id = null;
