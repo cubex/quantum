@@ -65,6 +65,7 @@ abstract class QuantumBaseController extends Controller implements QuantumAware
     }
     catch(Throwable $e)
     {
+      error_log($e->getMessage() . PHP_EOL . $e->getTraceAsString());
       $theme = $this->getQuantum()->getErrorTheme();
       $theme->setPageTitle($e->getMessage())
         ->setCode($e->getCode())
