@@ -41,8 +41,8 @@ class PagesController extends QuantumAdminController
     yield  self::_route('publish/{pageId@num}/{version@num}', 'publish');
     yield  self::_route('live/{pageId@num}/{version@num}', 'live');
     yield  self::_route('live/{pageId@num}', 'live');
-    yield  self::_route('{pageId@num}/{version@num}', 'edit');
-    yield  self::_route('{pageId@num}', 'edit');
+    yield  self::_route('edit/{pageId@num}/{version@num}', 'edit');
+    yield  self::_route('edit/{pageId@num}', 'edit');
     yield  self::_route('new', 'edit');
     return 'list';
   }
@@ -107,7 +107,7 @@ class PagesController extends QuantumAdminController
           $page->path,
           $pageContent->title,
           TableCell::create(
-            Link::create($this->_buildModuleUrl($page->id), FaIcon::create(FaIcon::EDIT))
+            Link::create($this->_buildModuleUrl('edit', $page->id), FaIcon::create(FaIcon::EDIT))
           )->addClass('shrink')
         );
       }
@@ -151,7 +151,7 @@ class PagesController extends QuantumAdminController
     {
       $page = Page::loadById($pageId);
       $content = $this->_getPageContent($page, $version);
-      $postUrl = $this->_buildModuleUrl($page->id, $content->id);
+      $postUrl = $this->_buildModuleUrl('edit', $page->id, $content->id);
     }
     else
     {
@@ -221,16 +221,16 @@ class PagesController extends QuantumAdminController
     $content->pageId = $page->id;
     $content->title = $request->get('title');
     $content->content = $request->get('content');
-    if($content->save())
+
+    $saved = $content->save();
+    if($this->request()->request->has('_publish'))
     {
-
-      if($this->request()->request->get('_submit', 'Save') === 'Save & Publish')
-      {
-        $this->_publish($content->pageId, $content->id);
-      }
-
+      $this->_publish($content->pageId, $content->id);
+    }
+    if($saved)
+    {
       // contents changed, redirect to new edit url
-      return RedirectResponse::create($this->_buildModuleUrl($page->id, $content->id));
+      return RedirectResponse::create($this->_buildModuleUrl('edit', $page->id, $content->id));
     }
     // no changes, just show same page
     return $this->getEdit();
@@ -281,7 +281,7 @@ class PagesController extends QuantumAdminController
       }
       $versionList->addRow(
         Link::create(
-          $this->_buildModuleUrl($page->id, $version->id),
+          $this->_buildModuleUrl('edit', $page->id, $version->id),
           '[' . date('Y-m-d H:i:s', $version->createdTime) . '] ' . $version->title
           . ' (' . strlen($version->content) . ' bytes)'
         ),
@@ -298,7 +298,7 @@ class PagesController extends QuantumAdminController
       $this->getContext()->routeData()->get('version')
     );
 
-    return RedirectResponse::create($this->_buildModuleUrl($page->id));
+    return RedirectResponse::create($this->_buildModuleUrl('edit', $page->id));
   }
 
   protected function _publish($pageId, $version)

@@ -5,7 +5,7 @@
 
 use Cubex\Quantum\Modules\Pages\Controllers\Admin\Forms\PageForm;
 use Cubex\Quantum\Modules\Pages\Controllers\Admin\Forms\PageFormDecorator;
-use Packaged\Glimpse\Tags\Form\Input;
+use PackagedUi\Fusion\Button\Button;
 
 /** @var PageForm $form */
 $form = $this->getForm();
@@ -29,8 +29,8 @@ $form = $this->getForm();
 </div>
 <?= $form->content->render(); ?>
 <div style="display: flex; padding: 10px 0;">
-  <?= Input::create()->setValue('Save')->setType(Input::TYPE_SUBMIT)->setAttribute('name', '_submit'); ?> &nbsp;
-  <?= Input::create()->setValue('Save & Publish')->setType(Input::TYPE_SUBMIT)->setAttribute('name', '_submit'); ?>
+  <?= Button::create('Save') ?> &nbsp;
+  <?= Button::create('Save & Publish')->setAttribute('name', '_publish') ?>
 </div>
 
 <div style="display: none;">
