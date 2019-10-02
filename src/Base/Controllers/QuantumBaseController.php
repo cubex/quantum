@@ -97,7 +97,11 @@ abstract class QuantumBaseController extends Controller implements QuantumAware
       }
 
       $theme = $this->getTheme();
-      $theme->setPageTitle($this->_getPageTitle());
+      $pageTitle = $this->_getPageTitle();
+      if($pageTitle)
+      {
+        $theme->setPageTitle($pageTitle);
+      }
       $result = $theme->setContent($result);
     }
     return parent::_prepareResponse($c, $result);
