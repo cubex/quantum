@@ -65,7 +65,6 @@ abstract class QuantumBaseController extends Controller implements QuantumAware
     }
     catch(Throwable $e)
     {
-      error_log($e->getMessage() . PHP_EOL . $e->getTraceAsString());
       $theme = $this->getQuantum()->getErrorTheme();
       $theme->setPageTitle($e->getMessage())
         ->setCode($e->getCode())
@@ -75,6 +74,10 @@ abstract class QuantumBaseController extends Controller implements QuantumAware
       if($httpCode === 0 || $httpCode > 599)
       {
         $httpCode = 500;
+      }
+      if($httpCode < 400 || $httpCode > 500)
+      {
+        error_log($e->getMessage() . PHP_EOL . $e->getTraceAsString());
       }
       return Response::create($theme, $httpCode);
     }
