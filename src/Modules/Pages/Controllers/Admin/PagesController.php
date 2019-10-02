@@ -277,7 +277,7 @@ class PagesController extends QuantumAdminController
       if($page->publishedVersion !== $version->id)
       {
         $publishLink = Link::create($this->_buildModuleUrl('publish', $page->id, $version->id), 'PUBLISH')
-          ->addClass(ButtonInferface::BUTTON);
+          ->addClass(ButtonInferface::BUTTON, ButtonInferface::BUTTON_PRIMARY);
       }
       $versionList->addRow(
         Link::create(
@@ -285,7 +285,7 @@ class PagesController extends QuantumAdminController
           '[' . date('Y-m-d H:i:s', $version->createdTime) . '] ' . $version->title
           . ' (' . strlen($version->content) . ' bytes)'
         ),
-        $publishLink
+        TableCell::create($publishLink)->addClass(Fusion::TEXT_RIGHT)
       );
     }
     return $versionList;
