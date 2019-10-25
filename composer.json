@@ -12,16 +12,16 @@
   ],
   "require": {
     "ext-json": "*",
-    "cubex/framework": "^4.0",
-    "packaged/dispatch": "^2.8",
-    "packaged/glimpse": "^2.6",
-    "packaged/form": "^2.4",
-    "packaged/dal": "^1.8",
+    "cubex/framework": "^4.2",
+    "packaged/dispatch": "^2.9",
+    "packaged/glimpse": "^2.7",
+    "packaged/form": "^2.7",
+    "packaged/dal": "^1.9",
     "packaged-ui/fontawesome": "^3.5",
-    "packaged-ui/fusion": "^1.0"
+    "packaged-ui/fusion": "dev-master"
   },
   "require-dev": {
-    "google/cloud-storage": "^1.9",
+    "google/cloud-storage": "^1.14",
     "php-coveralls/php-coveralls": "^2.1",
     "phpunit/phpunit": "^6.5",
     "filp/whoops": "^2.3"
