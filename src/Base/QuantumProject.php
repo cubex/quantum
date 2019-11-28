@@ -74,9 +74,7 @@ abstract class QuantumProject extends Application
       );
     }
 
-    $dispatch = $this->_prepareDispatch($this->getCubex()->getContext()->getProjectRoot());
-    Dispatch::bind($dispatch);
-    yield self::_route(QuantumDispatch::PATH, $dispatch);
+    yield self::_route(QuantumDispatch::PATH, Dispatch::instance());
 
     return parent::_generateRoutes();
   }
@@ -145,6 +143,8 @@ abstract class QuantumProject extends Application
 
   protected function _initialize()
   {
+    Dispatch::bind($this->_prepareDispatch($this->getCubex()->getContext()->getProjectRoot()));
+
     //Send debug headers locally
     $this->getCubex()->listen(
       ResponsePreSendHeadersEvent::class,
